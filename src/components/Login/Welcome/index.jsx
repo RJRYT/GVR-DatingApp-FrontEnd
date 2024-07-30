@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Phone from "../../../assets/login/phone.png";
 import Google from "../../../assets/login/google.png";
 import Illustration from "../../../assets/login/illustration.png";
+import SignUp from './Model/SignUp';
 
 function Welcome() {
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const handleSignUpClick = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen m-0 font-sans bg-white">
       <div className="relative w-[300px] max-w-md">
-        <img src={Illustration} alt="center image" className="w-full" />
+        <img src={Illustration} alt="Illustration" className="w-full" />
       </div>
       <div className="my-5 text-2xl text-center text-gray-800">
         Let’s meet new <br /> people around you
@@ -24,8 +35,9 @@ function Welcome() {
         </Link>
       </div>
       <div className="mt-5 text-sm text-gray-600">
-        Don't have an account? <Link to="#" className="text-pink-500">Sign Up</Link>
+        Don't have an account? <button onClick={handleSignUpClick} className="text-pink-500">Sign Up</button>
       </div>
+      <SignUp isVisible={isModalVisible} onClose={handleCloseModal} />
     </div>
   );
 }
