@@ -1,13 +1,11 @@
 import React, { Suspense } from 'react';
-import "bootstrap/dist/css/bootstrap.min.css";
-import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginWelcome from "./components/Login/Welcome/Welcome";
+import LoginWelcome from "./components/Login/Welcome";
 
 function App() {
   return (
-    <section className="page-content chakra-petch-medium">
-      <main className='container'>
+    <section className="page-content font-sans">
+      <main className='container mx-auto p-4 max-w-[600px]'>
         <Suspense fallback={<div>Loading...</div>}>
           <BrowserRouter>
             <Routes>
