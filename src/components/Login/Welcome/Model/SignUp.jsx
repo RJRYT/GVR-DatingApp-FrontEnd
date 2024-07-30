@@ -1,6 +1,12 @@
-import React from 'react';
+import React,{useState} from 'react';
+import Login from '../Model/Login';
 
-const SignUp = ({ isVisible, onClose }) => {
+const SignUp = ({ isVisible, onClose,onSwitchToLogin  }) => {
+  const handleRegisterClick = (e) => {
+    e.preventDefault();
+    onSwitchToLogin();
+  };
+
   if (!isVisible) return null;
 
   return (
@@ -41,12 +47,13 @@ const SignUp = ({ isVisible, onClose }) => {
           <button 
             type="submit" 
             className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
-            onClick={onClose} 
+            onClick={handleRegisterClick} 
           >
             Register
           </button>
         </form>
       </div>
+      
     </div>
   );
 };
