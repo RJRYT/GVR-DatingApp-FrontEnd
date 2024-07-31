@@ -1,27 +1,20 @@
-import React, { useState } from 'react';
-import Login from '../Model/Login';
+import React, { useState } from 'react'
 
-const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
-  const handleRegisterClick = (e) => {
-    e.preventDefault();
-    onSwitchToLogin();
+const Login = ({ isVisible, onSwitchToPersonalDetails, onSwitchToSignUp }) => {
+  const [isModalVisible, setModalVisible] = useState(false);
+  const handleSignUpClick = () => {
+    setModalVisible(true);
   };
-
+  const handleLoginClick = (e) => {
+    e.preventDefault();
+    onSwitchToPersonalDetails();
+  }
   if (!isVisible) return null;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
         <form className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-            />
-          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -40,22 +33,21 @@ const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
           </div>
           <button
             type="button"
-            className="w-full p-2 bg-gray-200 text-black rounded-lg font-medium"
+            className="w-full p-2 bg-black text-white rounded-lg font-medium"
+            onClick={handleLoginClick}
           >
-            Login with Social
+            Login
           </button>
-          <button
-            type="submit"
-            className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
-            onClick={handleRegisterClick}
-          >
-            Register
-          </button>
+          <div className="mt-5 text-sm text-gray-600">
+            <span className="font-bold underline">Forgot password?</span>
+          </div>
+          <div className="mt-5 text-sm text-gray-600">
+            Don't have an account? <button onClick={onSwitchToSignUp} className="text-pink-500">Sign Up</button>
+          </div>
         </form>
       </div>
-
     </div>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default Login
