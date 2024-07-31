@@ -1,9 +1,19 @@
+
 import React from "react";
 import Image from '../../../../assets/Image.png'
 import Video from '../../../../assets/Video.png'
 import { PiImageSquareBold } from "react-icons/pi";
 
-const PersonalDetails = ({ isVisible, onClose }) => {
+
+
+
+
+const PersonalDetails = ({ isVisible, onClose ,onSwitchToJobStatus }) => {
+  const handleClick =(e)=>{
+    e.preventDefault();
+    onSwitchToJobStatus();
+  }
+
     if (!isVisible) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -84,6 +94,7 @@ const PersonalDetails = ({ isVisible, onClose }) => {
           <button
             type="submit"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
+            onClick={handleClick}
           >
             Next
           </button>

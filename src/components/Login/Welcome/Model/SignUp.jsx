@@ -1,3 +1,4 @@
+
 import React,{useState} from 'react';
 import Login from '../Model/Login';
 
@@ -8,26 +9,6 @@ const SignUp = ({ isVisible, onClose,onSwitchToLogin  }) => {
   };
 
   if (!isVisible) return null;
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    setJobStatusVisible(true);
-  };
-
-  const handleJobStatusNext = (jobRole) => {
-    setJobStatusVisible(false);
-    if (jobRole === 'employee' || jobRole === 'employer') {
-      setSelectedJobRole(jobRole);
-      setJobDetailsVisible(true);
-    } else {
-      onClose();
-    }
-  };
-
-  const handleJobDetailsNext = () => {
-    setJobDetailsVisible(false);
-    onClose();
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">

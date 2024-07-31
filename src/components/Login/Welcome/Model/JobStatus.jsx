@@ -1,16 +1,18 @@
 // GVR-DatingApp-FrontEnd\src\components\Login\Model\JobStatus.jsx
 import React, { useState } from 'react';
 
-const JobStatus = ({ isVisible, onClose, onNext }) => {
+const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
   const [jobRole, setJobRole] = useState('');
+
 
   if (!isVisible) return null;
 
-  const handleNext = () => {
-    if (jobRole) {
-      onNext(jobRole);
+  const handleClick =(e)=>{
+    e.preventDefault();
+    if (jobRole === 'employee' || jobRole === 'employer') {
+      onSwitchToJobDetails();
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -56,7 +58,7 @@ const JobStatus = ({ isVisible, onClose, onNext }) => {
           <button 
             type="button" 
             className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
-            onClick={handleNext}
+            onClick={handleClick}
           >
             Next
           </button>
