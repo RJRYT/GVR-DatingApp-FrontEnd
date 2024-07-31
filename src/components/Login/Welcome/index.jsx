@@ -4,10 +4,13 @@ import Phone from "../../../assets/login/phone.png";
 import Google from "../../../assets/login/google.png";
 import Illustration from "../../../assets/login/illustration.png";
 import SignUp from './Model/SignUp';
+import Login from './Model/Login';
+import PersonalDetails from './Model/PersonalDetails';
 
 function Welcome() {
   const [isModalVisible, setModalVisible] = useState(false);
-
+  const [isLoginModalVisible,setLoginModalVisible]=useState(false)
+  const [isPersonalDetails,setPersonalDetails] = useState(false)
   const handleSignUpClick = () => {
     setModalVisible(true);
   };
@@ -15,7 +18,28 @@ function Welcome() {
   const handleCloseModal = () => {
     setModalVisible(false);
   };
-
+  const handleLoginClick = () => {
+    setLoginModalVisible(true);
+  };
+  const handleLoginClose =()=>{
+    setLoginModalVisible(false)
+  }
+  const handleSwitchToLogin = () => {
+    setModalVisible(false);
+    setLoginModalVisible(true);
+  };
+  const handlePersonalDetailsClose=()=>{
+    setPersonalDetails(false)
+  }
+  const handleSwitchToPersonalDetails=()=>{
+    setLoginModalVisible(false)
+    setPersonalDetails(true)
+  }
+  const handleSwitchToSignUp = () => {
+    setLoginModalVisible(false);
+    setModalVisible(true);
+  };
+  
   return (
     <div className="flex flex-col items-center justify-center h-screen m-0 font-sans bg-white">
       <div className="relative w-[300px] max-w-md">
@@ -37,7 +61,10 @@ function Welcome() {
       <div className="mt-5 text-sm text-gray-600">
         Don't have an account? <button onClick={handleSignUpClick} className="text-pink-500">Sign Up</button>
       </div>
-      <SignUp isVisible={isModalVisible} onClose={handleCloseModal} />
+      <SignUp isVisible={isModalVisible} onClose={handleCloseModal} onSwitchToLogin={handleSwitchToLogin}/>
+      <Login isVisible={isLoginModalVisible} onClose={handleLoginClose} onSwitchToPersonalDetails={handleSwitchToPersonalDetails} onSwitchToSignUp={handleSwitchToSignUp}/>
+      <PersonalDetails isVisible={isPersonalDetails} onClose={handlePersonalDetailsClose} />
+      
     </div>
   );
 }
