@@ -9,7 +9,7 @@ const JobDetails = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">Job Details</h2>
         <form className="space-y-4">
