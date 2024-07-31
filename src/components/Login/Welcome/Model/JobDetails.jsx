@@ -1,10 +1,18 @@
 // GVR-DatingApp-FrontEnd\src\components\Login\Model\JobDetails.jsx
 import React, { useState } from 'react';
 
-const JobDetails = ({ isVisible, onClose }) => {
+const JobDetails = ({ isVisible, onClose , onSwitchToInterested }) => {
   const [companyName, setCompanyName] = useState('');
   const [designation, setDesignation] = useState('');
   const [location, setLocation] = useState('');
+
+  
+  const handleClick =(e)=>{
+    e.preventDefault();
+   
+      onSwitchToInterested();
+    
+  }
 
   if (!isVisible) return null;
 
@@ -46,7 +54,7 @@ const JobDetails = ({ isVisible, onClose }) => {
           <button 
             type="submit" 
             className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
-            onClick={onClose}
+            onClick={handleClick}
           >
             Next
           </button>
