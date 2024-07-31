@@ -16,8 +16,8 @@ const PersonalDetails = ({ isVisible, onClose ,onSwitchToJobStatus }) => {
 
     if (!isVisible) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-h-full max-w-md overflow-y-auto hide-scrollbar">
         <h2 className="text-2xl font-bold text-center mb-4">Personal Details</h2>
         <form className="space-y-4">
           <div>
@@ -37,7 +37,7 @@ const PersonalDetails = ({ isVisible, onClose ,onSwitchToJobStatus }) => {
           <div>
             <input
               type="text"
-              placeholder="Habbies"
+              placeholder="Hobbies"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
           </div>
@@ -72,10 +72,9 @@ const PersonalDetails = ({ isVisible, onClose ,onSwitchToJobStatus }) => {
           <div>
             <input
               type="text"
-              placeholder="ProfilePic"
+              placeholder="Profile Pic"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
-            
           </div>
           <div>
             <input
@@ -101,6 +100,7 @@ const PersonalDetails = ({ isVisible, onClose ,onSwitchToJobStatus }) => {
         </form>
       </div>
     </div>
+
   );
 };
 
