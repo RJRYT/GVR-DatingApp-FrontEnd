@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Phone from "../../../assets/login/phone.png";
@@ -6,11 +7,15 @@ import Illustration from "../../../assets/login/illustration.png";
 import SignUp from './Model/SignUp';
 import Login from './Model/Login';
 import PersonalDetails from './Model/PersonalDetails';
+import JobStatus from './Model/JobStatus';
+import JobDetails from './Model/JobDetails';
 
 function Welcome() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLoginModalVisible,setLoginModalVisible]=useState(false)
   const [isPersonalDetails,setPersonalDetails] = useState(false)
+  const [isJobStatusModalVisible,setJobStatusModalVisible] = useState(false);
+  const [isJobDetailsModalVisible,setJobDetailsModalVisible] = useState(false);
   const handleSignUpClick = () => {
     setModalVisible(true);
   };
@@ -39,7 +44,21 @@ function Welcome() {
     setLoginModalVisible(false);
     setModalVisible(true);
   };
+  const handleSwitchToJobStatus =()=>{
+    setPersonalDetails(false);
+    setJobStatusModalVisible(true);
+  }
   
+  const handleJobStatusClose =()=>{
+    setJobStatusModalVisible(false);
+  }
+  const handleSwitchToJobDetails=()=>{
+    setJobStatusModalVisible(false);
+    setJobDetailsModalVisible(true);
+  }
+  const handleJobDetailsClose =()=>{
+    setJobDetailsModalVisible(false);
+  }
   return (
     <div className="flex flex-col items-center justify-center h-screen m-0 font-sans bg-white">
       <div className="relative w-[300px] max-w-md">
@@ -63,8 +82,9 @@ function Welcome() {
       </div>
       <SignUp isVisible={isModalVisible} onClose={handleCloseModal} onSwitchToLogin={handleSwitchToLogin}/>
       <Login isVisible={isLoginModalVisible} onClose={handleLoginClose} onSwitchToPersonalDetails={handleSwitchToPersonalDetails} onSwitchToSignUp={handleSwitchToSignUp}/>
-      <PersonalDetails isVisible={isPersonalDetails} onClose={handlePersonalDetailsClose} />
-      
+      <PersonalDetails isVisible={isPersonalDetails} onClose={handlePersonalDetailsClose} onSwitchToJobStatus={handleSwitchToJobStatus}/>
+      <JobStatus isVisible={isJobStatusModalVisible} onClose={handleJobStatusClose} onSwitchToJobDetails={handleSwitchToJobDetails}/>
+      <JobDetails isVisible={isJobDetailsModalVisible} onClose={handleJobDetailsClose} />
     </div>
   );
 }
