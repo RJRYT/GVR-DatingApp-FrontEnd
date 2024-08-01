@@ -1,61 +1,59 @@
 import React, { useState } from "react";
-import Login from "../Model/Login";
 
-const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
-  const handleRegisterClick = (e) => {
-    e.preventDefault();
-    onSwitchToLogin();
-  };
+const JobDetails = ({ isVisible, onClose }) => {
+  const [companyName, setCompanyName] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [location, setLocation] = useState("");
 
   if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Job Details</h2>
         <form className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Name
+              Company Name
             </label>
             <input
               type="text"
-              placeholder="Full Name"
+              placeholder="Company Name"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Email
+              Designation
             </label>
             <input
-              type="email"
-              placeholder="Email Address"
+              type="text"
+              placeholder="Designation"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+              value={designation}
+              onChange={(e) => setDesignation(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Password
+              Location
             </label>
             <input
-              type="password"
-              placeholder="Password"
+              type="text"
+              placeholder="Location"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
-          <button
-            type="button"
-            className="w-full p-2 bg-[#d7d4d4] text-black rounded-lg font-medium"
-          >
-            Login with Social
-          </button>
           <button
             type="submit"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
-            onClick={handleRegisterClick}
+            onClick={onClose}
           >
-            Register
+            Next
           </button>
         </form>
       </div>
@@ -63,4 +61,4 @@ const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
   );
 };
 
-export default SignUp;
+export default JobDetails;

@@ -1,18 +1,16 @@
-// GVR-DatingApp-FrontEnd\src\components\Login\Model\JobStatus.jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
-  const [jobRole, setJobRole] = useState('');
-
+const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails, onNext }) => {
+  const [jobRole, setJobRole] = useState("");
 
   if (!isVisible) return null;
 
-  const handleClick =(e)=>{
+  const handleClick = (e) => {
     e.preventDefault();
-    if (jobRole === 'employee' || jobRole === 'employer') {
+    if (jobRole === "employee" || jobRole === "employer") {
       onSwitchToJobDetails();
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
@@ -21,11 +19,11 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
         <form className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              <input 
-                type="radio" 
-                name="jobRole" 
-                value="employee" 
-                onChange={(e) => setJobRole(e.target.value)} 
+              <input
+                type="radio"
+                name="jobRole"
+                value="employee"
+                onChange={(e) => setJobRole(e.target.value)}
                 className="mr-2"
               />
               Employee
@@ -33,11 +31,11 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              <input 
-                type="radio" 
-                name="jobRole" 
-                value="employer" 
-                onChange={(e) => setJobRole(e.target.value)} 
+              <input
+                type="radio"
+                name="jobRole"
+                value="employer"
+                onChange={(e) => setJobRole(e.target.value)}
                 className="mr-2"
               />
               Employer
@@ -45,18 +43,18 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              <input 
-                type="radio" 
-                name="jobRole" 
-                value="jobSeeker" 
-                onChange={(e) => setJobRole(e.target.value)} 
+              <input
+                type="radio"
+                name="jobRole"
+                value="jobSeeker"
+                onChange={(e) => setJobRole(e.target.value)}
                 className="mr-2"
               />
               Job Seeker
             </label>
           </div>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
             onClick={handleClick}
           >

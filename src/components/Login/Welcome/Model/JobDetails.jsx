@@ -1,10 +1,9 @@
-// GVR-DatingApp-FrontEnd\src\components\Login\Model\JobDetails.jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const JobDetails = ({ isVisible, onClose }) => {
-  const [companyName, setCompanyName] = useState('');
-  const [designation, setDesignation] = useState('');
-  const [location, setLocation] = useState('');
+  const [title, setTitle] = useState("");
+  const [expertLvl, setExpertLvl] = useState("");
+  const [expertLvlShown, setExpertLvlShown] = useState(false);
 
   if (!isVisible) return null;
 
@@ -14,38 +13,61 @@ const JobDetails = ({ isVisible, onClose }) => {
         <h2 className="text-2xl font-bold text-center mb-4">Job Details</h2>
         <form className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Company Name</label>
-            <input 
-              type="text" 
-              placeholder="Company Name" 
+            <input
+              type="text"
+              placeholder="Title"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Designation</label>
-            <input 
-              type="text" 
-              placeholder="Designation" 
+            <label className="block text-sm font-medium text-gray-700">
+              Expertise Level
+            </label>
+            <input
+              type="text"
+              placeholder="Expertise Level"
+              readOnly
+              value={expertLvl}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-              value={designation}
-              onChange={(e) => setDesignation(e.target.value)}
+              onClick={() => setExpertLvlShown(!expertLvlShown)}
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Location</label>
-            <input 
-              type="text" 
-              placeholder="Location" 
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </div>
-          <button 
-            type="submit" 
-            className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
+          {expertLvlShown && (
+            <>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Beginner"
+                  readOnly
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  onClick={(e) => setExpertLvl("beginner")}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Intermediate"
+                  readOnly
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  onClick={(e) => setExpertLvl("intermediate")}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Expert"
+                  readOnly
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  onClick={(e) => setExpertLvl("expert")}
+                />
+              </div>
+            </>
+          )}
+          <button
+            type="submit"
+            className="w-full p-2 bg-black text-white rounded-lg font-medium"
             onClick={onClose}
           >
             Next
