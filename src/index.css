@@ -81,3 +81,7 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.btns{
+  margin-bottom: 25px;
+}

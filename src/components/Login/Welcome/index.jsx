@@ -8,6 +8,8 @@ import Login from './Model/Login';
 import PersonalDetails from './Model/PersonalDetails';
 import JobStatus from './Model/JobStatus';
 import JobDetails from './Model/JobDetails';
+import Interested from './Model/Interested';
+
 import JobDetails2 from './Model/JobDetails2';
 import RelationshipGoals from './Model/RelationshipGoals';
 
@@ -17,6 +19,8 @@ function Welcome() {
   const [isPersonalDetails,setPersonalDetails] = useState(false)
   const [isJobStatusModalVisible,setJobStatusModalVisible] = useState(false);
   const [isJobDetailsModalVisible,setJobDetailsModalVisible] = useState(false);
+  const [isInterestedModalVisible,setInterestedModalVisible] = useState(false)
+  
   const [isJobDetails2ModalVisible,setJobDetails2ModalVisible] = useState(false);
   const [isRelationshipModalVisible,setRelationshipModalVisible] = useState(false);
 
@@ -63,7 +67,16 @@ function Welcome() {
   }
   const handleJobDetailsClose =()=>{
     setJobDetailsModalVisible(false);
+    setInterestedModalVisible(true)
   }
+const handleSwitchToInterested =()=>{
+  setJobDetailsModalVisible(false);
+  setInterestedModalVisible(true);
+}
+const handleInterestedClose =()=>{
+  setInterestedModalVisible(false)
+}
+
 
   const handleSwitchToJobDetails2=()=>{
     setJobStatusModalVisible(false);
@@ -105,6 +118,10 @@ function Welcome() {
       <SignUp isVisible={isModalVisible} onClose={handleCloseModal} onSwitchToLogin={handleSwitchToLogin}/>
       <Login isVisible={isLoginModalVisible} onClose={handleLoginClose} onSwitchToPersonalDetails={handleSwitchToPersonalDetails} onSwitchToSignUp={handleSwitchToSignUp}/>
       <PersonalDetails isVisible={isPersonalDetails} onClose={handlePersonalDetailsClose} onSwitchToJobStatus={handleSwitchToJobStatus}/>
+      <JobStatus isVisible={isJobStatusModalVisible} onClose={handleJobStatusClose} onSwitchToJobDetails={handleSwitchToJobDetails}/>
+      <JobDetails isVisible={isJobDetailsModalVisible} onClose={handleJobDetailsClose} onSwitchToInterested={handleSwitchToInterested} />
+      <Interested isVisible={isInterestedModalVisible} onClose={handleInterestedClose}  />
+      
       <JobStatus isVisible={isJobStatusModalVisible} onClose={handleJobStatusClose} onSwitchToJobDetails={handleSwitchToJobDetails} onSwitchToJobDetails2={handleSwitchToJobDetails2}/>
       <JobDetails isVisible={isJobDetailsModalVisible} onClose={handleJobDetailsClose} onSwitchToRelationship={handleSwitchToRelationship}/>
       <JobDetails2 isVisible={isJobDetails2ModalVisible} onClose={handleJobDetails2Close} onSwitchToRelationship={handleSwitchToRelationship}/>
