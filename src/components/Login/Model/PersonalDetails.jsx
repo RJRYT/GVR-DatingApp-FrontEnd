@@ -1,12 +1,12 @@
 import React from "react";
-import Image from "../../../../assets/Image.png";
-import Video from "../../../../assets/Video.png";
+import Image from "../../../assets/Image.png";
+import Video from "../../../assets/Video.png";
 import { PiImageSquareBold } from "react-icons/pi";
 
-const PersonalDetails = ({ isVisible, onSwitchToJobStatus }) => {
+const PersonalDetails = ({ isVisible, modelToggle }) => {
   const handleClick = (e) => {
     e.preventDefault();
-    onSwitchToJobStatus();
+    modelToggle("JobStatus");
   };
 
   if (!isVisible) return null;

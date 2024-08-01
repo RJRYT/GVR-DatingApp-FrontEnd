@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 
-const RelationshipGoals = ({ isVisible, onClose }) => {
+const RelationshipGoals = ({ isVisible, modelToggle }) => {
   const [relationshipGoal, setRelationshipGoal] = useState("");
 
   if (!isVisible) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    onClose();
+    modelToggle("Intersted");
   };
 
   return (

@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 
-const JobDetails = ({ isVisible, onSwitchToRelationship }) => {
+const JobDetails = ({ isVisible, modelToggle }) => {
   const [title, setTitle] = useState("");
   const [expertLvl, setExpertLvl] = useState("");
   const [expertLvlShown, setExpertLvlShown] = useState(false);
 
-  if (!isVisible) return null;
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSwitchToRelationship();
+    modelToggle("RelationShip");
   };
-
+  
+  if (!isVisible) return null;
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

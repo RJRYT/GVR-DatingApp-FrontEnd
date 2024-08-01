@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Login = ({ isVisible, onSwitchToPersonalDetails, onSwitchToSignUp }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const handleSignUpClick = () => {
-    setModalVisible(true);
-  };
+const Login = ({ isVisible, modelToggle }) => {
+
   const handleLoginClick = (e) => {
     e.preventDefault();
-    onSwitchToPersonalDetails();
+    modelToggle();
   };
   if (!isVisible) return null;
   return (
@@ -47,7 +44,7 @@ const Login = ({ isVisible, onSwitchToPersonalDetails, onSwitchToSignUp }) => {
           </div>
           <div className="mt-5 text-sm text-gray-600">
             Don't have an account?{" "}
-            <button onClick={onSwitchToSignUp} className="text-pink-500">
+            <button onClick={()=>{modelToggle("Signup");}} className="text-pink-500">
               Sign Up
             </button>
           </div>

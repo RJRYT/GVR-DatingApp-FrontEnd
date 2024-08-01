@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const JobDetails = ({ isVisible }) => {
+const JobDetails = ({ isVisible, modelToggle }) => {
   const [companyName, setCompanyName] = useState("");
   const [designation, setDesignation] = useState("");
   const [location, setLocation] = useState("");
@@ -50,6 +50,7 @@ const JobDetails = ({ isVisible }) => {
           </div>
           <button
             type="submit"
+            onClick={()=>{modelToggle("RelationShip")}}
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
           >
             Next

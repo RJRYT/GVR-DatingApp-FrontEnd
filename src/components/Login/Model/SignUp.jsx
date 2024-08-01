@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 
-const SignUp = ({ isVisible, onSwitchToLogin }) => {
+const SignUp = ({ isVisible, modelToggle }) => {
   const handleRegisterClick = (e) => {
     e.preventDefault();
-    onSwitchToLogin();
+    modelToggle("Personal");
   };
 
   if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-h-screen overflow-y-auto hide-scrollbar max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
         <form className="space-y-4">
           <div>
@@ -84,12 +84,13 @@ const SignUp = ({ isVisible, onSwitchToLogin }) => {
           <button
             type="button"
             className="w-full p-2 bg-[#b84eb9] text-white rounded-lg font-medium"
+            onClick={modelToggle}
           >
             Social media Login
           </button>
           <div className="mt-5 text-sm text-gray-600">
             Already have a account?{" "}
-            <button className="text-pink-500">Log In</button>
+            <button onClick={()=>{modelToggle("Login")}} className="text-pink-500">Log In</button>
           </div>
         </form>
       </div>

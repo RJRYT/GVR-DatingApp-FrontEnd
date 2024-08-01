@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 
-const JobStatus = ({
-  isVisible,
-  onSwitchToJobDetails,
-  onSwitchToJobDetails2,
-}) => {
+const JobStatus = ({ isVisible, modelToggle }) => {
   const [jobRole, setJobRole] = useState("");
 
   if (!isVisible) return null;
@@ -12,8 +8,8 @@ const JobStatus = ({
   const handleClick = (e) => {
     e.preventDefault();
     if (jobRole === "employee" || jobRole === "employer") {
-      onSwitchToJobDetails();
-    } else if (jobRole === "jobSeeker") onSwitchToJobDetails2();
+      modelToggle("JobDetails1");
+    } else if (jobRole === "jobSeeker") modelToggle("JobDetails2");
   };
 
   return (
