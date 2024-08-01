@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Login from "../Model/Login";
 
-const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
+const SignUp = ({ isVisible, onSwitchToLogin }) => {
   const handleRegisterClick = (e) => {
     e.preventDefault();
     onSwitchToLogin();
@@ -36,6 +35,16 @@ const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
+              Mobile
+            </label>
+            <input
+              type="tel"
+              placeholder="Mobile"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -44,12 +53,27 @@ const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
           </div>
-          <button
-            type="button"
-            className="w-full p-2 bg-[#d7d4d4] text-black rounded-lg font-medium"
-          >
-            Login with Social
-          </button>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+            />
+          </div>
+          <div className="mt-5 text-sm text-gray-600">Generate OTP</div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              OTP
+            </label>
+            <input
+              type="number"
+              placeholder="OTP"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+            />
+          </div>
           <button
             type="submit"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
@@ -57,6 +81,16 @@ const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
           >
             Register
           </button>
+          <button
+            type="button"
+            className="w-full p-2 bg-[#b84eb9] text-white rounded-lg font-medium"
+          >
+            Social media Login
+          </button>
+          <div className="mt-5 text-sm text-gray-600">
+            Already have a account?{" "}
+            <button className="text-pink-500">Log In</button>
+          </div>
         </form>
       </div>
     </div>

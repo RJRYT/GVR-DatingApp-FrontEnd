@@ -3,7 +3,7 @@ import Image from "../../../../assets/Image.png";
 import Video from "../../../../assets/Video.png";
 import { PiImageSquareBold } from "react-icons/pi";
 
-const PersonalDetails = ({ isVisible, onClose, onSwitchToJobStatus }) => {
+const PersonalDetails = ({ isVisible, onSwitchToJobStatus }) => {
   const handleClick = (e) => {
     e.preventDefault();
     onSwitchToJobStatus();

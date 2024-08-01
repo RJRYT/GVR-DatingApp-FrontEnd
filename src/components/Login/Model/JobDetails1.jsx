@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const JobDetails = ({ isVisible, onClose }) => {
+const JobDetails = ({ isVisible }) => {
   const [companyName, setCompanyName] = useState("");
   const [designation, setDesignation] = useState("");
   const [location, setLocation] = useState("");
@@ -51,7 +51,6 @@ const JobDetails = ({ isVisible, onClose }) => {
           <button
             type="submit"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
-            onClick={onClose}
           >
             Next
           </button>

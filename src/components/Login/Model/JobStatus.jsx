@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 
-const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails, onSwitchToJobDetails2  }) => {
+const JobStatus = ({
+  isVisible,
+  onSwitchToJobDetails,
+  onSwitchToJobDetails2,
+}) => {
   const [jobRole, setJobRole] = useState("");
-
 
   if (!isVisible) return null;
 
@@ -10,9 +13,8 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails, onSwitchToJobDeta
     e.preventDefault();
     if (jobRole === "employee" || jobRole === "employer") {
       onSwitchToJobDetails();
-    } else if(jobRole ==='jobSeeker')
-    onSwitchToJobDetails2();
-  }
+    } else if (jobRole === "jobSeeker") onSwitchToJobDetails2();
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -57,7 +59,7 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails, onSwitchToJobDeta
           </div>
           <button
             type="button"
-            className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
+            className="w-full p-2 bg-black text-white rounded-lg font-medium"
             onClick={handleClick}
           >
             Next
@@ -68,4 +70,4 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails, onSwitchToJobDeta
   );
 };
 
-export default JobStatus;
+export default JobStatus;

@@ -1,23 +1,15 @@
 import React, { useState } from "react";
 
-const JobDetails = ({ isVisible, onClose, onSwitchToRelationship }) => {
-  const [companyName, setCompanyName] = useState('');
-  const [designation, setDesignation] = useState('');
-  const [location, setLocation] = useState('');
-
-  
-  const handleClick =(e)=>{
-    e.preventDefault();
-   
-      onSwitchToRelationship();
-    
-  }
+const JobDetails = ({ isVisible, onSwitchToRelationship }) => {
+  const [title, setTitle] = useState("");
+  const [expertLvl, setExpertLvl] = useState("");
+  const [expertLvlShown, setExpertLvlShown] = useState(false);
 
   if (!isVisible) return null;
   const handleSubmit = (e) => {
     e.preventDefault();
     onSwitchToRelationship();
-   }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -80,7 +72,6 @@ const JobDetails = ({ isVisible, onClose, onSwitchToRelationship }) => {
           <button
             type="submit"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
-            onClick={onClose}
           >
             Next
           </button>
@@ -90,4 +81,4 @@ const JobDetails = ({ isVisible, onClose, onSwitchToRelationship }) => {
   );
 };
 
-export default JobDetails;
+export default JobDetails;
