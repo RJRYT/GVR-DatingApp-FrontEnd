@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Login from '../Model/Login';
 
-const SignUp = ({ isVisible, onClose, onSwitchToLogin }) => {
+
+const SignUp = ({ isVisible, onSwitchToLogin }) => {
   const handleRegisterClick = (e) => {
     e.preventDefault();
     onSwitchToLogin();
