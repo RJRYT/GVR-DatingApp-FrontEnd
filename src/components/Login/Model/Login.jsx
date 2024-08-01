@@ -1,14 +1,11 @@
-import React, { useState } from 'react'
+import React from "react";
 
-const Login = ({ isVisible, onSwitchToPersonalDetails, onSwitchToSignUp }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const handleSignUpClick = () => {
-    setModalVisible(true);
-  };
+const Login = ({ isVisible, modelToggle }) => {
+
   const handleLoginClick = (e) => {
     e.preventDefault();
-    onSwitchToPersonalDetails();
-  }
+    modelToggle();
+  };
   if (!isVisible) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
@@ -16,15 +13,19 @@ const Login = ({ isVisible, onSwitchToPersonalDetails, onSwitchToSignUp }) => {
         <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
         <form className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email/Mobile
+            </label>
             <input
-              type="email"
-              placeholder="Email Address"
+              type="text"
+              placeholder="Email Address/Mobile"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               placeholder="Password"
@@ -42,12 +43,15 @@ const Login = ({ isVisible, onSwitchToPersonalDetails, onSwitchToSignUp }) => {
             <span className="font-bold underline">Forgot password?</span>
           </div>
           <div className="mt-5 text-sm text-gray-600">
-            Don't have an account? <button onClick={onSwitchToSignUp} className="text-pink-500">Sign Up</button>
+            Don't have an account?{" "}
+            <button onClick={()=>{modelToggle("Signup");}} className="text-pink-500">
+              Sign Up
+            </button>
           </div>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
