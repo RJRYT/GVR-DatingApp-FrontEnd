@@ -1,7 +1,7 @@
 // GVR-DatingApp-FrontEnd\src\components\Login\Model\JobStatus.jsx
 import React, { useState } from 'react';
 
-const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
+const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails, onSwitchToJobDetails2  }) => {
   const [jobRole, setJobRole] = useState('');
 
 
@@ -11,11 +11,12 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
     e.preventDefault();
     if (jobRole === 'employee' || jobRole === 'employer') {
       onSwitchToJobDetails();
-    }
+    } else if(jobRole ==='jobSeeker')
+    onSwitchToJobDetails2();
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">Job Status</h2>
         <form className="space-y-4">
@@ -57,7 +58,7 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
           </div>
           <button 
             type="button" 
-            className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
+            className="w-full p-2 bg-gray-800 text-w  hite rounded-lg font-medium"
             onClick={handleClick}
           >
             Next
@@ -68,4 +69,4 @@ const JobStatus = ({ isVisible, onClose, onSwitchToJobDetails ,onNext }) => {
   );
 };
 
-export default JobStatus;
+export default JobStatus;
