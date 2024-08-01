@@ -1,10 +1,22 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { AuthContext } from "../../contexts/AuthContext";
+import Loading from "../Loading";
+
 import Phone from "../../../assets/login/phone.png";
 import Google from "../../../assets/login/google.png";
 import Illustration from "../../../assets/login/illustration.png";
 
 function Login() {
+  const { authState, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(!loading && authState.isAuthenticated) navigate("/dashboard");
+  },[navigate, loading, authState]);
+
+  if (loading) return <Loading />;
 
   return (
     <div className="flex flex-col items-center justify-center h-screen m-0 font-sans bg-white">

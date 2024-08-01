@@ -8,7 +8,7 @@ import Loading from "./components/Loading";
 import Layout from "./components/Layout/Main";
 import DefaultPage from "./components/Default";
 import Login from "./components/Login";
-import Home from "./components/Home";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route path="/" element={<DefaultPage />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/home" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Routes>
         </BrowserRouter>
