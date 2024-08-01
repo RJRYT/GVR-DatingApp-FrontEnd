@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 
-import Phone from "../../../assets/login/phone.png";
-import Google from "../../../assets/login/google.png";
-import Illustration from "../../../assets/login/illustration.png";
+import Phone from "../../assets/login/phone.png";
+import Google from "../../assets/login/google.png";
+import Illustration from "../../assets/login/illustration.png";
 
 function Login() {
   const { authState, loading } = useContext(AuthContext);
