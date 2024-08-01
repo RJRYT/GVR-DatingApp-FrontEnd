@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./contexts/AuthContext";
 import LoginWelcome from "./components/Login/Welcome";
-
 function App() {
   return (
     <AuthProvider>

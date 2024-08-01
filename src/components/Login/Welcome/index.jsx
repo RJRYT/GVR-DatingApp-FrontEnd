@@ -8,13 +8,23 @@ import Login from "./Model/Login";
 import PersonalDetails from "./Model/PersonalDetails";
 import JobStatus from "./Model/JobStatus";
 import CompanyDetails from "./Model/CompanyDetails";
+import Interested from './Model/Interested';
+
+import JobDetails2 from './Model/JobDetails2';
+import RelationshipGoals from './Model/RelationshipGoals';
 
 function Welcome() {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
-  const [isPersonalDetails, setPersonalDetails] = useState(false);
-  const [isJobStatusModalVisible, setJobStatusModalVisible] = useState(false);
-  const [isJobDetailsModalVisible, setJobDetailsModalVisible] = useState(false);
+  const [isLoginModalVisible,setLoginModalVisible]=useState(false)
+  const [isPersonalDetails,setPersonalDetails] = useState(false)
+  const [isJobStatusModalVisible,setJobStatusModalVisible] = useState(false);
+  const [isJobDetailsModalVisible,setJobDetailsModalVisible] = useState(false);
+  const [isInterestedModalVisible,setInterestedModalVisible] = useState(false)
+  
+  const [isJobDetails2ModalVisible,setJobDetails2ModalVisible] = useState(false);
+  const [isRelationshipModalVisible,setRelationshipModalVisible] = useState(false);
+
+
   const handleSignUpClick = () => {
     setModalVisible(true);
   };
@@ -57,7 +67,33 @@ function Welcome() {
   };
   const handleJobDetailsClose = () => {
     setJobDetailsModalVisible(false);
-  };
+    setInterestedModalVisible(true)
+  }
+const handleSwitchToInterested =()=>{
+  setJobDetailsModalVisible(false);
+  setInterestedModalVisible(true);
+}
+const handleInterestedClose =()=>{
+  setInterestedModalVisible(false)
+}
+
+
+  const handleSwitchToJobDetails2=()=>{
+    setJobStatusModalVisible(false);
+    setJobDetails2ModalVisible(true);
+  }
+  const handleJobDetails2Close =()=>{
+    setJobDetails2ModalVisible(false);
+  }
+  const handleSwitchToRelationship=()=>{
+    setJobDetailsModalVisible(false);
+    setJobDetails2ModalVisible(false)
+    setRelationshipModalVisible(true);
+  }
+  const handleRelationshipClose =()=>{
+    setJobDetails2ModalVisible(false);
+  }
+
   return (
     <div className="flex flex-col items-center justify-center h-screen m-0 font-sans bg-white">
       <div className="relative w-[300px] max-w-md">
@@ -120,9 +156,15 @@ function Welcome() {
       <CompanyDetails
         isVisible={isJobDetailsModalVisible}
         onClose={handleJobDetailsClose}
-      />
+      onSwitchToInterested={handleSwitchToInterested} />
+      <Interested isVisible={isInterestedModalVisible} onClose={handleInterestedClose}  />
+      
+      <JobStatus isVisible={isJobStatusModalVisible} onClose={handleJobStatusClose} onSwitchToJobDetails={handleSwitchToJobDetails} onSwitchToJobDetails2={handleSwitchToJobDetails2}/>
+      <JobDetails isVisible={isJobDetailsModalVisible} onClose={handleJobDetailsClose} onSwitchToRelationship={handleSwitchToRelationship}/>
+      <JobDetails2 isVisible={isJobDetails2ModalVisible} onClose={handleJobDetails2Close} onSwitchToRelationship={handleSwitchToRelationship}/>
+      <RelationshipGoals isVisible={isRelationshipModalVisible} onClose={handleRelationshipClose} />
     </div>
   );
 }
 
-export default Welcome;
+export default Welcome;
