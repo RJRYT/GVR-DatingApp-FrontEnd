@@ -5,7 +5,7 @@ const Tabs = () => {
 
   return (
     <div className='max-w-3xl mx-auto px-4 sm:px-0'>
-      <div className='w-full sm:w-7/12 mx-auto'>
+      <div className='w-full  mx-auto'>
         <div
           role='tablist'
           aria-label='tabs'
