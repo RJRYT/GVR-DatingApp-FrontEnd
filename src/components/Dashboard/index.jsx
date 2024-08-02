@@ -3,6 +3,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import AccessDenied from "../AccessDenied";
 import Loading from "../Loading";
 import Header from "./Header";
+import Story from "./Story";
 import Tab from "./Tab";
 
 function HomePage() {
@@ -15,6 +16,7 @@ function HomePage() {
   return (
     <>
       <Header />
+      <Story />
       <Tab />
     </>
   );

@@ -1,0 +1,52 @@
+import React from "react";
+import MyStory from "../../../assets/story/profile1.png";
+import Selena from "../../../assets/story/profile2.png";
+import Fabian from "../../../assets/story/profile3.png";
+import Clara from "../../../assets/story/profile4.png";
+import Ryan from "../../../assets/story/profile5.png";
+
+const images = [
+  { src: MyStory, alt: "My Story", label: "My Story", isMyStory: true },
+  { src: Selena, alt: "Selena", label: "Selena", isMyStory: false },
+  { src: Fabian, alt: "Fabian", label: "Fabian", isMyStory: false },
+  { src: Clara, alt: "Clara", label: "Clara", isMyStory: false },
+  { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
+];
+
+const Story = () => {
+  return (
+    <div className="mt-8">
+      <div className="flex justify-center px-2 py-5">
+        <ul className="flex space-x-4">
+          {images.map((image, index) => (
+            <li
+              key={index}
+              className="relative flex flex-col items-center space-y-1"
+            >
+              <div className="bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-500 rounded-full p-0.5">
+                <a
+                  href="#"
+                  className="relative bg-white rounded-full block p-1"
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="w-16 h-16 rounded-full"
+                  />
+                  {image.isMyStory && (
+                    <button className="absolute top-11 right-0 bg-pink-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xl">
+                      +
+                    </button>
+                  )}
+                </a>
+              </div>
+              <a href="#">{image.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default Story;
