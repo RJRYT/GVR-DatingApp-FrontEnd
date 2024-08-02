@@ -1,24 +1,21 @@
-
 import React from "react";
-import Image from '../../../../assets/Image.png'
-import Video from '../../../../assets/Video.png'
+import Image from "../../../assets/Image.png";
+import Video from "../../../assets/Video.png";
 import { PiImageSquareBold } from "react-icons/pi";
 
-
-
-
-
-const PersonalDetails = ({ isVisible, onClose ,onSwitchToJobStatus }) => {
-  const handleClick =(e)=>{
+const PersonalDetails = ({ isVisible, modelToggle }) => {
+  const handleClick = (e) => {
     e.preventDefault();
-    onSwitchToJobStatus();
-  }
+    modelToggle("JobStatus");
+  };
 
-    if (!isVisible) return null;
+  if (!isVisible) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-h-full max-w-md overflow-y-auto hide-scrollbar">
-        <h2 className="text-2xl font-bold text-center mb-4">Personal Details</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">
+          Personal Details
+        </h2>
         <form className="space-y-4">
           <div>
             <input
@@ -100,7 +97,6 @@ const PersonalDetails = ({ isVisible, onClose ,onSwitchToJobStatus }) => {
         </form>
       </div>
     </div>
-
   );
 };
 

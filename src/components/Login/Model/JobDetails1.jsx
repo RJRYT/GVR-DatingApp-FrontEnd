@@ -1,30 +1,17 @@
-// GVR-DatingApp-FrontEnd\src\components\Login\Model\JobDetails.jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const JobDetails = ({ isVisible, onClose, onSwitchToRelationship }) => {
-  const [companyName, setCompanyName] = useState('');
-  const [designation, setDesignation] = useState('');
-  const [location, setLocation] = useState('');
-
-  
-  const handleClick =(e)=>{
-    e.preventDefault();
-   
-      onSwitchToRelationship();
-    
-  }
+const JobDetails = ({ isVisible, modelToggle }) => {
+  const [companyName, setCompanyName] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [location, setLocation] = useState("");
 
   if (!isVisible) return null;
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSwitchToRelationship();
-   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">Job Details</h2>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Company Name
@@ -63,8 +50,8 @@ const JobDetails = ({ isVisible, onClose, onSwitchToRelationship }) => {
           </div>
           <button
             type="submit"
-            className="w-full p-2 bg-gray-800 text-white rounded-lg font-medium"
-            onClick={handleClick}
+            onClick={()=>{modelToggle("RelationShip")}}
+            className="w-full p-2 bg-black text-white rounded-lg font-medium"
           >
             Next
           </button>
@@ -74,4 +61,4 @@ const JobDetails = ({ isVisible, onClose, onSwitchToRelationship }) => {
   );
 };
 
-export default JobDetails;
+export default JobDetails;
