@@ -15,7 +15,7 @@ const images = [
 
 const Story = () => {
   return (
-    <div className="mt-8">
+    <div className="mt-1">
       <div className="flex justify-center px-2 py-5">
         <ul className="flex space-x-4">
           {images.map((image, index) => (
