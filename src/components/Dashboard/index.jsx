@@ -3,6 +3,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import AccessDenied from "../AccessDenied";
 import Loading from "../Loading";
 import Header from "./Header";
+import Tab from "./Tab";
 
 function HomePage() {
   const { authState, loading } = useContext(AuthContext);
@@ -11,7 +12,12 @@ function HomePage() {
 
   //if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
-  return <Header />;
+  return (
+    <>
+      <Header />
+      <Tab />
+    </>
+  );
 }
 
 export default HomePage;

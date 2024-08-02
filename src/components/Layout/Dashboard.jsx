@@ -5,8 +5,8 @@ import Navbar from "../Dashboard/Navbar";
 function DashboardLayout() {
   return (
     <div className="font-sans">
-        <Navbar />
         <Outlet />
+        <Navbar />
     </div>
   );
 }
