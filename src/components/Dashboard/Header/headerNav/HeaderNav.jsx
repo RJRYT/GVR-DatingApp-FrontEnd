@@ -69,7 +69,7 @@ const HeaderNav = ({ toggleModal }) => {
       </div>
       <div
         onClick={toggleModal}
-        className="absolute top-0 left-0 right-0 bottom-0 bg-trasperant"
+        className={`absolute top-0 left-0 right-0 bottom-0 bg-trasperant ${toggleModal ? "backdrop-blur-sm" : ""}`}
       ></div>
     </>
   );

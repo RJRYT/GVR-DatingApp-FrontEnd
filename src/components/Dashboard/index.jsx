@@ -22,7 +22,7 @@ function HomePage() {
 
   return (
     <>
-      <div className={`mx-auto ${isModalVisible ? "blur-sm" : ""}`}>
+      <div className='mx-auto'>
         <Interested />
       <Header isModalVisible={isModalVisible} toggleModal={toggleModal} />
         <Story />
