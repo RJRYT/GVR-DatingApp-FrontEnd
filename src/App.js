@@ -10,6 +10,7 @@ import DefaultPage from "./components/Default";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import DashboardLayout from "./components/Layout/Dashboard";
+import Matches from "./components/Matches";
 
 function App() {
   return (
@@ -23,6 +24,32 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route
+                  path="/dashboard/matches"
+                  element={<Matches title="Matches" />}
+                />
+                <Route
+                  path="/dashboard/matches/qualification"
+                  element={<Matches title="Qualification" />}
+                />
+                <Route
+                  path="/dashboard/matches/location"
+                  element={<Matches title="Location" />}
+                />
+                <Route
+                  path="/dashboard/matches/designation"
+                  element={<Matches title="Designation" />}
+                />
+                <Route
+                  path="/dashboard/matches/my"
+                  element={
+                    <Matches title="Viewed my profile" profileView={true} />
+                  }
+                />
+                <Route
+                  path="/dashboard/matches/upgrade"
+                  element={<Matches upgrade={true} />}
+                />
               </Route>
             </Route>
           </Routes>

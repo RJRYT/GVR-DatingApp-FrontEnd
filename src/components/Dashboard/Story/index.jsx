@@ -11,13 +11,19 @@ const images = [
   { src: Fabian, alt: "Fabian", label: "Fabian", isMyStory: false },
   { src: Clara, alt: "Clara", label: "Clara", isMyStory: false },
   { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
+  { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
+  { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
+  { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
+  { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
+  { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
+  { src: Ryan, alt: "Ryan", label: "Ryan", isMyStory: false },
 ];
 
 const Story = () => {
   return (
-    <div className="mt-1">
-      <div className="flex justify-center px-2 py-5">
-        <ul className="flex md:gap-4 max-md:gap-[1px]">
+    <div className="mt-1 xl:max-w-[768px]">
+      <div className="flex justify-start py-5 overflow-y-auto hide-scrollbar">
+        <ul className="flex gap-4 mx-2">
           {images.map((image, index) => (
             <li
               key={index}
@@ -26,12 +32,12 @@ const Story = () => {
               <div className="bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-500 rounded-full p-0.5">
                 <a
                   href="#"
-                  className="relative bg-white rounded-full block p-1"
+                  className="relative bg-white rounded-full block p-1 h-[80px] w-[80px] "
                 >
                   <img
                     src={image.src}
                     alt={image.alt}
-                    className="max-md:w-[60px] max-md:h-[60px] md:w-[80px] md:h-[80px] rounded-full object-cover"
+                    className="h-full w-full rounded-full object-cover"
                   />
                   {image.isMyStory && (
                     <button className="absolute bottom-0 right-0 bg-pink-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xl">

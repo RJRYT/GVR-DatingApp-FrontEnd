@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Interested = ({ isVisible, modelToggle }) => {
+  const navigate = useNavigate();
   const handleDatingClick = (e) => {
     e.preventDefault();
     modelToggle();
@@ -17,6 +19,7 @@ const Interested = ({ isVisible, modelToggle }) => {
           <button
             type="button"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
+            onClick={() => navigate("/dashboard")}
           >
             Dating
           </button>
