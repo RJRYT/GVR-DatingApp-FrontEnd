@@ -18,8 +18,10 @@ function HomePage() {
     <div className="mx-auto">
       <Header />
       <Story />
-      <Tab />
-      <ProfileGrid />
+      <div className="p-[25px]">
+        <Tab />
+        <ProfileGrid />
+      </div>
     </div>
   );
 }
