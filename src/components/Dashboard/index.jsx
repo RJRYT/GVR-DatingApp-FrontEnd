@@ -6,6 +6,7 @@ import Header from "./Header";
 import Story from "./Story";
 import Tab from "./Tab";
 import ProfileGrid from "./ProfileGrid";
+import Interested from "./Modal/Gender";
 import HeaderNav from "./Header/headerNav/HeaderNav";
 
 function HomePage() {
@@ -22,7 +23,8 @@ function HomePage() {
   return (
     <>
       <div className={`mx-auto ${isModalVisible ? "blur-sm" : ""}`}>
-        <Header isModalVisible={isModalVisible} toggleModal={toggleModal} />
+        <Interested />
+      <Header isModalVisible={isModalVisible} toggleModal={toggleModal} />
         <Story />
         <div className="p-[25px]">
           <Tab />
