@@ -4,7 +4,7 @@ const Tabs = () => {
   const [activeTab, setActiveTab] = useState("near by");
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-0">
+    <div className="mx-auto ">
       <div className="w-full  mx-auto">
         <div
           role="tablist"
