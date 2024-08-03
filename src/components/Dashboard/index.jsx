@@ -6,6 +6,7 @@ import Header from "./Header";
 import Story from "./Story";
 import Tab from "./Tab";
 import ProfileGrid from "./ProfileGrid";
+import Interested from "./Modal/Gender";
 
 function HomePage() {
   const { authState, loading } = useContext(AuthContext);
@@ -16,6 +17,7 @@ function HomePage() {
 
   return (
     <div className="mx-auto">
+      <Interested />
       <Header />
       <Story />
       <div className="p-[25px]">
