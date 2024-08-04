@@ -8,12 +8,17 @@ import Tab from "./Tab";
 import ProfileGrid from "./ProfileGrid";
 import Interested from "./Modal/Gender";
 import HeaderNav from "./Header/headerNav/HeaderNav";
+import NotificationsContainer from "./Notifications/NotificationContainer";
 
 function HomePage() {
   const { authState, loading } = useContext(AuthContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
+  };  
+  const toggleNotificationModal = () => {
+    setIsNotificationVisible(!isNotificationVisible);
   };
 
   if (loading) return <Loading />;
@@ -24,7 +29,7 @@ function HomePage() {
     <>
       <div className='mx-auto'>
         <Interested />
-      <Header isModalVisible={isModalVisible} toggleModal={toggleModal} />
+      <Header isModalVisible={isModalVisible} toggleModal={toggleModal} toggleNotificationModal={toggleNotificationModal} />
         <Story />
         <div className="p-[25px]">
           <Tab />
@@ -32,6 +37,7 @@ function HomePage() {
         </div>
       </div>
       {isModalVisible && <HeaderNav toggleModal={toggleModal} />}
+      {isNotificationVisible && <NotificationsContainer toggleNotificationModal={toggleNotificationModal} />}
     </>
   );
 }
