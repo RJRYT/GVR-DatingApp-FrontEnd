@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
                 />
               </Route>
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
