@@ -5,7 +5,7 @@ function Navbar() {
   return (
     <nav className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-46px)] xl:w-[728px] bg-white border-t border-gray-200 rounded-full shadow-lg">
       <div className="flex justify-around p-4">
-        <Link to="/contacts" className="text-gray-400">
+        <Link to="/dashboard" className="text-gray-400">
           <button className="p-1 mt-1 bg-fuchsia-200 rounded-full">
             <svg
               className="h-6 w-6 text-slate-100"
@@ -41,13 +41,13 @@ function Navbar() {
             </svg>
           </button>
         </Link>
-        <div className="">
+        <Link to="/dashboard/matches">
           <img
             className="h-15 w-12"
             src="https://i.postimg.cc/xCJN7cvX/Screenshot-2024-07-31-211552.png"
             alt=""
           />
-        </div>
+        </Link>
         <Link to="/colors" className="text-gray-400">
           <button className="p-2">
             <svg
