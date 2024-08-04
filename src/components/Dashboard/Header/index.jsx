@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Header = ({ toggleModal }) => {
+const Header = ({ toggleModal, toggleNotificationModal }) => {
   return (
     <div className="relative">
       <header className="flex items-center justify-between p-4 bg-white">
@@ -28,10 +28,15 @@ const Header = ({ toggleModal }) => {
           <div className="text-xl font-bold text-fuchsia-800">BuddyPair</div>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <a
-            href="#"
+        <div className="flex items-center space-x-3" >
+          {/* <a
+            href="#" onClick={notificationModal}
             className="h-10 w-10 rounded-full p-2 block border border-fuchsia-300"
+          > */}
+          <button
+            className="h-10 w-10 rounded-full p-2 block border border-fuchsia-300"
+            onClick={toggleNotificationModal}
+            aria-label="Toggle menu"
           >
             <svg
               className="text-fuchsia-800"
@@ -46,7 +51,8 @@ const Header = ({ toggleModal }) => {
               <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
               <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
             </svg>
-          </a>
+          {/* </a> */}
+          </button>
           <a href="#" className="bg-white rounded-full block p-1">
             <img
               src="https://i.imgur.com/sjLMNDM.png"
