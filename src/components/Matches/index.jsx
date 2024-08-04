@@ -3,6 +3,7 @@ import React from "react";
 import Topbar from "./Topbar";
 import Filter from "./Filter";
 import MatchGrid from "./MatchGrid";
+import Upgrade from "./Upgrade";
 
 const Matches = ({
   title = "",
@@ -25,9 +26,10 @@ const Matches = ({
           Your Matches <span className="text-pink-500">{views}</span>
         </div>
       )}
-      <main className="mt-8">
+      <section className="mt-8">
         <MatchGrid />
-      </main>
+        {upgrade && <Upgrade />}
+      </section>
     </div>
   );
 };
