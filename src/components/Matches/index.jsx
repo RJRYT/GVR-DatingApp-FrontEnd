@@ -3,6 +3,7 @@ import React from "react";
 import Topbar from "./Topbar";
 import Filter from "./Filter";
 import MatchGrid from "./MatchGrid";
+import Upgrade from "./Upgrade";
 
 const Matches = ({
   title = "",
@@ -27,6 +28,7 @@ const Matches = ({
       )}
       <section className="mt-8">
         <MatchGrid />
+        {upgrade && <Upgrade />}
       </section>
     </div>
   );
