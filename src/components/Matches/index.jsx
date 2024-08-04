@@ -25,9 +25,9 @@ const Matches = ({
           Your Matches <span className="text-pink-500">{views}</span>
         </div>
       )}
-      <main className="mt-8">
+      <section className="mt-8">
         <MatchGrid />
-      </main>
+      </section>
     </div>
   );
 };
