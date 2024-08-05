@@ -12,6 +12,7 @@ import Dashboard from "./components/Dashboard";
 import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
+import Discover from "./components/Discover";
 
 function App() {
   return (
@@ -52,7 +53,12 @@ function App() {
                   element={<Matches upgrade={true} />}
                 />
               </Route>
-            </Route>
+              <Route
+                  path="/dashboard/discover"
+                  element={<Discover  />}
+                />
+              </Route>
+          
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
