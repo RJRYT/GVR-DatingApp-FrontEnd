@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
-import Maps from '../../assets/Maps.png'
-import Clara from '../../assets/story/profile4.png'
-import User1 from '../../assets/User1.png'
+import Maps from '../../../assets/Maps.png'
+import Clara from '../../../assets/story/profile4.png'
+import User1 from '../../../assets/User1.png'
 
 const interests = [
     { name: 'Football', icon: '⚽️' },
@@ -28,7 +28,7 @@ const Interest = () => {
       setSelectedInterest(interestName);
     };
     return (
-        <div className="px-4 py-2 bg-white rounded-lg shadow-md">
+        <div className="px-4 py-2 bg-white rounded-lg shadow-md  h-screen overflow-hidden">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Interest</h2>
                 <button className="text-fuchsia-500">View all</button>
@@ -47,14 +47,14 @@ const Interest = () => {
         </div>
       ))}
     </div>
-            <div className="mt-4">
+            <div className="mt-4 ">
                 <div className="mb-4">
                     <h2 className="text-lg font-semibold">Around me</h2>
                     <p className="text-sm text-gray-500">People with <span className="text-fuchsia-500 font-medium">"Music"</span> interest around you</p>
                 </div>
-                <div className="relative overflow-hidden rounded-lg shadow-md h-96">
-                    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${Maps})`, height: '500px' }}></div>
-                    <div className="relative z-10 p-4 mt-10">
+                <div className="relative  flex-grow overflow-hidden rounded-lg shadow-md ">
+                    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${Maps})` }}></div>
+                    <div className="relative z-10 p-4 mt-10 h-full">
                         <div className="flex items-center  mt-10 left-1">
                             {peopleAroundMe.map((person, index) => (
                                 <div key={index} className="relative flex flex-col items-center ">

@@ -12,7 +12,7 @@ import Dashboard from "./components/Dashboard";
 import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
-import Discover from "./components/Discover";
+import DiscoverHeader from "./components/Dashboard/Discover";
 
 function App() {
   return (
@@ -26,6 +26,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route
+                  path="/dashboard/discover"
+                  element={<DiscoverHeader title="Discover" />}
+                />
                 <Route
                   path="/dashboard/matches"
                   element={<Matches title="Matches" />}
@@ -53,12 +57,7 @@ function App() {
                   element={<Matches upgrade={true} />}
                 />
               </Route>
-              <Route
-                  path="/dashboard/discover"
-                  element={<Discover  />}
-                />
-              </Route>
-          
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
