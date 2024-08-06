@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ isVisible, modelToggle }) => {
-
+  const navigate = useNavigate();
   const handleLoginClick = (e) => {
     e.preventDefault();
     modelToggle();
+    navigate("/dashboard");
   };
   if (!isVisible) return null;
   return (

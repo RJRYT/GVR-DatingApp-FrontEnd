@@ -1,9 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = ({ title = "" }) => {
+  const navigate = useNavigate();
+
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="flex items-center justify-between mt-4">
-      <button className="flex items-center rounded-full hover:border-black border p-2 text-black">
+      <button
+        onClick={goBack}
+        className="flex items-center rounded-full hover:border-black border p-2 text-black"
+      >
         <svg
           className="h-6 w-6"
           fill="none"
@@ -18,9 +28,11 @@ const Topbar = ({ title = "" }) => {
           />
         </svg>
       </button>
-      {title && (<div className="text-center">
-        <div className="text-2xl font-bold text-black">{title}</div>
-      </div>)}
+      {title && (
+        <div className="text-center">
+          <div className="text-2xl font-bold text-black">{title}</div>
+        </div>
+      )}
       <button className="flex items-center rounded-full hover:border-black border p-2 text-black">
         <svg
           className="h-6 w-6"

@@ -11,6 +11,8 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
+import NotFound from "./components/NotFound";
+import DiscoverHeader from "./components/Dashboard/Discover";
 import UserProfile from "./components/Dashboard/UserProfile";
 
 function App() {
@@ -25,6 +27,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route
+                  path="/dashboard/discover"
+                  element={<DiscoverHeader title="Discover" />}
+                />
                 <Route
                   path="/dashboard/matches"
                   element={<Matches title="Matches" />}
@@ -53,6 +59,7 @@ function App() {
                 />
               </Route>
             </Route>
+            <Route path="*" element={<NotFound />} />
             <Route path="/userprofile" element={<UserProfile/>}/>
           </Routes>
         </BrowserRouter>
