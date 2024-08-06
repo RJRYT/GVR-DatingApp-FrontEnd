@@ -1,19 +1,19 @@
 import React from "react";
+import { useNavigate} from "react-router-dom";
 
-function AccessDenied() {
+function NotFound() {
+    const navigate = useNavigate();
   return (
     <div className="flex items-center aldrich-regular justify-center h-svh bg-fuchsia-950">
       <div className="text-center">
-        <h1 className="text-6xl font-bold text-orange-200 mb-4">403</h1>
-        <h4 className="text-2xl text-white mb-2">Access Denied</h4>
-        <p className="text-lg text-white mb-6">
-          Sorry, You don't have access to this page
-        </p>
+        <h1 className="text-6xl font-bold text-orange-200 mb-4">404</h1>
+        <h4 className="text-2xl text-white mb-2">Ooops...</h4>
+        <p className="text-lg text-white mb-6">We cannot find this page</p>
         <button
           className="flex items-center mx-auto justify-center border-2 border-white text-white hover:text-slate-300 px-4 py-2 rounded"
-          onClick={() => window.history.back()}
+          onClick={() => navigate("/")}
         >
-          <span>Go back to previous page</span>
+          <span>Let's try something different</span>
           <svg
             className="w-6 h-6 ml-2"
             fill="none"
@@ -34,4 +34,4 @@ function AccessDenied() {
   );
 }
 
-export default AccessDenied;
+export default NotFound;
