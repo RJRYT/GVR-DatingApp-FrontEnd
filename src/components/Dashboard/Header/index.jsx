@@ -1,4 +1,5 @@
 import React from "react";
+import profile from '../../../assets/story/profile1.png'
 
 const Header = () => {
   return (
@@ -44,7 +45,7 @@ const Header = () => {
         </a>
         <a href="#" className="bg-white rounded-full block p-1">
           <img
-            src="https://i.imgur.com/sjLMNDM.png"
+            src={profile}
             alt="Profile"
             className="w-10 h-10 rounded-full"
           />
