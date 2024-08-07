@@ -28,7 +28,7 @@ const NotificationsContainer = ({toggleNotificationModal}) => {
 
   return (
 <>
-      <div className="absolute z-[100] top-[20px] right-4  p-6 rounded-lg text-white max-w-full w-full">
+      <div className="absolute z-20 top-[20px] p-6 rounded-lg text-white max-w-full w-full">
       {notifications.map((notification) => (
         <Notification
           key={notification.id}

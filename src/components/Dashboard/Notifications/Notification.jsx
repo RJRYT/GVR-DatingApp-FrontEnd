@@ -52,7 +52,11 @@ const Notification = ({ type, title, message, time, onClose  }) => {
 
   return (
     <div className={`rounded-[30px] shadow-lg p-7 ml-4 mr-4 mb-4 ${typeStyles[type]} bg-fuchsia-800 text-white relative`}>
+<<<<<<< HEAD
       <div class="flex flex-row ">
+=======
+      <div class="flex flex-row">
+>>>>>>> main
       <div class="flex-none">
         <Icon type={type} />
         </div>

@@ -25,7 +25,7 @@ function Navbar() {
             </svg>
           </button>
         </Link>
-        <Link to="/" className="text-purple-700">
+        <Link to="/dashboard/discover" className="text-purple-700">
           <button className="p-2">
             <svg
               className="h-6 w-6 text-fuchsia-200"

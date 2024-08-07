@@ -1,7 +1,4 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
-import AccessDenied from "../AccessDenied";
-import Loading from "../Loading";
+import React, { useState } from "react";
 import Header from "./Header";
 import Story from "./Story";
 import Tab from "./Tab";
@@ -11,7 +8,6 @@ import HeaderNav from "./Header/headerNav/HeaderNav";
 import NotificationsContainer from "./Notifications/NotificationContainer";
 
 function HomePage() {
-  const { authState, loading } = useContext(AuthContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const toggleModal = () => {
@@ -20,10 +16,6 @@ function HomePage() {
   const toggleNotificationModal = () => {
     setIsNotificationVisible(!isNotificationVisible);
   };
-
-  if (loading) return <Loading />;
-
-  //if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <>
