@@ -13,7 +13,10 @@ import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
 import DiscoverHeader from "./components/Dashboard/Discover";
-import UserProfile from "./components/Dashboard/UserProfile";
+// import UserProfile from "./components/Dashboard/UserProfile";
+ import ProfileSettings from "./components/UserProfile/Settings/ProfileSettings";
+ import PrivacySettings from "./components/UserProfile/Settings/PrivacySettings"
+
 
 function App() {
   return (
@@ -58,9 +61,17 @@ function App() {
                   element={<Matches upgrade={true} />}
                 />
               </Route>
+              <Route
+                path="/userProfile/settings"
+                element={<ProfileSettings  />}
+              />
+               <Route
+                path="/userProfile/account"
+                element={<PrivacySettings  />}
+              />
             </Route>
             <Route path="*" element={<NotFound />} />
-            <Route path="/userprofile" element={<UserProfile/>}/>
+            {/* <Route path="/userprofile" element={<UserProfile />} /> */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>
