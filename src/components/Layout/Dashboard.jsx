@@ -13,7 +13,7 @@ function DashboardLayout() {
   //if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
-    <div className="font-sans">
+    <div className="font-aldrich">
       <Outlet />
       <Navbar />
     </div>
