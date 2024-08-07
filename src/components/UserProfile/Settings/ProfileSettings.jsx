@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Profile from '../../../assets/profile/profilePic.png';
 
 const settingsOptions = [
-  { icon: <FaUser />, label: 'Account', description: 'Privacy, security, change number', path: '/userProfile/account' },
+  { icon: <FaUser />, label: 'Account', description: 'Privacy, security, change number', path: '/dashboard/userProfile/account' },
   { icon: <FaComments />, label: 'Chat', description: 'Chat history, theme, wallpapers', path: '/dashboard/userProfile/settings/chat' },
   { icon: <FaBell />, label: 'Notifications', description: 'Messages, group and others', path: '/dashboard/userProfile/settings/notifications' },
   { icon: <FaQuestionCircle />, label: 'Help', description: 'Help center, contact us, privacy policy', path: '/dashboard/userProfile/settings/help' },
@@ -17,7 +17,7 @@ const ProfileSettings = () => {
   return (
     <div className="items-center justify-center min-h-screen bg-fuchsia-950">
       <div className="flex p-6">      
-        <button className="rounded-full border border-white border-2 p-2 bg-[#DD88CF] ml-6">
+        <button className="rounded-full border border-white border-2 p-2 bg-[#DD88CF] ml-4">
           <FaSearch className="text-white" />
         </button>
         <h3 className="flex-1 text-center text-white text-2xl font-bold">Settings</h3>
@@ -38,7 +38,7 @@ const ProfileSettings = () => {
         </div>
         ))}
         
-        <div>
+        <div className='pb-24'>
           {settingsOptions.map((option, index) => (
             <Link to={option.path} key={index} className="flex items-center p-6 last:border-b-0 hover:bg-gray-100">
               <div className="text-xl text-gray-600">{option.icon}</div>
