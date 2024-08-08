@@ -14,7 +14,7 @@ import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
 import DiscoverHeader from "./components/Dashboard/Discover";
 import UserProfile from "./components/Dashboard/UserProfile";
-
+import Filter from "./components/Filter/Filter";
 function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -57,10 +57,12 @@ function App() {
                   path="/dashboard/matches/upgrade"
                   element={<Matches upgrade={true} />}
                 />
+                <Route path="/dashboard/filter" element={<Filter />} />
               </Route>
             </Route>
             <Route path="*" element={<NotFound />} />
-            <Route path="/userprofile" element={<UserProfile/>}/>
+            <Route path="/userprofile" element={<UserProfile />} />
+            
           </Routes>
         </BrowserRouter>
       </AuthProvider>
