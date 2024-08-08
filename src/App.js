@@ -16,6 +16,7 @@ import DiscoverHeader from "./components/Dashboard/Discover";
 // import UserProfile from "./components/Dashboard/UserProfile";
 import ProfileSettings from "./components/UserProfile/Settings/ProfileSettings";
 import PrivacySettings from "./components/UserProfile/Settings/PrivacySettings";
+import PrefrenencesSettings from "./components/UserProfile/Settings/PrefrenencesSettings";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
                 <Route
                   path="/dashboard/discover"
                   element={<DiscoverHeader />}
-                /> 
+                />
                 <Route
                   path="/dashboard/matches"
                   element={<Matches title="Matches" />}
@@ -66,6 +67,10 @@ function App() {
                 <Route
                   path="/dashboard/userprofile/account"
                   element={<PrivacySettings />}
+                />
+                <Route
+                  path="/dashboard/userprofile/preferences"
+                  element={<PrefrenencesSettings />}
                 />
               </Route>
             </Route>
