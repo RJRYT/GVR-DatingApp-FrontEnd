@@ -16,6 +16,7 @@ import DiscoverHeader from "./components/Dashboard/Discover";
 // import UserProfile from "./components/Dashboard/UserProfile";
 import ProfileSettings from "./components/UserProfile/Settings/ProfileSettings";
 import PrivacySettings from "./components/UserProfile/Settings/PrivacySettings";
+import ChangePassword from "./components/UserProfile/Settings/ChangePassword"
 
 function App() {
   return (
@@ -66,6 +67,10 @@ function App() {
                 <Route
                   path="/dashboard/userprofile/account"
                   element={<PrivacySettings />}
+                />
+                 <Route
+                  path="/dashboard/userprofile/changePassword"
+                  element={<ChangePassword />}
                 />
               </Route>
             </Route>
