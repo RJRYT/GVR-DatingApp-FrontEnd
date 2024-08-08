@@ -17,7 +17,7 @@ import DiscoverHeader from "./components/Dashboard/Discover";
 import ProfileSettings from "./components/UserProfile/Settings/ProfileSettings";
 import PrivacySettings from "./components/UserProfile/Settings/PrivacySettings";
 import PrefrenencesSettings from "./components/UserProfile/Settings/PrefrenencesSettings";
-
+import Filter from "./components/Filter/Filter";
 function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -72,6 +72,7 @@ function App() {
                   path="/dashboard/userprofile/preferences"
                   element={<PrefrenencesSettings />}
                 />
+                <Route path="/dashboard/filter" element={<Filter />} />
               </Route>
             </Route>
             <Route path="*" element={<NotFound />} />
