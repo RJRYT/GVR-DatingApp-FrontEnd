@@ -69,6 +69,7 @@ function App() {
               <Route path="/dashboard/@me/filter" element={<Filter />} />
               <Route path="/dashboard/@me/edit" element={<EditProfile />} />
               <Route path="/dashboard/story" element={<Stories />} />
+              <Route path="/dashboard/story/upgrade" element={<Stories upgrade={true} />} />
               <Route
                 path="/dashboard/@me/changepass"
                 element={<ChangePassword />}
