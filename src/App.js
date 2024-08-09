@@ -20,6 +20,7 @@ import ChangePassword from "./components/UserProfile/Edit/ChangePassword";
 import Prefrenences from "./components/UserProfile/Settings/Prefrenences";
 import Filter from "./components/UserProfile/Filter/Filter";
 import EditProfile from "./components/UserProfile/Edit/Profile";
+import Stories from "./components/UserProfile/Story/Story";
 function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -67,6 +68,7 @@ function App() {
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
               <Route path="/dashboard/@me/edit" element={<EditProfile />} />
+              <Route path="/dashboard/story" element={<Stories />} />
               <Route
                 path="/dashboard/@me/changepass"
                 element={<ChangePassword />}
