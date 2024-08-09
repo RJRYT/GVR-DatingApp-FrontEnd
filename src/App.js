@@ -16,6 +16,7 @@ import DiscoverHeader from "./components/Dashboard/Discover";
 // import UserProfile from "./components/Dashboard/UserProfile";
 import ProfileSettings from "./components/UserProfile/Settings/ProfileSettings";
 import PrivacySettings from "./components/UserProfile/Settings/PrivacySettings";
+import ChangePassword from "./components/UserProfile/Settings/ChangePassword"
 import PrefrenencesSettings from "./components/UserProfile/Settings/PrefrenencesSettings";
 import Filter from "./components/Filter/Filter";
 function App() {
@@ -67,6 +68,10 @@ function App() {
                 <Route
                   path="/dashboard/userprofile/account"
                   element={<PrivacySettings />}
+                />
+                 <Route
+                  path="/dashboard/userprofile/changePassword"
+                  element={<ChangePassword />}
                 />
                 <Route
                   path="/dashboard/userprofile/preferences"

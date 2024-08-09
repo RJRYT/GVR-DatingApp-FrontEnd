@@ -25,7 +25,7 @@ const PrivacySettings = () => {
       </div>
       <div className='flex px-6 py-2 border-b'>
       <label className='font-medium'>Password</label>
-      <Link to='' className='flex-1 text-right'><p className='text-blue-600 font-bold'> Change Password</p></Link>      
+      <Link to='/dashboard/userprofile/changePassword' className='flex-1 text-right'><p className='text-blue-600 font-bold'> Change Password</p></Link>      
       </div>
       <div className='flex px-6 pt-6 '>
       <label className='font-medium'>2-FA authentication</label>
@@ -57,20 +57,20 @@ const PrivacySettings = () => {
          
       </div>
       <div className=' px-6 pt-6'>
-      <label className='font-medium'>Last sign in</label>
-      <p className='  font-light py-6'>Today at 18:34,Safary 198.123.23.23</p>
+      <label className='font-semibold'>Last sign in</label>
+      <p className='  text-sm py-6'>Today at 18:34,Safary 198.123.23.23</p>
       
       </div>
       <div className=' px-6 pt-6 border-b'>
       <label className='font-medium'>Total active sessions(5)</label>
-      <p className='  font-light pt-6 pb-2'><span>DESKTOP_6TIG6EC</span>.Kyiv,ukraine</p>
-      <p className='font-light pb-2'>Chrome.Used right now</p>
+      <p className='  font-sm pt-6 pb-2'><span>DESKTOP_6TIG6EC</span>.Kyiv,ukraine</p>
+      <p className='text-sm pb-2'>Chrome.Used right now</p>
       
       </div>
       <div className=' px-6 pt-6 border-b'>
       
       <p className='  font-light pt-2 pb-2'><span>DESKTOP_6TIG6EC</span>.Kyiv,ukraine</p>
-      <p className='font-light pb-2'>Chrome.Used right now</p>      
+      <p className='text-sm pb-2'>Chrome.Used right now</p>      
       </div>
       <div className='p-6 flex pb-24'>
         <button className='bg-fuchsia-950 text-white p-2 rounded-md ml-auto'>+ Reset all active sessions</button>
