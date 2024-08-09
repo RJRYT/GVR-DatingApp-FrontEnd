@@ -70,6 +70,10 @@ function App() {
                   path="/dashboard/userprofile/account"
                   element={<PrivacySettings />}
                 />
+                <Route
+                  path="/dashboard/userprofile/changepassword"
+                  element={<ChangePassword />}
+                />
               </Route>
             </Route>
             <Route path="*" element={<NotFound />} />
