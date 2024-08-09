@@ -1,8 +1,8 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
-import Slider from "./Slider";
-import Select from "./Select";
-import Badge from "./Badge";
+import Slider from "../Components/Slider";
+import Select from "../Components/Select";
+import Badge from "../Components/Badge";
 import Navbar from "../../Dashboard/Navbar";
 
 const locations = ["Kochi", "Kollam", "Aluva"];

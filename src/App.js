@@ -16,9 +16,10 @@ import DiscoverHeader from "./components/Dashboard/Discover";
 // import UserProfile from "./components/Dashboard/UserProfile";
 import Profile from "./components/UserProfile/Settings/Profile";
 import Privacy from "./components/UserProfile/Settings/Privacy";
-import ChangePassword from "./components/UserProfile/Settings/ChangePassword";
+import ChangePassword from "./components/UserProfile/Edit/ChangePassword";
 import Prefrenences from "./components/UserProfile/Settings/Prefrenences";
-import Filter from "./components/UserProfile/Settings/Filter";
+import Filter from "./components/UserProfile/Filter/Filter";
+import EditProfile from "./components/UserProfile/Edit/Profile";
 function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -65,6 +66,7 @@ function App() {
               <Route path="/dashboard/@me/profile" element={<Profile />} />
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
+              <Route path="/dashboard/@me/edit" element={<EditProfile />} />
               <Route
                 path="/dashboard/@me/changepass"
                 element={<ChangePassword />}
