@@ -17,7 +17,7 @@ const PrivacySettings = () => {
         </button>
         <h3 className="flex-1 text-center text-white text-2xl font-bold"> Privacy & Settings</h3>
      </div>
-     <div className="bg-white rounded-t-3xl min-h-screen p-6 h-96 mt-4 ">
+     <div className="bg-white rounded-t-3xl min-h-screen p-6  mt-4 ">
       <div className='flex p-6'>
       <label className='font-medium'>Sign-in Email</label>
       <p className='flex-1 text-right '>johnsmith@gmail.com</p>

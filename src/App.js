@@ -19,6 +19,8 @@ import PrivacySettings from "./components/UserProfile/Settings/PrivacySettings";
 import PrefrenencesSettings from "./components/UserProfile/Settings/PrefrenencesSettings";
 import Filter from "./components/Filter/Filter";
 import ChangePassword from "./components/UserProfile/Settings/ChangePassword"
+import Subscription from "./components/UserProfile/Settings/Subscription";
+
 
 function App() {
   return (
@@ -73,6 +75,10 @@ function App() {
                 <Route
                   path="/dashboard/userprofile/changepassword"
                   element={<ChangePassword />}
+                />
+                <Route
+                  path="/dashboard/userprofile/subscription"
+                  element={<Subscription />}
                 />
               </Route>
             </Route>

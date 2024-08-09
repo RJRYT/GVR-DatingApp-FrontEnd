@@ -16,7 +16,7 @@ const ChangePassword = () => {
           Change Password
         </h3>
       </div>
-      <div className="bg-white rounded-t-3xl min-h-screen p-6 h-96 mt-4 font-sans">
+      <div className="bg-white rounded-t-3xl min-h-screen p-6 mt-4 font-sans">
         <div className="p-6">
           <p className="font-sm text-medium border-b pb-4 ">
             Feeling worried about your account been easily preyed on? Then
