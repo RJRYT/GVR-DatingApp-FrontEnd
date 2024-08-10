@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Header = ({ toggleModal, toggleNotificationModal }) => {
+const Header = ({ toggleModal, toggleNotificationModal,toggleProfileModal }) => {
   return (
     <div className="relative">
       <header className="flex items-center justify-between p-4 bg-white">
@@ -53,13 +53,13 @@ const Header = ({ toggleModal, toggleNotificationModal }) => {
             </svg>
           {/* </a> */}
           </button>
-          <a href="#" className="bg-white rounded-full block p-1">
-            <img
+          <button  aria-label="ToggleProfileMenu" className="bg-white rounded-full  p-2">
+            <img onClick={toggleProfileModal}
               src="https://i.imgur.com/sjLMNDM.png"
               alt="Profile"
               className="w-10 h-10 rounded-full"
             />
-          </a>
+          </button>
         </div>
       </header>
     </div>
