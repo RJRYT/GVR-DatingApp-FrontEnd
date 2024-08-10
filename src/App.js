@@ -22,7 +22,9 @@ import Filter from "./components/UserProfile/Filter/Filter";
 import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
 import Subscription from "./components/UserProfile/Settings/Subscription";
-
+import Reject from "./components/UserProfile/Pages/Reject";
+import Sent from "./components/UserProfile/Pages/Sent";
+import Received from "./components/UserProfile/Pages/Recived";
 
 function App() {
   return (
@@ -71,9 +73,15 @@ function App() {
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
               <Route path="/dashboard/@me/edit" element={<EditProfile />} />
-              <Route path="/dashboard/@me/subscription" element={<Subscription />} />
+              <Route
+                path="/dashboard/@me/subscription"
+                element={<Subscription />}
+              />
               <Route path="/dashboard/story" element={<Stories />} />
-              <Route path="/dashboard/story/upgrade" element={<Stories upgrade={true} />} />
+              <Route
+                path="/dashboard/story/upgrade"
+                element={<Stories upgrade={true} />}
+              />
               <Route
                 path="/dashboard/@me/changepass"
                 element={<ChangePassword />}
@@ -81,6 +89,28 @@ function App() {
               <Route
                 path="/dashboard/@me/preferences"
                 element={<Prefrenences />}
+              />
+              <Route path="/dashboard/@me/reject" element={<Reject />} />
+              <Route
+                path="/dashboard/@me/received"
+                element={<Received sidemenutitle={"Received"} />}
+              />
+              <Route path="/dashboard/@me/sent" element={<Sent />} />
+              <Route
+                path="/dashboard/@me/shortlist"
+                element={<Received sidemenutitle={"Shortlist"} />}
+              />
+              <Route
+                path="/dashboard/@me/contacted"
+                element={<Received sidemenutitle={"Contacted"} />}
+              />
+              <Route
+                path="/dashboard/@me/shortlisted-by"
+                element={<Received sidemenutitle={"Shortlisted By"} />}
+              />
+              <Route
+                path="/dashboard/@me/myprofile"
+                element={<Received sidemenutitle={"Viewed My Profile"} />}
               />
             </Route>
             <Route path="*" element={<NotFound />} />
