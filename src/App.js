@@ -14,10 +14,16 @@ import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
 import DiscoverHeader from "./components/Dashboard/Discover";
 // import UserProfile from "./components/Dashboard/UserProfile";
-import ProfileSettings from "./components/UserProfile/Settings/ProfileSettings";
-import PrivacySettings from "./components/UserProfile/Settings/PrivacySettings";
-import PrefrenencesSettings from "./components/UserProfile/Settings/PrefrenencesSettings";
-import Filter from "./components/Filter/Filter";
+import Profile from "./components/UserProfile/Settings/Profile";
+import Privacy from "./components/UserProfile/Settings/Privacy";
+import ChangePassword from "./components/UserProfile/Edit/ChangePassword";
+import Prefrenences from "./components/UserProfile/Settings/Prefrenences";
+import Filter from "./components/UserProfile/Filter/Filter";
+import EditProfile from "./components/UserProfile/Edit/Profile";
+import Stories from "./components/UserProfile/Story/Story";
+import Subscription from "./components/UserProfile/Settings/Subscription";
+
+
 function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -60,20 +66,22 @@ function App() {
                   path="/dashboard/matches/upgrade"
                   element={<Matches upgrade={true} />}
                 />
-                <Route
-                  path="/dashboard/userprofile/settings"
-                  element={<ProfileSettings />}
-                />
-                <Route
-                  path="/dashboard/userprofile/account"
-                  element={<PrivacySettings />}
-                />
-                <Route
-                  path="/dashboard/userprofile/preferences"
-                  element={<PrefrenencesSettings />}
-                />
-                <Route path="/dashboard/filter" element={<Filter />} />
               </Route>
+              <Route path="/dashboard/@me/profile" element={<Profile />} />
+              <Route path="/dashboard/@me/privacy" element={<Privacy />} />
+              <Route path="/dashboard/@me/filter" element={<Filter />} />
+              <Route path="/dashboard/@me/edit" element={<EditProfile />} />
+              <Route path="/dashboard/@me/subscription" element={<Subscription />} />
+              <Route path="/dashboard/story" element={<Stories />} />
+              <Route path="/dashboard/story/upgrade" element={<Stories upgrade={true} />} />
+              <Route
+                path="/dashboard/@me/changepass"
+                element={<ChangePassword />}
+              />
+              <Route
+                path="/dashboard/@me/preferences"
+                element={<Prefrenences />}
+              />
             </Route>
             <Route path="*" element={<NotFound />} />
             {/* <Route path="/userprofile" element={<UserProfile />} /> */}

@@ -22,7 +22,7 @@ const ProfileSettings = () => {
         </button>
         <h3 className="flex-1 text-center text-white text-2xl font-bold">Settings</h3>
       </div>
-      <div className="bg-white rounded-t-3xl min-h-screen p-6 h-96 mt-4">
+      <div className="bg-white rounded-t-3xl min-h-screen p-6  mt-4">
        { users.map((user)=>(
           <div className="flex items-center border-b-2 border-b-slate-200 pb-4">
           <div className="w-16 h-16 rounded-full overflow-hidden">
