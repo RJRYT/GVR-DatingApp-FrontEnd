@@ -25,6 +25,8 @@ import Subscription from "./components/UserProfile/Settings/Subscription";
 import Reject from "./components/UserProfile/Pages/Reject";
 import Sent from "./components/UserProfile/Pages/Sent";
 import Received from "./components/UserProfile/Pages/Recived";
+import Messages from "./components/UserProfile/Pages/Messages";
+import Accept from "./components/UserProfile/Pages/Accept";
 
 function App() {
   return (
@@ -91,6 +93,8 @@ function App() {
                 element={<Prefrenences />}
               />
               <Route path="/dashboard/@me/reject" element={<Reject />} />
+              <Route path="/dashboard/@me/messages" element={<Messages />} />
+              <Route path="/dashboard/@me/accept" element={<Accept />} />
               <Route
                 path="/dashboard/@me/received"
                 element={<Received sidemenutitle={"Received"} />}
