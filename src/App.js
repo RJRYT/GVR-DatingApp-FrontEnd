@@ -22,6 +22,7 @@ import Filter from "./components/UserProfile/Filter/Filter";
 import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
 import Subscription from "./components/UserProfile/Settings/Subscription";
+import CreateGroup from "./components/CreateGroup/CreateGroup";
 
 
 function App() {
@@ -81,6 +82,10 @@ function App() {
               <Route
                 path="/dashboard/@me/preferences"
                 element={<Prefrenences />}
+              />
+              <Route
+                path="/dashboard/@me/creategroup"
+                element={<CreateGroup/>}
               />
             </Route>
             <Route path="*" element={<NotFound />} />
