@@ -75,6 +75,7 @@ function App() {
               </Route>
               <Route path="/dashboard/groups" element={<GroupList />} />
               <Route path="/dashboard/userprofile" element={<UserProfile />} />
+              <Route path="/dashboard/userprofile/upgrade" element={<UserProfile upgrade={true} />} />
               <Route path="/dashboard/@me/profile" element={<Profile />} />
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
