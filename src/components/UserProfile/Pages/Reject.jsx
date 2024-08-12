@@ -84,8 +84,7 @@ const Reject = () => {
         {/* Horizontal Line at the Top Center */}
         <div className="absolute  left-1/2 transform -translate-x-1/2 w-full">
           <div
-            className="w-16 h-1 bg-gray-200 mx-auto mt-0"
-            style={{ borderRadius: "2px" }}
+            className="w-16 h-1 bg-gray-200 mx-auto mt-0 rounded-full"
           ></div>
         </div>
 

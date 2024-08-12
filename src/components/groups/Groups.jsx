@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../Dashboard/Navbar";
 import { CiSearch } from "react-icons/ci";
 import imgAfrin from "../../assets/profile/Afrin.png";
@@ -52,7 +53,9 @@ const Groups = () => {
           <span className="pt-6 pl-1 chakra-petch-semibold text-white text-2xl">
             BuddyPair
           </span>
-          <GoDot className="text-fuchsia-400 text-sm ml-[60%] mt-2  md:block md:text-base lg:text-xl lg:ml-[70%]" />
+          <Link to={"/dashboard/@me/creategroup"} className="text-fuchsia-400 text-sm ml-[60%] mt-2 md:block md:text-base lg:text-xl lg:ml-[70%]">
+            <GoDot />
+          </Link>
         </div>
         <div className="mt-0 ml-3 text-white">
           <FaArrowLeftLong />
@@ -80,24 +83,25 @@ const Groups = () => {
             <div>
               {Object.keys(groupedUsers).map((letter) => (
                 <div key={letter}>
-                  <ul className="list-none p-0 ">
+                  <ul className="list-none p-0">
                     {groupedUsers[letter].map((user) => (
                       <li
                         key={user.id}
                         className="flex items-center mb-5 relative"
                       >
-                        <CombinedProfile images={profilePictures} />
-                        <div>
-                          <span className="text-lg text-black font-semibold chakra-petch-medium ml-3">
+                        <div className="w-20 h-20">
+                          <CombinedProfile images={profilePictures} />
+                        </div>
+                        <div className="border-b ml-2 border-gray-300 pb-3 w-full flex items-center justify-center">
+                          <span className="text-lg text-black mr-auto font-semibold chakra-petch-medium">
                             {user.name}
                           </span>
 
-                          <div className="absolute right-0 top-1/2 transform -translate-y-1 flex space-x-4">
+                          <div className="flex gap-4 ml-auto">
                             <FaRegComment className="text-purple-900 cursor-pointer text-2xl" />
                             <LuPhoneCall className="text-gray-500 cursor-pointer text-2xl" />
                             <GoDeviceCameraVideo className="text-gray-500 cursor-pointer text-2xl" />
                           </div>
-                          <div className="absolute bottom-0 left-0 w-full border-b border-gray-300 mt-60 ml-24"></div>
                         </div>
                       </li>
                     ))}

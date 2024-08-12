@@ -18,7 +18,7 @@ const settingsOptions = [
     icon: <FaUser />,
     label: "Account",
     description: "Privacy, security, change number",
-    path: "/dashboard/userProfile/account",
+    path: "/dashboard/@me/privacy",
   },
   {
     icon: <FaComments />,
@@ -72,7 +72,10 @@ const ProfileSettings = () => {
             <div className="w-5 rounded-full md:w-10 lg:w-16 h-1 bg-gray-200 border-2"></div>
           </div>
           {users.map((user) => (
-            <div className="flex items-center border-b-2 border-b-slate-200 pb-4">
+            <Link
+              to={"/dashboard/@me"}
+              className="flex items-center border-b-2 border-b-slate-200 pb-4"
+            >
               <div className="w-16 h-16 rounded-full overflow-hidden">
                 <img
                   src={user.src}
@@ -89,7 +92,7 @@ const ProfileSettings = () => {
               <div>
                 <FaQrcode className="text-teal-500 text-xl" />
               </div>
-            </div>
+            </Link>
           ))}
 
           <div className="pb-24">
