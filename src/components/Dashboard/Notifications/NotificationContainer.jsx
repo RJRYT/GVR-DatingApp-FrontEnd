@@ -23,7 +23,7 @@ const NotificationsContainer = ({toggleNotificationModal}) => {
       toggleNotificationModal()
       console.log("no more notifications");
     }
-  }, [notifications,toggleNotificationModal]);
+  }, [notifications]);
 
 
   return (
