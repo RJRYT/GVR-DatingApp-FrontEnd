@@ -39,7 +39,6 @@ function App() {
         <ToastContainer newestOnTop={true} theme="colored" />
         <BrowserRouter>
           <Routes>
-          <Route path="/payment" element={<PayMethods/>}/>
             <Route path="/" element={<Layout />}>
               <Route path="/" element={<DefaultPage />} />
               <Route path="/login" element={<Login />} />
@@ -99,6 +98,7 @@ function App() {
                 path="/dashboard/@me/subscription"
                 element={<Subscription />}
               />
+              <Route path="/dashboard/@me/payment" element={<PayMethods />} />
               <Route
                 path="/dashboard/story/upgrade"
                 element={<Stories upgrade={true} />}
@@ -138,8 +138,6 @@ function App() {
               />
             </Route>
             <Route path="*" element={<NotFound />} />
-
-            
           </Routes>
         </BrowserRouter>
       </AuthProvider>
