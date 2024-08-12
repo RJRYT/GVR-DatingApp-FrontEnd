@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Dashboard/Navbar";
 import { CiSearch } from "react-icons/ci";
-import imgAfrin from "../../assets/reject/Afrin.png";
+import imgAfrin from "../../assets/profile/Afrin.png";
 import imgCatherine from "../../assets/story/profile1.png";
 import imgRyan from "../../assets/story/profile5.png";
 import imgSelena from "../../assets/story/profile2.png";

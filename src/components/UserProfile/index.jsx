@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import profilePicture from "../../../assets/profile/profilePic.png"; // Ensure correct path
+import profilePicture from "../../assets/profile/profilePic.png"; // Ensure correct path
 import { Link } from "react-router-dom";
-import MatchButton from "./MatchButton";
+import MatchButton from "./Components/MatchButton";
 
 // Sample user data
 const sampleUser = {
