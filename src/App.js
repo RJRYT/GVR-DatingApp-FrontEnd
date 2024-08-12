@@ -22,6 +22,7 @@ import Filter from "./components/UserProfile/Filter/Filter";
 import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
 import Subscription from "./components/UserProfile/Settings/Subscription";
+import AddCard from "./components/UserProfile/Settings/AddCard";
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
               <Route path="/dashboard/@me/filter" element={<Filter />} />
               <Route path="/dashboard/@me/edit" element={<EditProfile />} />
               <Route path="/dashboard/@me/subscription" element={<Subscription />} />
+              <Route path="/dashboard/@me/addcard" element={<AddCard />} />
               <Route path="/dashboard/story" element={<Stories />} />
               <Route path="/dashboard/story/upgrade" element={<Stories upgrade={true} />} />
               <Route
