@@ -60,9 +60,9 @@ const contacts = [
 
 const Accept = () => {
   return (
-    <div className="items-center justify-center min-h-screen bg-[#4b104d] rounded-t-3xl">
-      <div className="flex p-12">
-        <button className="  border bg-[#d887ca] w-14 h-14 rounded-full">
+    <div className="items-center justify-center min-h-screen bg-[#4b104d]">
+      <div className="flex p-6">
+        <button className="border bg-[#d887ca] w-14 h-14 rounded-full">
           <svg
             class="h-8 w-8 ml-3  text-stone-100"
             viewBox="0 0 24 24"
@@ -77,12 +77,16 @@ const Accept = () => {
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </button>
-        <h3 className=" flex-1 text-center mt-2 mr-14 text-3xl text-white font-medium">
+        <h3 className="flex-1 text-center mt-2 mr-14 text-3xl text-white font-medium">
           Accept
         </h3>
       </div>
       <div className="bg-white rounded-t-3xl min-h-screen p-4 h-96 mt-4">
-        <div className="border-2 rounded-sm bg-black mb-2 ml-60 w-12"></div>
+        <div className="absolute left-1/2 transform -translate-x-1/2 w-full">
+          <div
+            className="w-16 h-1 bg-gray-200 mx-auto mt-0 rounded-full"
+          ></div>
+        </div>
         <div className="p-4 w-full h-1000 overflow-auto touch-pan-y">
           {contacts.map((contact, index) => (
             <div

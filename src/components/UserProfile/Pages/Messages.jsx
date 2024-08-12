@@ -1,4 +1,5 @@
 import React from "react";
+import NavBar from "../../Dashboard/Navbar";
 
 const recentMatches = [
   {
@@ -82,10 +83,11 @@ const messages = [
 
 const Messages = () => {
   return (
-    <div className="bg-[#4b104d] rounded-t-3xl">
+    <div className="bg-[#4b104d]">
       <Header />
       <RecentMatches matches={recentMatches} />
       <MessageList messages={messages} />
+      <NavBar />
     </div>
   );
 };
@@ -116,8 +118,8 @@ const Header = () => (
 const RecentMatches = ({ matches }) => (
   <div className="mb-10">
     <h2 className="text-white text-xl  ml-10">Recent Matches</h2>
-    <div className="overflow-x-auto mt-4 scrollbar-hide">
-      <div className="flex space-x-10 items-center ml-12">
+    <div className="overflow-x-auto mt-4 hide-scrollbar">
+      <div className="flex gap-4 items-center ml-12">
         {matches.map((match, index) => (
           <div
             key={index}
@@ -176,7 +178,7 @@ const MessageList = ({ messages }) => (
         </div>
 
         {message.isNew && message.name !== "Amina Mina" && (
-          <span className="ml-2 w-4 h-4 bg-[#da6fde] rounded-full"></span>
+          <span className="w-4 h-4 bg-[#da6fde] rounded-full"></span>
         )}
       </div>
     ))}

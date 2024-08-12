@@ -43,10 +43,9 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
           style={{ backgroundImage: `url(${sampleUser.profilePicture})` }}
         >
-          {/* Back Arrow Button */}
           <button
             onClick={handleBackClick}
-            className="absolute top-4 left-4 bg-transparent p-2 rounded-full border border-gray-300 shadow-md text-gray-300 w-12 h-12"
+            className="absolute top-4 left-4 bg-transparent flex items-center justify-center rounded-full border border-gray-300 shadow-md text-gray-300 p-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -63,10 +62,15 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
               />
             </svg>
           </button>
-
-          {/* NearMeOutlined Icon with Blurred Background */}
-          <div className="absolute top-4 right-4 flex items-center p-2 rounded-3xl border border-gray-300 shadow-md text-gray-300 backdrop-blur-md bg-white bg-opacity-30 w-20 h-10">
-            {!OwnProfile && (
+          {OwnProfile ? (
+            <Link
+              to={"/dashboard/@me/edit"}
+              className="absolute top-4 right-4 flex items-center justify-center rounded-3xl border py-1 px-3 gap-1 border-gray-300 shadow-md text-gray-300 backdrop-blur-md bg-white bg-opacity-30"
+            >
+              <span className="text-gray-300 text-sm">Edit</span>
+            </Link>
+          ) : (
+            <div className="absolute top-4 right-4 flex items-center justify-center rounded-3xl border py-1 px-3 gap-1 border-gray-300 shadow-md text-gray-300 backdrop-blur-md bg-white bg-opacity-30">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 text-gray-300"
@@ -82,13 +86,11 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                   d="m5 11 14-6-6 14-2-6-6-2Z"
                 ></path>
               </svg>
-            )}
-            <span className="text-gray-300 text-sm pr-3">
-              {OwnProfile ? "Edit" : "2.5km"}
-            </span>
-          </div>
 
-          {/* User Information Overlay */}
+              <span className="text-gray-300 text-sm">2.5km</span>
+            </div>
+          )}
+
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
               {sampleUser.name}, {sampleUser.age}
@@ -102,7 +104,6 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
               <MatchButton />
             )}
           </div>
-
           {/* Combined Vertical Lines */}
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
             <div
@@ -118,7 +119,6 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
               }`}
             ></div>
           </div>
-
           {/* User Details Section */}
           <div className="absolute w-full h-full bg-white shadow-lg rounded-t-3xl">
             {/* Horizontal Line at the Top Center */}
@@ -151,7 +151,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
             </div>
           </div>
         </div>
-        {!UserProfile && (
+        {!OwnProfile && (
           <nav className="fixed bottom-4 z-12 left-1/2 transform -translate-x-1/2 w-[calc(100%-46px)] xl:w-[728px] bg-white border-t border-gray-200 rounded-full shadow-lg">
             <div className="flex justify-around p-4">
               <Link to="./" className="text-gray-400">

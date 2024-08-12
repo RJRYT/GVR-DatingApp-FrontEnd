@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import MyStory from "../../../assets/story/profile1.png";
 import Selena from "../../../assets/story/profile2.png";
 import Fabian from "../../../assets/story/profile3.png";
@@ -30,9 +31,9 @@ const Story = () => {
               className="relative flex flex-col items-center space-y-2 max-md:w-[80px]"
             >
               <div className="bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-500 rounded-full p-0.5">
-                <a
-                  href="#"
-                  className="relative bg-white rounded-full block p-1 h-[80px] w-[80px] "
+                <Link
+                  to={"/dashboard/story"}
+                  className="relative bg-white rounded-full block p-1 h-[80px] w-[80px]"
                 >
                   <img
                     src={image.src}
@@ -44,7 +45,7 @@ const Story = () => {
                       +
                     </button>
                   )}
-                </a>
+                </Link>
               </div>
               <a href="#">{image.label}</a>
             </li>

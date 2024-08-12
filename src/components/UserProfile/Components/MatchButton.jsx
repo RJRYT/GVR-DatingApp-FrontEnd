@@ -10,7 +10,7 @@ const MatchButton = ({ progress = 80, text = "Match" }) => {
 
   return (
     <div className="relative flex justify-center items-center">
-      <button className="relative flex items-center justify-between border-2 gap-2 border-fuchsia-600 rounded-full p-2 bg-fuchsia-900 shadow-md">
+      <button className="relative flex items-center justify-between border-2 gap-2 border-fuchsia-600 rounded-full py-1 px-2 bg-fuchsia-900 shadow-md">
         {/* Progress Circle */}
         <div className="relative flex items-center justify-center">
           <svg

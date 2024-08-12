@@ -22,7 +22,7 @@ import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
 import UserProfile from "./components/UserProfile";
 import Subscription from "./components/UserProfile/Pages/Subscription";
-import CreateGroup from "./components/CreateGroup/CreateGroup";
+import CreateGroup from "./components/groups/CreateGroup";
 import Reject from "./components/UserProfile/Pages/Reject";
 import Sent from "./components/UserProfile/Pages/Sent";
 import Received from "./components/UserProfile/Pages/Recived";
@@ -31,6 +31,7 @@ import Accept from "./components/UserProfile/Pages/Accept";
 import GroupList from "./components/groups/Groups";
 import AddCard from "./components/UserProfile/Settings/AddCard";
 import PayMethods from "./components/UserProfile/Pages/PayMethods";
+import AccessDenied from "./components/AccessDenied";
 
 function App() {
   return (
@@ -136,6 +137,7 @@ function App() {
                 path="/dashboard/@me/myprofile"
                 element={<Received sidemenutitle={"Viewed My Profile"} />}
               />
+              <Route path="/403" element={<AccessDenied />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
