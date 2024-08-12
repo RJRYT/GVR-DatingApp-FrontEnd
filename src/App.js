@@ -13,7 +13,6 @@ import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
 import DiscoverHeader from "./components/Dashboard/Discover";
-// import UserProfile from "./components/Dashboard/UserProfile";
 import Profile from "./components/UserProfile/Settings/Profile";
 import Privacy from "./components/UserProfile/Settings/Privacy";
 import ChangePassword from "./components/UserProfile/Edit/ChangePassword";
@@ -21,7 +20,7 @@ import Prefrenences from "./components/UserProfile/Settings/Prefrenences";
 import Filter from "./components/UserProfile/Filter/Filter";
 import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
-import Subscription from "./components/UserProfile/Settings/Subscription";
+import Subscription from "./components/UserProfile/Pages/Subscription";
 import Reject from "./components/UserProfile/Pages/Reject";
 import Sent from "./components/UserProfile/Pages/Sent";
 import Received from "./components/UserProfile/Pages/Recived";
@@ -118,7 +117,6 @@ function App() {
               />
             </Route>
             <Route path="*" element={<NotFound />} />
-            {/* <Route path="/userprofile" element={<UserProfile />} /> */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>
