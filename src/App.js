@@ -30,6 +30,7 @@ import Messages from "./components/UserProfile/Pages/Messages";
 import Accept from "./components/UserProfile/Pages/Accept";
 import GroupList from "./components/groups/Groups";
 import AddCard from "./components/UserProfile/Settings/AddCard";
+import PayMethods from "./components/UserProfile/Pages/PayMethods";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <ToastContainer newestOnTop={true} theme="colored" />
         <BrowserRouter>
           <Routes>
+          <Route path="/payment" element={<PayMethods/>}/>
             <Route path="/" element={<Layout />}>
               <Route path="/" element={<DefaultPage />} />
               <Route path="/login" element={<Login />} />
@@ -136,6 +138,8 @@ function App() {
               />
             </Route>
             <Route path="*" element={<NotFound />} />
+
+            
           </Routes>
         </BrowserRouter>
       </AuthProvider>
