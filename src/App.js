@@ -29,6 +29,7 @@ import Received from "./components/UserProfile/Pages/Recived";
 import Messages from "./components/UserProfile/Pages/Messages";
 import Accept from "./components/UserProfile/Pages/Accept";
 import GroupList from "./components/groups/Groups";
+import AddCard from "./components/UserProfile/Settings/AddCard";
 
 function App() {
   return (
@@ -75,11 +76,15 @@ function App() {
               </Route>
               <Route path="/dashboard/groups" element={<GroupList />} />
               <Route path="/dashboard/userprofile" element={<UserProfile />} />
-              <Route path="/dashboard/userprofile/upgrade" element={<UserProfile upgrade={true} />} />
+              <Route
+                path="/dashboard/userprofile/upgrade"
+                element={<UserProfile upgrade={true} />}
+              />
               <Route path="/dashboard/@me/profile" element={<Profile />} />
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
               <Route path="/dashboard/@me/edit" element={<EditProfile />} />
+              <Route path="/dashboard/@me/addcard" element={<AddCard />} />
               <Route path="/dashboard/story" element={<Stories />} />
               <Route path="/dashboard/@me/reject" element={<Reject />} />
               <Route path="/dashboard/@me/messages" element={<Messages />} />
