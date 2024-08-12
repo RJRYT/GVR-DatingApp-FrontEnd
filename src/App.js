@@ -30,6 +30,7 @@ import Messages from "./components/UserProfile/Pages/Messages";
 import Accept from "./components/UserProfile/Pages/Accept";
 import GroupList from "./components/groups/Groups";
 import AddCard from "./components/UserProfile/Settings/AddCard";
+import PayMethods from "./components/UserProfile/Pages/PayMethods";
 import AccessDenied from "./components/AccessDenied";
 
 function App() {
@@ -98,6 +99,7 @@ function App() {
                 path="/dashboard/@me/subscription"
                 element={<Subscription />}
               />
+              <Route path="/dashboard/@me/payment" element={<PayMethods />} />
               <Route
                 path="/dashboard/story/upgrade"
                 element={<Stories upgrade={true} />}
