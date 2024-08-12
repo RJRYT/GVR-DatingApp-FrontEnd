@@ -13,7 +13,6 @@ import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
 import DiscoverHeader from "./components/Dashboard/Discover";
-// import UserProfile from "./components/Dashboard/UserProfile";
 import Profile from "./components/UserProfile/Settings/Profile";
 import Privacy from "./components/UserProfile/Settings/Privacy";
 import ChangePassword from "./components/UserProfile/Edit/ChangePassword";
@@ -21,12 +20,15 @@ import Prefrenences from "./components/UserProfile/Settings/Prefrenences";
 import Filter from "./components/UserProfile/Filter/Filter";
 import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
-import Subscription from "./components/UserProfile/Settings/Subscription";
+import UserProfile from "./components/UserProfile";
+import Subscription from "./components/UserProfile/Pages/Subscription";
+import CreateGroup from "./components/CreateGroup/CreateGroup";
 import Reject from "./components/UserProfile/Pages/Reject";
 import Sent from "./components/UserProfile/Pages/Sent";
 import Received from "./components/UserProfile/Pages/Recived";
 import Messages from "./components/UserProfile/Pages/Messages";
 import Accept from "./components/UserProfile/Pages/Accept";
+import GroupList from "./components/groups/Groups";
 
 function App() {
   return (
@@ -42,7 +44,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route
                   path="/dashboard/discover"
-                  element={<DiscoverHeader />}
+                  element={<DiscoverHeader title="Discover" />}
                 />
                 <Route
                   path="/dashboard/matches"
@@ -71,15 +73,24 @@ function App() {
                   element={<Matches upgrade={true} />}
                 />
               </Route>
+              <Route path="/dashboard/groups" element={<GroupList />} />
+              <Route path="/dashboard/userprofile" element={<UserProfile />} />
               <Route path="/dashboard/@me/profile" element={<Profile />} />
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
               <Route path="/dashboard/@me/edit" element={<EditProfile />} />
+              <Route path="/dashboard/story" element={<Stories />} />
+              <Route path="/dashboard/@me/reject" element={<Reject />} />
+              <Route path="/dashboard/@me/messages" element={<Messages />} />
+              <Route path="/dashboard/@me/accept" element={<Accept />} />
+              <Route
+                path="/dashboard/@me"
+                element={<UserProfile OwnProfile={true} />}
+              />
               <Route
                 path="/dashboard/@me/subscription"
                 element={<Subscription />}
               />
-              <Route path="/dashboard/story" element={<Stories />} />
               <Route
                 path="/dashboard/story/upgrade"
                 element={<Stories upgrade={true} />}
@@ -92,9 +103,10 @@ function App() {
                 path="/dashboard/@me/preferences"
                 element={<Prefrenences />}
               />
-              <Route path="/dashboard/@me/reject" element={<Reject />} />
-              <Route path="/dashboard/@me/messages" element={<Messages />} />
-              <Route path="/dashboard/@me/accept" element={<Accept />} />
+              <Route
+                path="/dashboard/@me/creategroup"
+                element={<CreateGroup />}
+              />
               <Route
                 path="/dashboard/@me/received"
                 element={<Received sidemenutitle={"Received"} />}
@@ -118,7 +130,6 @@ function App() {
               />
             </Route>
             <Route path="*" element={<NotFound />} />
-            {/* <Route path="/userprofile" element={<UserProfile />} /> */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>

@@ -7,7 +7,7 @@ import imgAlice from "../../../assets/profile/Alice.png";
 import imgCatherine from "../../../assets/story/profile1.png";
 import imgRyan from "../../../assets/story/profile5.png";
 import imgSelena from "../../../assets/story/profile2.png";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { RiCloseLine } from "react-icons/ri";
 
 // Example user data with profile pictures
 const initialUsers = [
@@ -112,7 +112,7 @@ const Sent = () => {
                       </p>
                     </div>
                     <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex space-x-2">
-                      <CloseOutlinedIcon className="text-gray-500 cursor-pointer" />
+                      <RiCloseLine className="text-gray-500 cursor-pointer" />
                     </div>
                   </li>
                 ))}
