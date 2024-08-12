@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import ProfileCard from "./ProfileCard";
 
 // Import profile images
@@ -64,7 +65,9 @@ const ProfileGrid = () => {
   return (
     <div className="grid grid-cols-2 gap-4 mt-4">
       {profiles.map((profile, index) => (
-        <ProfileCard key={index} profile={profile} />
+        <Link key={index} to={"/dashboard/userprofile"}>
+          <ProfileCard profile={profile} />
+        </Link>
       ))}
     </div>
   );

@@ -48,7 +48,7 @@ function Navbar() {
             alt=""
           />
         </Link>
-        <Link to="/colors" className="text-gray-400">
+        <Link to="/dashboard/groups" className="text-gray-400">
           <button className="p-2">
             <svg
               className="h-6 w-6 text-fuchsia-200"
@@ -65,7 +65,7 @@ function Navbar() {
             </svg>
           </button>
         </Link>
-        <Link to="/contacts" className="text-gray-400">
+        <Link to="/dashboard/@me/messages" className="text-gray-400">
           <button className="p-2">
             <svg
               className="h-6 w-6 text-fuchsia-200"
