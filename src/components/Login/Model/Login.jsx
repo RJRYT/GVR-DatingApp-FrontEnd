@@ -18,7 +18,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
 
   const validateEmailOrNumber = (e) => {
     const { value } = e.target;
-    if (/^\d{10}$/.test(value)) {
+    if (/^[0-9]{10}$/.test(value)) {
       return setFormData((prevData) => ({
         ...prevData,
         email: "",
@@ -38,7 +38,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
       newErrors.email = "Email/Phone is required";
     } else if (
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
-      !/^\d{10}$/.test(formData.phoneNumber)
+      !/^[0-9]{10}$/.test(formData.phoneNumber)
     ) {
       newErrors.email = "Email/Phone is invalid";
     }
@@ -95,7 +95,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
                 }  rounded-lg focus:outline-none focus:ring-2`}
             />
             {errors.email && (
-              <span className="text-red-600 text-xs absolute translate-y-[40px] -translate-x-[400px]">
+              <span className="text-red-600 text-xs">
                 {errors.email}
               </span>
             )}
@@ -120,7 +120,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
                 }  rounded-lg focus:outline-none focus:ring-2`}
             />
             {errors.password && (
-              <span className="text-red-600 text-xs absolute translate-y-[40px] -translate-x-[400px]">
+              <span className="text-red-600 text-xs">
                 {errors.password}
               </span>
             )}
