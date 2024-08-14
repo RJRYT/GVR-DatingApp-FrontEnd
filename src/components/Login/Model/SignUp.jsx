@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
+import axiosInstance from "../../../Instance/Axios";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../../contexts/AuthContext";
 
-const SignUp = ({ isVisible, modelToggle }) => {
+const SignUp = ({ isVisible, modelToggle, setLoading }) => {
   const handleRegisterClick = (e) => {
     e.preventDefault();
     modelToggle("Personal");
