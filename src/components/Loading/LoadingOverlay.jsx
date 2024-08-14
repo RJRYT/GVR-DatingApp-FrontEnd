@@ -1,10 +1,10 @@
 import React from "react";
 
-function Loading() {
+function LoadingOverlay() {
   return (
-    <div className="flex items-center aldrich-regular justify-center h-svh bg-fuchsia-950">
-      <div className="text-center">
-        <h4 className="text-4xl text-white mb-2 flex">
+    <div className="fixed inset-0 z-[51] flex items-center justify-center bg-fuchsia-950 bg-opacity-50">
+      <div className="text-center w-full max-w-md">
+        <h4 className="text-4xl text-white mb-2 flex justify-center">
           <svg
             width="35"
             height="35"
@@ -22,4 +22,4 @@ function Loading() {
   );
 }
 
-export default Loading;
+export default LoadingOverlay;

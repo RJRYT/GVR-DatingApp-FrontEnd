@@ -1,43 +1,133 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import axiosInstance from "../../../Instance/Axios";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../../contexts/AuthContext";
 
-const Login = ({ isVisible, modelToggle }) => {
-  const navigate = useNavigate();
-  const handleLoginClick = (e) => {
-    e.preventDefault();
-    modelToggle();
-    navigate("/dashboard");
+const Login = ({ isVisible, modelToggle, setLoading }) => {
+  const { authState, checkAuthStatus, loading } = useContext(AuthContext);
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    phoneNumber: "",
+  });
+
+  useEffect(() => {
+    if (!loading && authState.isAuthenticated) modelToggle();
+  }, [loading, authState]);
+
+  const validateEmailOrNumber = (e) => {
+    const { value } = e.target;
+    if (/^\d{10}$/.test(value)) {
+      return setFormData((prevData) => ({
+        ...prevData,
+        email: "",
+        phoneNumber: value,
+      }));
+    }
+    return setFormData((prevData) => ({
+      ...prevData,
+      email: value,
+      phoneNumber: "",
+    }));
   };
+
+  const validateInputs = () => {
+    const newErrors = {};
+    if (!formData.email && !formData.phoneNumber) {
+      newErrors.email = "Email/Phone is required";
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
+      !/^\d{10}$/.test(formData.phoneNumber)
+    ) {
+      newErrors.email = "Email/Phone is invalid";
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleLoginSubmit = async(e) => {
+    e.preventDefault();
+    if (validateInputs()) {
+      setLoading(true);
+      try {
+        await axiosInstance.post("/auth/email/login", formData);
+        checkAuthStatus();
+        toast.success("Login Success");
+        modelToggle();
+      } catch (err) {
+        console.error(err);
+        toast.error(
+          err.response?.data.message || "Something Broken..! Try again later"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   if (!isVisible) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-6">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-        <form className="space-y-4">
+        <form className="space-y-4" noValidate onSubmit={handleLoginSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${errors.email ? "text-red-600" : "text-gray-700"} `}
+            >
               Email/Mobile
             </label>
             <input
               type="text"
               placeholder="Email Address/Mobile"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+              value={formData.email || formData.phoneNumber}
+              onChange={validateEmailOrNumber}
+              className={`w-full p-2 border ${errors.email ? "border-red-600 focus:ring-red-700 placeholder-red-700 text-red-700" : "border-gray-300 focus:ring-gray-400"
+                }  rounded-lg focus:outline-none focus:ring-2`}
             />
+            {errors.email && (
+              <span className="text-red-600 text-xs absolute translate-y-[40px] -translate-x-[400px]">
+                {errors.email}
+              </span>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${errors.password ? "text-red-600" : "text-gray-700"} `}
+            >
               Password
             </label>
             <input
               type="password"
               placeholder="Password"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+              value={formData.password}
+              onChange={(e) => {
+                setFormData((prevData) => ({
+                  ...prevData,
+                  password: e.target.value,
+                }));
+              }}
+              className={`w-full p-2 border ${errors.password ? "border-red-600 focus:ring-red-700 placeholder-red-700 text-red-700" : "border-gray-300 focus:ring-gray-400"
+                }  rounded-lg focus:outline-none focus:ring-2`}
             />
+            {errors.password && (
+              <span className="text-red-600 text-xs absolute translate-y-[40px] -translate-x-[400px]">
+                {errors.password}
+              </span>
+            )}
           </div>
           <button
-            type="button"
+            type="submit"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
-            onClick={handleLoginClick}
           >
             Login
           </button>
@@ -46,7 +136,12 @@ const Login = ({ isVisible, modelToggle }) => {
           </div>
           <div className="mt-5 text-sm text-gray-600">
             Don't have an account?{" "}
-            <button onClick={()=>{modelToggle("Signup");}} className="text-pink-500">
+            <button
+              onClick={() => {
+                modelToggle("Signup");
+              }}
+              className="text-pink-500"
+            >
               Sign Up
             </button>
           </div>
