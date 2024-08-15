@@ -77,13 +77,15 @@ function Login() {
   const fetchRegistrationStatus = useCallback(async () => {
     try {
       const res = await axiosInstance.get("/users/status/registration");
-      setCompletedSteps(res.data);
-      if (
-        res.data.personalInfoSubmitted &&
-        res.data.professionalInfoSubmitted &&
-        res.data.purposeSubmitted
-      ) {
-        navigate("/dashboard");
+      if (res.data.success) {
+        setCompletedSteps(res.data);
+        if (
+          res.data.personalInfoSubmitted &&
+          res.data.professionalInfoSubmitted &&
+          res.data.purposeSubmitted
+        ) {
+          navigate("/dashboard");
+        }
       }
     } catch (err) {
       console.error(err);

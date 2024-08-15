@@ -90,10 +90,15 @@ const SignUp = ({ isVisible, modelToggle, setLoading }) => {
       setErrors({});
       setLoading(true);
       try {
-        await axiosInstance.post("/auth/number/sendotp", {
+        const res = await axiosInstance.post("/auth/number/sendotp", {
           phoneNumber: formData.phoneNumber,
         });
-        setIsOtpSent(true);
+        if (res.data.success) {
+          setIsOtpSent(true);
+          toast.success("OTP is sended to the given number.");
+        } else {
+          toast.error(res.data.message);
+        }
       } catch (err) {
         console.error(err);
         toast.error(
@@ -119,10 +124,14 @@ const SignUp = ({ isVisible, modelToggle, setLoading }) => {
     if (validateForm()) {
       setLoading(true);
       try {
-        await axiosInstance.post("/auth/email/register", formData);
-        checkAuthStatus();
-        modelToggle("Personal");
-        toast.success("Registration Success");
+        const res = await axiosInstance.post("/auth/email/register", formData);
+        if(res.data.success){
+          checkAuthStatus();
+          modelToggle("Personal");
+          toast.success("Registration Success");
+        }else{
+          toast.error(res.data.message);
+        }
       } catch (err) {
         console.error(err);
         toast.error(

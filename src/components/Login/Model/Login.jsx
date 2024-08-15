@@ -53,15 +53,19 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLoginSubmit = async(e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (validateInputs()) {
       setLoading(true);
       try {
-        await axiosInstance.post("/auth/email/login", formData);
-        checkAuthStatus();
-        toast.success("Login Success");
-        modelToggle();
+        const res = await axiosInstance.post("/auth/email/login", formData);
+        if (res.data.success) {
+          checkAuthStatus();
+          toast.success("Login Success");
+          modelToggle();
+        } else {
+          toast.error(res.data.message);
+        }
       } catch (err) {
         console.error(err);
         toast.error(

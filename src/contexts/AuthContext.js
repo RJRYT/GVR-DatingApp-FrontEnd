@@ -14,7 +14,8 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = useCallback(async () => {
     try {
       const response = await axiosInstance.get("/users/me");
-      setAuthState({ isAuthenticated: true, user: response.data });
+      if (response.data.success) setAuthState({ isAuthenticated: true, user: response.data.user });
+      else setAuthState({ isAuthenticated: false, user: null });
     } catch (error) {
       setAuthState({ isAuthenticated: false, user: null });
     } finally {
