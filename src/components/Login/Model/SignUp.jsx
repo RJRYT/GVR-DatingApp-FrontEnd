@@ -119,10 +119,6 @@ const SignUp = ({ isVisible, modelToggle, setLoading }) => {
     if (validateForm()) {
       setLoading(true);
       try {
-        await axiosInstance.post("/auth/number/verifyotp", {
-          phoneNumber: formData.phoneNumber,
-          otp: formData.otp,
-        });
         await axiosInstance.post("/auth/email/register", formData);
         checkAuthStatus();
         modelToggle("Personal");

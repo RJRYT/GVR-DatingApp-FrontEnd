@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Instance/Axios";
 import { AuthContext } from "../../contexts/AuthContext";
-import { toast } from "react-toastify";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
 
@@ -91,7 +90,7 @@ function Login() {
     } finally {
       setPageLoading(false);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (!loading && authState.isAuthenticated) {
