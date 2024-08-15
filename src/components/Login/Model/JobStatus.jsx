@@ -1,22 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
 
-const JobStatus = ({ isVisible, modelToggle }) => {
+const JobStatus = ({ isVisible, modelToggle, setLoading, setProfessionType }) => {
   const [jobRole, setJobRole] = useState("");
+  const [error, setError] = useState("");
+  const { authState, loading } = useContext(AuthContext);
 
-  if (!isVisible) return null;
+  useEffect(() => {
+    //if (!loading && !authState.isAuthenticated) modelToggle();
+  }, [loading, authState]);
 
-  const handleClick = (e) => {
+  const handleFormSubmit = (e) => {
+    setError("");
     e.preventDefault();
+    setProfessionType(jobRole);
     if (jobRole === "employee" || jobRole === "employer") {
       modelToggle("JobDetails1");
     } else if (jobRole === "jobSeeker") modelToggle("JobDetails2");
+    else setError("Choose a option to continue");
   };
+
+  if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">Job Status</h2>
-        <form className="space-y-4">
+        <form className="space-y-4" noValidate onSubmit={handleFormSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               <input
@@ -52,11 +62,15 @@ const JobStatus = ({ isVisible, modelToggle }) => {
               />
               Job Seeker
             </label>
+            {error && (
+              <span className="text-red-600 text-xs">
+                {error}
+              </span>
+            )}
           </div>
           <button
-            type="button"
+            type="submit"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
-            onClick={handleClick}
           >
             Next
           </button>

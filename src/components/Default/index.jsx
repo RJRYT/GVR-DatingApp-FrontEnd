@@ -13,13 +13,14 @@ function DefaultPage() {
   const fetchRegistrationStatus = useCallback(async () => {
     try {
       const res = await axiosInstance.get("/users/status/registration");
-      if (
+      if (!res.data.success) navigate("/login");
+      else if (
         res.data.personalInfoSubmitted &&
         res.data.professionalInfoSubmitted &&
         res.data.purposeSubmitted
       ) {
         navigate("/dashboard");
-      }else navigate("/login");
+      } else navigate("/login");
     } catch (err) {
       console.error(err);
     }
@@ -28,7 +29,7 @@ function DefaultPage() {
   useEffect(() => {
     if (!loading && authState.isAuthenticated) {
       fetchRegistrationStatus();
-    }else if(!loading) navigate("/login");
+    } else if (!loading) navigate("/login");
   }, [fetchRegistrationStatus, loading, authState, navigate]);
 
   if (loading) return <Loading />;
