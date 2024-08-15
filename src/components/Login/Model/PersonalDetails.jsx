@@ -39,7 +39,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
   });
 
   useEffect(() => {
-    //if (!loading && !authState.isAuthenticated) modelToggle();
+    if (!loading && !authState.isAuthenticated) modelToggle();
   }, [loading, authState]);
 
   const validateForm = () => {

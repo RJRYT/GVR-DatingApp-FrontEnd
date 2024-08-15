@@ -19,9 +19,10 @@ import ModelRelationShip from "./Model/RelationshipGoals";
 import ModelInterested from "./Model/Interested";
 
 function Login() {
-  const { authState, loading } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { authState, loading } = useContext(AuthContext);
   const [pageLoading, setPageLoading] = useState(false);
+  const [professionType, setProfessionType] = useState("");
   const [completedSteps, setCompletedSteps] = useState({
     personalInfoSubmitted: false,
     professionalInfoSubmitted: false,
@@ -162,16 +163,19 @@ function Login() {
           isVisible={modelShown.JobStatus}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
+          setProfessionType={setProfessionType}
         />
         <ModelJobDetails1
           isVisible={modelShown.JobDetails1}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
+          professionType={professionType}
         />
         <ModelJobDetails2
           isVisible={modelShown.JobDetails2}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
+          professionType={professionType}
         />
         <ModelRelationShip
           isVisible={modelShown.RelationShip}
