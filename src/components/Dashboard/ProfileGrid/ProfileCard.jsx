@@ -34,7 +34,7 @@ const ProfileCard = ({ profile }) => {
       {/* Interaction Icons */}
 
       <div
-        class="absolute bottom-0 top-[50%] mt-[-70px] right-0  bg-transparent h-[150px] w-[60px] flex justify-center bg-center gap-2 bg-no-repeat items-center flex-col"
+        className="absolute bottom-0 top-[50%] mt-[-70px] right-0  bg-transparent h-[150px] w-[60px] flex justify-center bg-center gap-2 bg-no-repeat items-center flex-col"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <button className=" flex-col items-center justify-center">
