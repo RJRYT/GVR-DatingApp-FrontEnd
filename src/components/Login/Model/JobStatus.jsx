@@ -7,7 +7,7 @@ const JobStatus = ({ isVisible, modelToggle, setLoading, setProfessionType }) =>
   const { authState, loading } = useContext(AuthContext);
 
   useEffect(() => {
-    //if (!loading && !authState.isAuthenticated) modelToggle();
+    if (!loading && !authState.isAuthenticated) modelToggle();
   }, [loading, authState]);
 
   const handleFormSubmit = (e) => {

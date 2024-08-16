@@ -24,11 +24,6 @@ function Login() {
   const { authState, checkAuthStatus, loading } = useContext(AuthContext);
   const [pageLoading, setPageLoading] = useState(false);
   const [professionType, setProfessionType] = useState("");
-  const [completedSteps, setCompletedSteps] = useState({
-    personalInfoSubmitted: false,
-    professionalInfoSubmitted: false,
-    purposeSubmitted: false,
-  });
   const [modelShown, setModelShown] = useState({
     Login: false,
     Signup: false,
@@ -59,41 +54,37 @@ function Login() {
       window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/google/login`;
       return;
     }
-    setPageLoading(true);
-    fetchRegistrationStatus();
+    checkRegistrationStatus();
     toast.success("You are already loggined. Proceed to next step...");
   };
 
   const handleLoginClick = () => {
     if (!authState.isAuthenticated) return ToggleModel("Login");
-    setPageLoading(true);
-    fetchRegistrationStatus();
+    checkRegistrationStatus();
     toast.success("You are already loggined. Proceed to next step...");
   };
 
   const handleSignUpClick = () => {
     if (!authState.isAuthenticated) return ToggleModel("Signup");
-    setPageLoading(true);
-    fetchRegistrationStatus();
+    checkRegistrationStatus();
     toast.success("You are already loggined. Proceed to next step...");
   };
 
-  const fetchRegistrationStatus = useCallback(async () => {
+  const checkRegistrationStatus = useCallback(async () => {
+    setPageLoading(true);
     try {
-      const res = await axiosInstance.get("/users/status/registration");
-      if (res.data.success) {
-        setCompletedSteps(res.data);
+      if (!loading && authState.isAuthenticated) {
         if (
-          res.data.personalInfoSubmitted &&
-          res.data.professionalInfoSubmitted &&
-          res.data.purposeSubmitted
+          authState.user.personalInfoSubmitted &&
+          authState.user.professionalInfoSubmitted &&
+          authState.user.purposeSubmitted
         ) {
           return navigate("/dashboard");
         }
-        if (!res.data.personalInfoSubmitted) return ToggleModel("Personal");
-        if (!res.data.professionalInfoSubmitted)
+        if (!authState.user.personalInfoSubmitted) return ToggleModel("Personal");
+        if (!authState.user.professionalInfoSubmitted)
           return ToggleModel("JobStatus");
-        if (!res.data.purposeSubmitted) return ToggleModel("RelationShip");
+        if (!authState.user.purposeSubmitted) return ToggleModel("RelationShip");
       }
     } catch (err) {
       console.error(err);
@@ -107,17 +98,13 @@ function Login() {
     const token = urlParams.get("token");
     if (token) {
       checkAuthStatus();
-      setPageLoading(true);
-      fetchRegistrationStatus();
+      checkRegistrationStatus();
     }
   }, []);
 
   useEffect(() => {
-    if (!loading && authState.isAuthenticated) {
-      setPageLoading(true);
-      fetchRegistrationStatus();
-    }
-  }, [fetchRegistrationStatus, loading, authState]);
+    if (!loading && authState.isAuthenticated) checkRegistrationStatus();
+  }, [loading, authState]);
 
   if (loading) return <Loading />;
 
