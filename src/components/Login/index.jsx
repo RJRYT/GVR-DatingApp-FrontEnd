@@ -4,6 +4,7 @@ import axiosInstance from "../../Instance/Axios";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
+import { toast } from "react-toastify";
 
 import Phone from "../../assets/login/phone.png";
 import Google from "../../assets/login/google.png";
@@ -20,7 +21,7 @@ import ModelInterested from "./Model/Interested";
 
 function Login() {
   const navigate = useNavigate();
-  const { authState, loading } = useContext(AuthContext);
+  const { authState, checkAuthStatus, loading } = useContext(AuthContext);
   const [pageLoading, setPageLoading] = useState(false);
   const [professionType, setProfessionType] = useState("");
   const [completedSteps, setCompletedSteps] = useState({
@@ -58,21 +59,23 @@ function Login() {
       window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/google/login`;
       return;
     }
-    //return navigate("/dashboard");
+    setPageLoading(true);
+    fetchRegistrationStatus();
+    toast.success("You are already loggined. Proceed to next step...");
   };
 
   const handleLoginClick = () => {
     if (!authState.isAuthenticated) return ToggleModel("Login");
-    if (!completedSteps.personalInfoSubmitted) return ToggleModel("Personal");
-    if (!completedSteps.professionalInfoSubmitted)
-      return ToggleModel("JobStatus");
-    if (!completedSteps.purposeSubmitted) return ToggleModel("RelationShip");
-    //return navigate("/dashboard");
+    setPageLoading(true);
+    fetchRegistrationStatus();
+    toast.success("You are already loggined. Proceed to next step...");
   };
 
   const handleSignUpClick = () => {
     if (!authState.isAuthenticated) return ToggleModel("Signup");
-    //return navigate("/dashboard");
+    setPageLoading(true);
+    fetchRegistrationStatus();
+    toast.success("You are already loggined. Proceed to next step...");
   };
 
   const fetchRegistrationStatus = useCallback(async () => {
@@ -85,8 +88,12 @@ function Login() {
           res.data.professionalInfoSubmitted &&
           res.data.purposeSubmitted
         ) {
-          navigate("/dashboard");
+          return navigate("/dashboard");
         }
+        if (!res.data.personalInfoSubmitted) return ToggleModel("Personal");
+        if (!res.data.professionalInfoSubmitted)
+          return ToggleModel("JobStatus");
+        if (!res.data.purposeSubmitted) return ToggleModel("RelationShip");
       }
     } catch (err) {
       console.error(err);
@@ -94,6 +101,16 @@ function Login() {
       setPageLoading(false);
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      checkAuthStatus();
+      setPageLoading(true);
+      fetchRegistrationStatus();
+    }
+  }, []);
 
   useEffect(() => {
     if (!loading && authState.isAuthenticated) {
@@ -144,49 +161,49 @@ function Login() {
             Sign Up
           </button>
         </div>
-        <ModelLogin
+        {modelShown.Login && (<ModelLogin
           isVisible={modelShown.Login}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
-        />
-        <ModelSignUp
+        />)}
+        {modelShown.Signup && (<ModelSignUp
           isVisible={modelShown.Signup}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
-        />
-        <ModelPersonal
+        />)}
+        {modelShown.Personal && (<ModelPersonal
           isVisible={modelShown.Personal}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
-        />
-        <ModelJobStatus
+        />)}
+        {modelShown.JobStatus && (<ModelJobStatus
           isVisible={modelShown.JobStatus}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
           setProfessionType={setProfessionType}
-        />
-        <ModelJobDetails1
+        />)}
+        {modelShown.JobDetails1 && (<ModelJobDetails1
           isVisible={modelShown.JobDetails1}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
           professionType={professionType}
-        />
-        <ModelJobDetails2
+        />)}
+        {modelShown.JobDetails2 && (<ModelJobDetails2
           isVisible={modelShown.JobDetails2}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
           professionType={professionType}
-        />
-        <ModelRelationShip
+        />)}
+        {modelShown.RelationShip && (<ModelRelationShip
           isVisible={modelShown.RelationShip}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
-        />
-        <ModelInterested
+        />)}
+        {modelShown.Intersted && (<ModelInterested
           isVisible={modelShown.Intersted}
           modelToggle={ToggleModel}
           setLoading={setPageLoading}
-        />
+        />)}
       </div>
     </>
   );
