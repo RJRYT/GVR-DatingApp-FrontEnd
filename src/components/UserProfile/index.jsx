@@ -1,19 +1,20 @@
-import React, { useState } from "react";
-import profilePicture from "../../assets/profile/profilePic.png"; // Ensure correct path
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
+import Loading from "../Loading";
+import AccessDenied from "../AccessDenied";
+import profilePicture from "../../assets/profile/profilePic.png"; 
 import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
 
-// Sample user data
 const sampleUser = {
-  profilePicture, // Correctly use the imported image
+  profilePicture, 
   name: "Alfredo Calzoni",
   age: "20",
   location: "Hamburg, Germany",
   about: `A good listener. I love having a good talk to know each other's side.`,
 };
 
-// Sample interests list with emojis
 const interests = [
   { text: "Nature", emoji: "🌳" },
   { text: "Travel", emoji: "🌍" },
@@ -23,25 +24,30 @@ const interests = [
 ];
 
 const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
-  const [activeLine, setActiveLine] = useState(1); // State to manage active line
+  const [activeLine, setActiveLine] = useState(1); 
+  const navigate = useNavigate();
+  const { authState, loading } = useContext(AuthContext);
 
+  
   const handleLineClick = (lineNumber) => {
-    setActiveLine(lineNumber); // Set active line based on the clicked line
+    setActiveLine(lineNumber); 
   };
-
+  
   const handleBackClick = () => {
-    // Example action: Navigate back or perform another action
-    window.history.back(); // This will navigate to the previous page
+    window.history.back(); 
   };
+  
+  if (loading) return <Loading />;
+
+  if(!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <>
       {upgrade && <Upgrade />}
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
-        {/* Profile Picture Section */}
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${sampleUser.profilePicture})` }}
+          style={{ backgroundImage: `url(${OwnProfile && authState.user ? authState.user.profilepic : sampleUser.profilePicture})` }}
         >
           <button
             onClick={handleBackClick}
@@ -93,10 +99,10 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
 
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
-              {sampleUser.name}, {sampleUser.age}
+              {authState.user.name}, {authState.user.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
-              {sampleUser.location}
+              {authState.user.location}
             </p>
             {OwnProfile ? (
               <MatchButton progress={75} text="Profile Complete" />
@@ -138,13 +144,22 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                 Interest
               </h4>
               <div className="flex flex-wrap gap-2 mb-2">
-                {interests.map((interest, index) => (
+                {authState.user.interests.map((interest, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"
                   >
-                    <span className="mr-2 text-xl">{interest.emoji}</span>
-                    {interest.text}
+                    {/* <span className="mr-2 text-xl">{interest.emoji}</span> */}
+                    {interest.label}
+                  </div>
+                ))}
+                {authState.user.hobbies.map((hobbie, index) => (
+                  <div
+                    key={index}
+                    className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"
+                  >
+                    {/* <span className="mr-2 text-xl">{hobbie.emoji}</span> */}
+                    {hobbie.label}
                   </div>
                 ))}
               </div>

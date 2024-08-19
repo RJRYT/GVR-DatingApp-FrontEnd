@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../Instance/Axios";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
@@ -70,7 +69,7 @@ function Login() {
     toast.success("You are already loggined. Proceed to next step...");
   };
 
-  const checkRegistrationStatus = useCallback(async () => {
+  const checkRegistrationStatus = () => {
     setPageLoading(true);
     try {
       if (!loading && authState.isAuthenticated) {
@@ -91,7 +90,7 @@ function Login() {
     } finally {
       setPageLoading(false);
     }
-  }, [navigate]);
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

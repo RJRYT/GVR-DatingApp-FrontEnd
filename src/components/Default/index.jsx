@@ -12,6 +12,7 @@ function DefaultPage() {
     if (!loading && !authState.isAuthenticated) return navigate("/login");
 
     if (
+      authState && authState.user &&
       authState.user.personalInfoSubmitted &&
       authState.user.professionalInfoSubmitted &&
       authState.user.purposeSubmitted
