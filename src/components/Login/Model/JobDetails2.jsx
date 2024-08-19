@@ -79,6 +79,7 @@ const JobDetails = ({ isVisible, modelToggle, setLoading, professionType }) => {
             <input
               type="text"
               placeholder="Title"
+              name="jobTitle"
               className={`w-full p-2 border text-gray-500 ${errors.jobTitle ? "border-red-600 focus:ring-red-700" : "border-gray-300 focus:ring-gray-400"
                 }  rounded-lg focus:outline-none focus:ring-2`}
               value={formData.jobTitle}

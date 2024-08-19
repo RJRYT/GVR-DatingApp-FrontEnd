@@ -197,7 +197,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
 
   const handleProfilePicSubmit = async (ProfilePic) => {
     const formData = new FormData();
-    formData.append("profilePic", ProfilePic);
+    formData.append("profilepic", ProfilePic);
     setLoading(true);
     const uploadToastId = toast.info("Profile pic upload started", {
       autoClose: false,
@@ -253,7 +253,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
 
   const handleShortReelSubmit = async (shortReel) => {
     const formData = new FormData();
-    formData.append("shortReel", shortReel);
+    formData.append("shortreels", shortReel);
     setLoading(true);
     const uploadToastId = toast.info("Short reel upload started", {
       autoClose: false,

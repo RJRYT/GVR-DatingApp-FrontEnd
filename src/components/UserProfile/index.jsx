@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import AccessDenied from "../AccessDenied";
@@ -25,7 +25,6 @@ const interests = [
 
 const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
   const [activeLine, setActiveLine] = useState(1); 
-  const navigate = useNavigate();
   const { authState, loading } = useContext(AuthContext);
 
   
@@ -47,7 +46,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${OwnProfile && authState.user ? authState.user.profilepic : sampleUser.profilePicture})` }}
+          style={{ backgroundImage: `url(${OwnProfile && authState.user ? authState.user.profilePic.url : sampleUser.profilePicture})` }}
         >
           <button
             onClick={handleBackClick}
@@ -99,7 +98,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
 
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
-              {authState.user.name}, {authState.user.age}
+              {authState.user.username}, {authState.user.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
               {authState.user.location}
@@ -132,12 +131,12 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
               <div className="w-16 h-1 bg-gray-200 mx-auto mt-4 rounded-full"></div>
             </div>
             <div className="px-4">
-              <p className="text-base mt-1 ">
+              <div className="text-base mt-1 ">
                 <h4 className="left-0 chakra-petch-medium text-gray-400">
                   About
                 </h4>
                 <p className="chakra-petch-medium pt-2">{sampleUser.about}</p>
-              </p>
+              </div>
             </div>
             <div className="px-4">
               <h4 className="left-0 chakra-petch-medium text-gray-400 mb-2">
