@@ -23,6 +23,7 @@ import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
 import Subscription from "./components/UserProfile/Settings/Subscription";
 import CreateGroup from "./components/CreateGroup/CreateGroup";
+import Spin from "./components/Dashboard/Spin";
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                   path="/dashboard/discover"
                   element={<DiscoverHeader />}
                 />
+               
                 <Route
                   path="/dashboard/matches"
                   element={<Matches title="Matches" />}
@@ -68,6 +70,7 @@ function App() {
                   element={<Matches upgrade={true} />}
                 />
               </Route>
+              <Route path="/dashboard/@me/spin" element={<Spin />}/>
               <Route path="/dashboard/@me/profile" element={<Profile />} />
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
