@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from 'react-router-dom'
 import { FaArrowLeft } from "react-icons/fa";
 import Profile from "../../../assets/profile/profilePic.png";
 
@@ -151,7 +152,7 @@ const EditProfile = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Change Password</label>
+              <label className="block font-bold text-gray-700"><Link to={"/dashboard/@me/changepass"}>Change Password</Link></label>
             </div>
             <div className="text-center">
               <button

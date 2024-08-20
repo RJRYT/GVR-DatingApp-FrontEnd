@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext,useEffect } from "react";
+import { Link ,useParams} from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import AccessDenied from "../AccessDenied";
+import axios from '../../Instance/Axios'
 import profilePicture from "../../assets/profile/profilePic.png"; 
 import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
@@ -15,18 +16,38 @@ const sampleUser = {
   about: `A good listener. I love having a good talk to know each other's side.`,
 };
 
-const interests = [
-  { text: "Nature", emoji: "🌳" },
-  { text: "Travel", emoji: "🌍" },
-  { text: "Writing", emoji: "✍️" },
-  { text: "People", emoji: "🙂" },
-  { text: "Gym & Fitness", emoji: "💪" },
-];
+// const interests = [
+//   { text: "Nature", emoji: "🌳" },
+//   { text: "Travel", emoji: "🌍" },
+//   { text: "Writing", emoji: "✍️" },
+//   { text: "People", emoji: "🙂" },
+//   { text: "Gym & Fitness", emoji: "💪" },
+// ];
 
 const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
   const [activeLine, setActiveLine] = useState(1); 
   const { authState, loading } = useContext(AuthContext);
+const {userId} =useParams()
+const [user,setUser]=useState(true)
 
+useEffect(()=>{
+ const fetchUserProfile=async ()=>{
+  try{
+ if(userId === '@me'){
+  setUser(authState.user)
+ }else{
+  const response = await axios.get(`/dashboard/userprofile/${userId}`)
+  setUser(response.data)
+ }
+  }catch(error){
+    console.error("Error fetching user profile",error);
+    
+  }finally{
+
+  }
+ }
+ if (!loading && authState.isAuthenticated) fetchUserProfile();
+},[userId,authState,loading])
   
   const handleLineClick = (lineNumber) => {
     setActiveLine(lineNumber); 
@@ -38,7 +59,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
   
   if (loading) return <Loading />;
 
-  if(!loading && !authState.isAuthenticated) return <AccessDenied />;
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <>
@@ -98,10 +119,10 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
 
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
-              {authState.user.username}, {authState.user.age}
+              {authState.user?.username}, {authState.user?.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
-              {authState.user.location}
+              {authState.user?.location}
             </p>
             {OwnProfile ? (
               <MatchButton progress={75} text="Profile Complete" />
