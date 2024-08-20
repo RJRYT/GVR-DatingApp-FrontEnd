@@ -25,7 +25,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
   const [shortReelSelected, setShortReelSelected] = useState(false);
   const [imagesSelected, setImagesSelected] = useState(false);
   const [errors, setErrors] = useState({});
-  const { authState, loading } = useContext(AuthContext);
+  const { authState, updateUser, loading } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     age: "",
     dateOfBirth: "",
@@ -315,6 +315,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
         const res = await axiosInstance.post("/users/update/personalinfo", formData);
         if (res.data.success) {
           modelToggle("JobStatus");
+          updateUser({...formData, personalInfoSubmitted: true});
           toast.success("Section Completed.");
         } else {
           toast.error(res.data.message);

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const RelationshipGoals = ({ isVisible, modelToggle, setLoading }) => {
   const [errors, setErrors] = useState({});
-  const { authState, loading } = useContext(AuthContext);
+  const { authState, updateUser, loading } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     purpose: "",
   });
@@ -40,6 +40,7 @@ const RelationshipGoals = ({ isVisible, modelToggle, setLoading }) => {
         const res = await axiosInstance.post("/users/update/purpose", formData);
         if (res.data.success) {
           modelToggle("Intersted");
+          updateUser({...formData, purposeSubmitted: true});
           toast.success("Done. Registration complete");
         } else {
           toast.error(res.data.message);

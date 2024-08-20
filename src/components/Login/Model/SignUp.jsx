@@ -7,6 +7,7 @@ const SignUp = ({ isVisible, modelToggle, setLoading }) => {
   const { authState, checkAuthStatus, loading } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const [forceCheck, setForceCheck] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -126,7 +127,7 @@ const SignUp = ({ isVisible, modelToggle, setLoading }) => {
       try {
         const res = await axiosInstance.post("/auth/email/register", formData);
         if(res.data.success){
-          checkAuthStatus();
+          checkAuthStatus(forceCheck);
           modelToggle("Personal");
           toast.success("Registration Success");
         }else{
@@ -139,6 +140,7 @@ const SignUp = ({ isVisible, modelToggle, setLoading }) => {
         );
       } finally {
         setLoading(false);
+        setForceCheck(false);
       }
     }
   };
