@@ -13,7 +13,6 @@ import DashboardLayout from "./components/Layout/Dashboard";
 import Matches from "./components/Matches";
 import NotFound from "./components/NotFound";
 import DiscoverHeader from "./components/Dashboard/Discover";
-// import UserProfile from "./components/Dashboard/UserProfile";
 import Profile from "./components/UserProfile/Settings/Profile";
 import Privacy from "./components/UserProfile/Settings/Privacy";
 import ChangePassword from "./components/UserProfile/Edit/ChangePassword";
@@ -21,6 +20,18 @@ import Prefrenences from "./components/UserProfile/Settings/Prefrenences";
 import Filter from "./components/UserProfile/Filter/Filter";
 import EditProfile from "./components/UserProfile/Edit/Profile";
 import Stories from "./components/UserProfile/Story/Story";
+import UserProfile from "./components/UserProfile";
+import Subscription from "./components/UserProfile/Pages/Subscription";
+import CreateGroup from "./components/groups/CreateGroup";
+import Reject from "./components/UserProfile/Pages/Reject";
+import Sent from "./components/UserProfile/Pages/Sent";
+import Received from "./components/UserProfile/Pages/Recived";
+import Messages from "./components/UserProfile/Pages/Messages";
+import Accept from "./components/UserProfile/Pages/Accept";
+import GroupList from "./components/groups/Groups";
+import AddCard from "./components/UserProfile/Settings/AddCard";
+import PayMethods from "./components/UserProfile/Pages/PayMethods";
+import AccessDenied from "./components/AccessDenied";
 import Subscription from "./components/UserProfile/Settings/Subscription";
 import CreateGroup from "./components/CreateGroup/CreateGroup";
 import Spin from "./components/Dashboard/Spin";
@@ -40,7 +51,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route
                   path="/dashboard/discover"
-                  element={<DiscoverHeader />}
+                  element={<DiscoverHeader title="Discover" />}
                 />
                
                 <Route
@@ -70,14 +81,35 @@ function App() {
                   element={<Matches upgrade={true} />}
                 />
               </Route>
+              <Route path="/dashboard/groups" element={<GroupList />} />
+              <Route path="/dashboard/userprofile" element={<UserProfile />} />
+              <Route
+                path="/dashboard/userprofile/upgrade"
+                element={<UserProfile upgrade={true} />}
+              />
               <Route path="/dashboard/@me/spin" element={<Spin />}/>
               <Route path="/dashboard/@me/profile" element={<Profile />} />
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
               <Route path="/dashboard/@me/edit" element={<EditProfile />} />
-              <Route path="/dashboard/@me/subscription" element={<Subscription />} />
+              <Route path="/dashboard/@me/addcard" element={<AddCard />} />
               <Route path="/dashboard/story" element={<Stories />} />
-              <Route path="/dashboard/story/upgrade" element={<Stories upgrade={true} />} />
+              <Route path="/dashboard/@me/reject" element={<Reject />} />
+              <Route path="/dashboard/@me/messages" element={<Messages />} />
+              <Route path="/dashboard/@me/accept" element={<Accept />} />
+              <Route
+                path="/dashboard/@me"
+                element={<UserProfile OwnProfile={true} />}
+              />
+              <Route
+                path="/dashboard/@me/subscription"
+                element={<Subscription />}
+              />
+              <Route path="/dashboard/@me/payment" element={<PayMethods />} />
+              <Route
+                path="/dashboard/story/upgrade"
+                element={<Stories upgrade={true} />}
+              />
               <Route
                 path="/dashboard/@me/changepass"
                 element={<ChangePassword />}
@@ -88,11 +120,32 @@ function App() {
               />
               <Route
                 path="/dashboard/@me/creategroup"
-                element={<CreateGroup/>}
+                element={<CreateGroup />}
               />
+              <Route
+                path="/dashboard/@me/received"
+                element={<Received sidemenutitle={"Received"} />}
+              />
+              <Route path="/dashboard/@me/sent" element={<Sent />} />
+              <Route
+                path="/dashboard/@me/shortlist"
+                element={<Received sidemenutitle={"Shortlist"} />}
+              />
+              <Route
+                path="/dashboard/@me/contacted"
+                element={<Received sidemenutitle={"Contacted"} />}
+              />
+              <Route
+                path="/dashboard/@me/shortlisted-by"
+                element={<Received sidemenutitle={"Shortlisted By"} />}
+              />
+              <Route
+                path="/dashboard/@me/myprofile"
+                element={<Received sidemenutitle={"Viewed My Profile"} />}
+              />
+              <Route path="/403" element={<AccessDenied />} />
             </Route>
             <Route path="*" element={<NotFound />} />
-            {/* <Route path="/userprofile" element={<UserProfile />} /> */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>

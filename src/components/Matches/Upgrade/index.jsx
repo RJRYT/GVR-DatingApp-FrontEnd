@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Upgrade() {
   const [showModal, setShowModal] = useState(false);
@@ -38,15 +39,16 @@ function Upgrade() {
       />
 
       {/* Modal content */}
-      <div className="absolute bottom-[80px] w-3/4 py max-w-md mx-auto mb-6 mx-3 bg-white p-6 rounded-lg shadow-lg">
+      <div className="absolute bottom-[80px] w-3/4 py max-w-md mb-6 mx-3 bg-white p-6 rounded-lg shadow-lg">
         <div className="text-center py-6">
           <h2 className="text-2xl font-bold mb-4">Upgrade to view more</h2>
-          <button
+          <Link
             onClick={closeModal}
+            to={"/dashboard/@me/subscription"}
             className="bg-fuchsia-900 text-white w-3/4 py-3 px-6 rounded-full"
           >
             Upgrade
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Interested = ({ isVisible, modelToggle }) => {
   const navigate = useNavigate();
+  const { authState, loading } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated) modelToggle();
+  }, [loading, authState]);
+
+  const handleMatermonyClick = (e) => {
+    e.preventDefault();
+    toast.error("Its not yet ready");
+  };
+
   const handleDatingClick = (e) => {
     e.preventDefault();
-    modelToggle();
+    toast.success("Redirecting to dating dashboard");
+    navigate("/dashboard");
   };
 
   if (!isVisible) return null;
@@ -19,16 +33,16 @@ const Interested = ({ isVisible, modelToggle }) => {
           <button
             type="button"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
-            onClick={() => navigate("/dashboard")}
+            onClick={handleDatingClick}
           >
             Dating
           </button>
           <br />
           <br />
           <button
-            type="submit"
+            type="button"
             className="w-full p-2 bg-black text-white rounded-lg font-medium"
-            onClick={handleDatingClick}
+            onClick={handleMatermonyClick}
           >
             Matrimony
           </button>

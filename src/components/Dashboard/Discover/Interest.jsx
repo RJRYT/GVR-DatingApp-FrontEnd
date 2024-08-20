@@ -74,10 +74,10 @@ const Interest = () => {
                   key={index}
                   className="relative flex flex-col items-center "
                 >
-                  <div className=" top-0 left-10 transform -translate-y-1/2 px-3 py-1 bg-fuchsia-950 rounded-full text-sm font-medium  ">
+                  <div className=" top-0 left-10 transform -translate-y-1/2 px-3 py-1 bg-purple-800 rounded-full text-sm font-medium  ">
                     <p className="text-xs text-white">Connect with Clara</p>
                   </div>
-                  <div className="w-12 h-12 rounded-full border-2 border-fuchsia-950 overflow-hidden  left-10">
+                  <div className="w-12 h-12 rounded-full border-2 border-purple-800 overflow-hidden  left-10">
                     <img
                       src={person.imgSrc}
                       alt={person.name}

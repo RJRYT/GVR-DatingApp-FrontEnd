@@ -1,11 +1,20 @@
 import React from 'react';
-import { IoClose, IoLogOutOutline } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
+import { IoLogOutOutline } from 'react-icons/io5';
 
 const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
   const menuItems = [
-    'My Profile', 'Sent Request', 'Viewed My Profile', 'Accept Request',
-    'Reject', 'Received', 'Shortlisted By', 'Shortlisted', 'Contacted',
-    'Message', 'Settings'
+    { label: "My Profile", path: "/dashboard/@me" },
+    { label: "Sent Request", path: "/dashboard/@me/sent" },
+    { label: "Viewed My Profile", path: "/dashboard/@me/myprofile" },
+    { label: "Accept Request", path: "/dashboard/@me/accept" },
+    { label: "Reject", path: "/dashboard/@me/reject" },
+    { label: "Received", path: "/dashboard/@me/received" },
+    { label: "Shortlisted By", path: "/dashboard/@me/shortlisted-by" },
+    { label: "Shortlisted", path: "/dashboard/@me/shortlist" },
+    { label: "Contacted", path: "/dashboard/@me/contacted" },
+    { label: "Message", path: "/dashboard/@me/messages" },
+    { label: "Settings", path: "/dashboard/@me/profile" },
   ];
 
   const handleItemClick = (item) => {
@@ -51,15 +60,15 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
 
         <div className="p-4">
           <div  className="relative flex space-x-2 mb-6">
-          <div className=" relative bg-pink-500 rounded-full  block p-1 h-[50px] w-[50px]">
+          <div className="relative bg-pink-500 rounded-full block p-0.5 h-[50px] w-[50px]">
             <img
               onClick={toggleProfileModal}
               src="https://i.imgur.com/sjLMNDM.png"
               alt="Profile"
-              className=" w-10 h-10 rounded-full "
+              className="w-full h-full rounded-full"
             /> 
              {/* {isOnline && ( */}
-              <span className="absolute top-0 right-0 block h-3 w-3 bg-green-500 rounded-full"></span>
+              <span className="absolute top-0 right-1 block h-3 w-3 bg-green-500 rounded-full"></span>
             {/* )} */}
             </div>
             <div >
@@ -72,11 +81,11 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
           <ul>
             {menuItems.map((item, index) => (
               <li
-                key={item}
-                onClick={() => handleItemClick(item)}
+                key={index}
+                onClick={() => handleItemClick(item.label)}
                 className="flex items-center  py-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
               >
-                {item}
+                <Link to={item.path}>{item.label}</Link>
               </li>
             ))}
             <li

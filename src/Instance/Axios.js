@@ -10,12 +10,12 @@ apiInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         const response = await apiInstance.post("/users/token");
-        if (response.status === 200) {
+        if (response?.status === 200) {
           return apiInstance(originalRequest);
         }
       } catch (err) {

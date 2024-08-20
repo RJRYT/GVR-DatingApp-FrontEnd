@@ -1,26 +1,31 @@
 import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
-import AccessDenied from "../AccessDenied";
 import Loading from "../Loading";
+import LoadingOverlay from "../Loading/LoadingOverlay";
 
 function DefaultPage() {
   const { authState, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !authState.isAuthenticated) {
-      navigate("/login");
-    } else if (!loading) {
-      navigate("/dashboard");
+    if (!loading && !authState.isAuthenticated) return navigate("/login");
+
+    if (
+      authState && authState.user &&
+      authState.user.personalInfoSubmitted &&
+      authState.user.professionalInfoSubmitted &&
+      authState.user.purposeSubmitted
+    ) {
+      return navigate("/dashboard");
     }
-  }, [navigate, loading, authState]);
+
+    return navigate("/login");
+  }, [loading, authState, navigate]);
 
   if (loading) return <Loading />;
 
-  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
-
-  return <div>DefaultPage</div>;
+  return <LoadingOverlay />;
 }
 
 export default DefaultPage;

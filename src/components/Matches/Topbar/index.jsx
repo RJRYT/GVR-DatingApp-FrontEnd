@@ -7,9 +7,6 @@ const Topbar = ({ title = "" }) => {
   const goBack = () => {
     navigate(-1);
   };
-  const filterRoute=()=>{
-    navigate('/dashboard/filter')
-  }
 
   return (
     <div className="flex items-center justify-between mt-4">
@@ -36,7 +33,7 @@ const Topbar = ({ title = "" }) => {
           <div className="text-2xl font-bold text-black">{title}</div>
         </div>
       )}
-      <button onClick={filterRoute} className="flex items-center rounded-full hover:border-black border p-2 text-black">
+      <button className="flex items-center rounded-full hover:border-black border p-2 text-black">
         <svg
           className="h-6 w-6"
           fill="none"
