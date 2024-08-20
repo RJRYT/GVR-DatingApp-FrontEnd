@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SpinButton from "../../../assets/spin/Gradient.png";
 import SpinBase from "../../../assets/spin/spin-base.png";
-import { IoArrowBack } from 'react-icons/io5';
+
 
 const SpinPage = () => {
   const [spinning, setSpinning] = useState(false);
@@ -14,9 +14,7 @@ const SpinPage = () => {
   return (
     <div className=" flex flex-col items-center justify-center min-h-screen bg-fuchsia-950 text-white p-4">
       <header  className=" w-full flex justify-start mt-10 mb-20 ">
-      {/* <button className="flex items-center justify-center w-12 h-12 bg-fuchsia-950 text-white rounded-full border-2 border-white focus:outline-none">
-            <IoArrowBack size={20} />
-        </button> */}
+      
         <button class="w-12 h-12 rounded-full border-2 border-opacity-50 flex items-center justify-center text-white bg-transparent hover:bg-[rgba(255,255,255,0.09)]">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
