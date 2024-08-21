@@ -1,30 +1,14 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
-import { AuthContext } from "../../../../contexts/AuthContext";
+import React, { useState, useRef } from "react";
 
-function ProfilePicUpload({ setUpload, Error, UploadStatus, SetUploadStatus, Placeholder, ClassName, setFileSelected }) {
-  const [files, setFiles] = useState(null);
+function ProfilePicUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected }) {
   const InputRef = useRef(null);
   const [profilePicPreview, setProfilePicPreview] = useState(null);
   const [placeholderText, setPlaceholderText] = useState(Placeholder);
-  const { authState } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (
-      authState.isAuthenticated &&
-      authState.user &&
-      authState.user.profilePic
-    ) {
-      setProfilePicPreview(authState.user.profilePic.url);
-      setFileSelected(true);
-      SetUploadStatus(true);
-      setPlaceholderText("Profile pic is already uploaded");
-    }
-  }, [authState]);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setFiles(file);
+      setUpload(file);
       setPlaceholderText("Profile pic selected");
       const previewURL = URL.createObjectURL(file);
       setProfilePicPreview(previewURL);
@@ -33,7 +17,6 @@ function ProfilePicUpload({ setUpload, Error, UploadStatus, SetUploadStatus, Pla
   };
 
   const clearSelection = () => {
-    setFiles(null);
     setProfilePicPreview(null);
     setFileSelected(false);
     setPlaceholderText(Placeholder);
@@ -42,7 +25,7 @@ function ProfilePicUpload({ setUpload, Error, UploadStatus, SetUploadStatus, Pla
 
   const fileUploadClick = (e) => {
     // eslint-disable-next-line no-restricted-globals
-    if (UploadStatus && !confirm("The images are already uploaded. Do you want to update it ?")) {
+    if (!confirm("The images are already uploaded. Do you want to update it ?")) {
       e.preventDefault();
     }
   };
@@ -71,7 +54,6 @@ function ProfilePicUpload({ setUpload, Error, UploadStatus, SetUploadStatus, Pla
               className="w-full h-auto object-cover rounded-xl"
             />
           </div> 
-          <button onClick={() => { setUpload(files) }} className="text-md text-gray-600 hover:underline">Upload</button>
           <button onClick={clearSelection} className="ml-3 text-md text-gray-600 hover:underline">Clear</button>
         </>
       )}

@@ -18,14 +18,16 @@ import {
 } from "../../../assets/static/Data";
 
 const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
-  const [profilePicUploaded, setProfilePicUploaded] = useState(false);
-  const [shortReelUploaded, setShortReelUploaded] = useState(false);
-  const [imagesUploaded, setImagesUploaded] = useState(false);
   const [profilePicSelected, setProfilePicSelected] = useState(false);
   const [shortReelSelected, setShortReelSelected] = useState(false);
   const [imagesSelected, setImagesSelected] = useState(false);
   const [errors, setErrors] = useState({});
   const { authState, updateUser, loading } = useContext(AuthContext);
+  const [uploadFiles, setUploadFiles] = useState({
+    images: [],
+    profilepic: null,
+    shortreels: null
+  })
   const [formData, setFormData] = useState({
     age: "",
     dateOfBirth: "",
@@ -105,22 +107,16 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
     // profile pic validation
     if (!profilePicSelected) {
       newErrors.profilePic = "profilePic is required";
-    } else if (!profilePicUploaded) {
-      newErrors.profilePic = "profilePic is need to upload first";
     }
 
     // images validation
     if (!imagesSelected) {
       newErrors.images = "Images is required";
-    } else if (!imagesUploaded) {
-      newErrors.images = "Images is need to upload first";
     }
 
     // Short reel validation
     if (!shortReelSelected) {
       newErrors.shortReel = "shortReel is required";
-    } else if (!shortReelUploaded) {
-      newErrors.shortReel = "shortReel is need to upload first";
     }
 
     setErrors(newErrors);
@@ -138,193 +134,85 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
       toast.error("You can only choose upto 5 images");
       return;
     }
-    const formData = new FormData();
-    for (let i = 0; i < images.length; i++) {
-      formData.append("images", images[i]);
-    }
-    setLoading(true);
-    const uploadToastId = toast.info("Images upload started", {
-      autoClose: false,
-    });
-    try {
-      const res = await axiosInstance.post("/users/upload/images", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          if (progress === 100) {
-            toast.update(uploadToastId, {
-              render: `Processing...`,
-              type: "info",
-              autoClose: false,
-            });
-          } else {
-            toast.update(uploadToastId, {
-              render: `Upload progress: ${progress}%`,
-              type: "info",
-              autoClose: false,
-            });
-          }
-        },
-      });
-      if (res.data.success) {
-        toast.update(uploadToastId, {
-          render: "Images upload completed",
-          type: "success",
-          autoClose: 3000,
-        });
-        setImagesUploaded(true);
-      } else {
-        toast.update(uploadToastId, {
-          render: res.data.message,
-          type: "error",
-          autoClose: 3000,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      toast.update(uploadToastId, {
-        render:
-          err.response?.data.message || "Something Broken..! Try again later",
-        type: "error",
-        autoClose: 3000,
-      });
-    } finally {
-      setLoading(false);
-    }
+    setUploadFiles({ ...uploadFiles, images });
   };
 
   const handleProfilePicSubmit = async (ProfilePic) => {
-    const formData = new FormData();
-    formData.append("profilepic", ProfilePic);
-    setLoading(true);
-    const uploadToastId = toast.info("Profile pic upload started", {
-      autoClose: false,
-    });
-    try {
-      const res = await axiosInstance.post("/users/upload/profilepic", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          if (progress === 100) {
-            toast.update(uploadToastId, {
-              render: `Processing...`,
-              type: "info",
-              autoClose: false,
-            });
-          } else {
-            toast.update(uploadToastId, {
-              render: `Upload progress: ${progress}%`,
-              type: "info",
-              autoClose: false,
-            });
-          }
-        },
-      });
-      if (res.data.success) {
-        setProfilePicUploaded(true);
-        toast.update(uploadToastId, {
-          render: "Profile pic upload completed",
-          type: "success",
-          autoClose: 3000,
-        });
-      } else {
-        toast.update(uploadToastId, {
-          render: res.data.message,
-          type: "error",
-          autoClose: 3000,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      toast.update(uploadToastId, {
-        render:
-          err.response?.data.message || "Something Broken..! Try again later",
-        type: "error",
-        autoClose: 3000,
-      });
-    } finally {
-      setLoading(false);
-    }
+    setUploadFiles({ ...uploadFiles, profilepic: ProfilePic });
   };
 
   const handleShortReelSubmit = async (shortReel) => {
-    const formData = new FormData();
-    formData.append("shortreels", shortReel);
-    setLoading(true);
-    const uploadToastId = toast.info("Short reel upload started", {
-      autoClose: false,
-    });
-    try {
-      const res = await axiosInstance.post("/users/upload/shortreel", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          if (progress === 100) {
-            toast.update(uploadToastId, {
-              render: `Processing...`,
-              type: "info",
-              autoClose: false,
-            });
-          } else {
-            toast.update(uploadToastId, {
-              render: `Upload progress: ${progress}%`,
-              type: "info",
-              autoClose: false,
-            });
-          }
-        },
-      });
-      if (res.data.success) {
-        setShortReelUploaded(true);
-        toast.update(uploadToastId, {
-          render: "Short reel upload completed",
-          type: "success",
-          autoClose: 3000,
-        });
-      } else {
-        toast.update(uploadToastId, {
-          render: res.data.message,
-          type: "error",
-          autoClose: 3000,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      toast.update(uploadToastId, {
-        render:
-          err.response?.data.message || "Something Broken..! Try again later",
-        type: "error",
-        autoClose: 3000,
-      });
-    } finally {
-      setLoading(false);
-    }
+    setUploadFiles({ ...uploadFiles, shortreels: shortReel });
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setLoading(true);
-      try {
-        const res = await axiosInstance.post("/users/update/personalinfo", formData);
-        if (res.data.success) {
-          modelToggle("JobStatus");
-          updateUser({...formData, personalInfoSubmitted: true});
-          toast.success("Section Completed.");
+      const formdata = new FormData();
+      formdata.append("shortreels", uploadFiles.shortreels);
+      formdata.append("profilepic", uploadFiles.profilepic);
+      for (let i = 0; i < uploadFiles.images.length; i++) {
+        formdata.append("images", uploadFiles.images[i]);
+      }
+      // Append form data
+      for (const key in formData) {
+        if (Array.isArray(formData[key])) {
+          formData[key].forEach(value => {
+            formdata.append(key, value);
+          });
         } else {
-          toast.error(res.data.message);
+          formdata.append(key, formData[key]);
+        }
+      }
+      setLoading(true);
+      const uploadToastId = toast.info("Starting upload...", {
+        autoClose: false,
+      });
+      try {
+        const res = await axiosInstance.post("/users/update/personalinfo/v2", formdata, {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            if (progress === 100) {
+              toast.update(uploadToastId, {
+                render: `Processing...`,
+                type: "info",
+                autoClose: false,
+              });
+            } else {
+              toast.update(uploadToastId, {
+                render: `Upload progress: ${progress}%`,
+                type: "info",
+                autoClose: false,
+              });
+            }
+          },
+        });
+        if (res.data.success) {
+          //modelToggle("JobStatus");
+          //updateUser({ ...formData, personalInfoSubmitted: true });
+          toast.update(uploadToastId, {
+            render: "Section Completed.",
+            type: "success",
+            autoClose: 3000,
+          });
+        } else {
+          toast.update(uploadToastId, {
+            render: res.data.message,
+            type: "error",
+            autoClose: 3000,
+          });
         }
       } catch (err) {
         console.error(err);
-        toast.error(
-          err.response?.data.message || "Something Broken..! Try again later"
-        );
+        toast.update(uploadToastId, {
+          render:
+            err.response?.data.message || "Something Broken..! Try again later",
+          type: "error",
+          autoClose: 3000,
+        });
       } finally {
         setLoading(false);
       }
@@ -482,37 +370,31 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               </span>
             )}
           </div>
-          <div className="group">
+          <div>
             <ProfilePicUpload
               setUpload={handleProfilePicSubmit}
               Placeholder="Profile Pic"
               Error={errors}
-              UploadStatus={profilePicUploaded}
-              SetUploadStatus={setProfilePicUploaded}
               setFileSelected={setProfilePicSelected}
               ClassName={`w-full block text-gray-500 p-2 border ${errors.profilePic ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
                 }  rounded-lg hover:ring-2`}
             />
           </div>
-          <div className="group">
+          <div>
             <ImageUpload
               setUpload={handleImagesSubmit}
               Placeholder="Add More Images"
               Error={errors}
-              UploadStatus={imagesUploaded}
-              SetUploadStatus={setImagesUploaded}
               setFileSelected={setImagesSelected}
               ClassName={`w-full block text-gray-500 p-2 border ${errors.images ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
                 }  rounded-lg hover:ring-2`}
             />
           </div>
-          <div className="group">
+          <div>
             <ReelUpload
               setUpload={handleShortReelSubmit}
               Placeholder="Short Reel"
               Error={errors}
-              UploadStatus={shortReelUploaded}
-              SetUploadStatus={setShortReelUploaded}
               setFileSelected={setShortReelSelected}
               ClassName={`w-full block text-gray-500 p-2 border ${errors.shortReel ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
                 }  rounded-lg hover:ring-2`}

@@ -1,29 +1,11 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
-import { AuthContext } from "../../../../contexts/AuthContext";
+import React, { useState, useRef } from "react";
 
-function ImageUpload({ setUpload, Error, UploadStatus, SetUploadStatus, Placeholder, ClassName, setFileSelected }) {
+function ImageUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected }) {
   const [imagePreviews, setImagePreviews] = useState([]);
-  const [files, setFiles] = useState(null);
   const InputRef = useRef(null);
   const [placeholderText, setPlaceholderText] = useState(Placeholder);
-  const { authState } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (
-      authState.isAuthenticated &&
-      authState.user &&
-      authState.user.images.length
-    ) {
-      const previews = authState.user.images.map((file) => file.url);
-      setImagePreviews(previews);
-      setFileSelected(true);
-      SetUploadStatus(true);
-      setPlaceholderText(`${previews.length} images already uploaded`);
-    }
-  }, [authState]);
 
   const clearSelection = () => {
-    setFiles(null);
     setImagePreviews([]);
     setPlaceholderText(Placeholder);
     setFileSelected(false);
@@ -35,16 +17,15 @@ function ImageUpload({ setUpload, Error, UploadStatus, SetUploadStatus, Placehol
     if (files.length) {
       const previews = files.map((file) => URL.createObjectURL(file));
       setImagePreviews(previews);
-      setFiles(files);
+      setUpload(files);
       setPlaceholderText(`${previews.length} images Selected`);
       setFileSelected(true);
     }
-
   };
 
   const fileUploadClick = (e) => {
     // eslint-disable-next-line no-restricted-globals
-    if (UploadStatus && !confirm("The images are already uploaded. Do you want to update it ?")) {
+    if (!confirm("The images are already uploaded. Do you want to update it ?")) {
       e.preventDefault();
     }
   };
@@ -77,7 +58,6 @@ function ImageUpload({ setUpload, Error, UploadStatus, SetUploadStatus, Placehol
               />
             ))}
           </div>
-          <button onClick={() => { setUpload(files) }} className="text-md text-gray-600 hover:underline">Upload</button>
           <button onClick={clearSelection} className="ml-3 text-md text-gray-600 hover:underline">Clear</button>
         </>
       ) : null}
