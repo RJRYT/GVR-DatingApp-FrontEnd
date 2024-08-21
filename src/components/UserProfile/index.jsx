@@ -33,10 +33,10 @@ const [user,setUser]=useState(true)
 useEffect(()=>{
  const fetchUserProfile=async ()=>{
   try{
- if(userId === '@me'){
+ if(OwnProfile){
   setUser(authState.user)
  }else{
-  const response = await axios.get(`/dashboard/userprofile/${userId}`)
+  const response = await axios.get(`/profile/${userId}`)
   setUser(response.data)
  }
   }catch(error){
@@ -47,8 +47,8 @@ useEffect(()=>{
   }
  }
  if (!loading && authState.isAuthenticated) fetchUserProfile();
-},[userId,authState,loading])
-  
+},[OwnProfile,userId,authState,loading])
+ 
   const handleLineClick = (lineNumber) => {
     setActiveLine(lineNumber); 
   };
@@ -67,7 +67,7 @@ useEffect(()=>{
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${OwnProfile && authState.user ? authState.user.profilePic.url : sampleUser.profilePicture})` }}
+          style={{ backgroundImage: `url(${user.profilePic?.url || profilePicture})` }}
         >
           <button
             onClick={handleBackClick}
@@ -119,10 +119,10 @@ useEffect(()=>{
 
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
-              {authState.user?.username}, {authState.user?.age}
+              {user.username}, {user.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
-              {authState.user?.location}
+              {user.location}
             </p>
             {OwnProfile ? (
               <MatchButton progress={75} text="Profile Complete" />
@@ -164,7 +164,7 @@ useEffect(()=>{
                 Interest
               </h4>
               <div className="flex flex-wrap gap-2 mb-2">
-                {authState.user.interests.map((interest, index) => (
+                {user.interests.map((interest, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"

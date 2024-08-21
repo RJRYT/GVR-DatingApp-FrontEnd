@@ -152,7 +152,7 @@ const EditProfile = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block font-bold text-gray-700"><Link to={"/dashboard/@me/changepass"}>Change Password</Link></label>
+              <label className="block font-bold text-fuchsia-950"><Link to={"/dashboard/@me/changepass"}>Change Password</Link></label>
             </div>
             <div className="text-center">
               <button
