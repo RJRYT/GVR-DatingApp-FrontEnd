@@ -23,13 +23,6 @@ function ReelUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected 
     InputRef.current.value = '';
   };
 
-  const fileUploadClick = (e) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm("The reel is already uploaded. Do you want to update it ?")) {
-      e.preventDefault();
-    }
-  };
-
   return (
     <>
       <input
@@ -38,7 +31,6 @@ function ReelUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected 
         accept="video/mp4,video/webm"
         onChange={handleVideoUpload}
         hidden
-        onClick={fileUploadClick}
         ref={InputRef}
       />
       <label htmlFor="videoUpload" className={ClassName}>
@@ -50,7 +42,7 @@ function ReelUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected 
           <div className="flex items-center gap-2 h-30 w-full">
             <video src={videoPreview} className="p-3 rounded-xl" controls />
           </div>
-          <button onClick={clearSelection} className="ml-3 text-md text-gray-600 hover:underline">Clear</button>
+          <button onClick={clearSelection} className="text-md text-gray-600 hover:underline">Clear</button>
         </>
       )}
     </>

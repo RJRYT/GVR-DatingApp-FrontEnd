@@ -23,13 +23,6 @@ function ImageUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected
     }
   };
 
-  const fileUploadClick = (e) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm("The images are already uploaded. Do you want to update it ?")) {
-      e.preventDefault();
-    }
-  };
-
   return (
     <>
       <input
@@ -39,7 +32,6 @@ function ImageUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected
         onChange={handleImageUpload}
         hidden
         multiple
-        onClick={fileUploadClick}
         ref={InputRef}
       />
       <label htmlFor="imageUpload" className={ClassName}>
@@ -58,7 +50,7 @@ function ImageUpload({ setUpload, Error, Placeholder, ClassName, setFileSelected
               />
             ))}
           </div>
-          <button onClick={clearSelection} className="ml-3 text-md text-gray-600 hover:underline">Clear</button>
+          <button onClick={clearSelection} className="text-md text-gray-600 hover:underline">Clear</button>
         </>
       ) : null}
     </>

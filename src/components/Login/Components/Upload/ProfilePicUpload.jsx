@@ -23,13 +23,6 @@ function ProfilePicUpload({ setUpload, Error, Placeholder, ClassName, setFileSel
     InputRef.current.value = '';
   };
 
-  const fileUploadClick = (e) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm("The images are already uploaded. Do you want to update it ?")) {
-      e.preventDefault();
-    }
-  };
-
   return (
     <>
       <input
@@ -38,7 +31,6 @@ function ProfilePicUpload({ setUpload, Error, Placeholder, ClassName, setFileSel
         accept="image/*,.png,.jpg,.jpeg"
         onChange={handleImageUpload}
         hidden
-        onClick={fileUploadClick}
         ref={InputRef}
       />
       <label htmlFor="profilePicUpload" className={ClassName}>
@@ -54,7 +46,7 @@ function ProfilePicUpload({ setUpload, Error, Placeholder, ClassName, setFileSel
               className="w-full h-auto object-cover rounded-xl"
             />
           </div> 
-          <button onClick={clearSelection} className="ml-3 text-md text-gray-600 hover:underline">Clear</button>
+          <button onClick={clearSelection} className="text-md text-gray-600 hover:underline">Clear</button>
         </>
       )}
 

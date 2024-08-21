@@ -148,28 +148,31 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const formdata = new FormData();
-      formdata.append("shortreels", uploadFiles.shortreels);
-      formdata.append("profilepic", uploadFiles.profilepic);
-      for (let i = 0; i < uploadFiles.images.length; i++) {
-        formdata.append("images", uploadFiles.images[i]);
-      }
-      // Append form data
-      for (const key in formData) {
-        if (Array.isArray(formData[key])) {
-          formData[key].forEach(value => {
-            formdata.append(key, value);
-          });
-        } else {
-          formdata.append(key, formData[key]);
-        }
-      }
+      const formDataToSend = new FormData();
+
+      // Append the regular form fields
+      formDataToSend.append("age", formData.age);
+      formDataToSend.append("dateOfBirth", formData.dateOfBirth);
+      formDataToSend.append("gender", formData.gender);
+      formDataToSend.append("location", formData.location);
+      formDataToSend.append("smokingHabits", formData.smokingHabits);
+      formDataToSend.append("drinkingHabits", formData.drinkingHabits);
+      formDataToSend.append("hobbies", JSON.stringify(formData.hobbies));
+      formDataToSend.append("interests", JSON.stringify(formData.interests));
+      formDataToSend.append("qualification", JSON.stringify(formData.qualification));
+
+      // Append the file fields
+      formDataToSend.append("shortreels", uploadFiles.shortreels);
+      formDataToSend.append("profilepic", uploadFiles.profilepic);
+      uploadFiles.images.forEach((image) => {
+        formDataToSend.append("images", image);
+      });
       setLoading(true);
       const uploadToastId = toast.info("Starting upload...", {
         autoClose: false,
       });
       try {
-        const res = await axiosInstance.post("/users/update/personalinfo/v2", formdata, {
+        const res = await axiosInstance.post("/users/update/personalinfo/v2", formDataToSend, {
           headers: { "Content-Type": "multipart/form-data" },
           onUploadProgress: (progressEvent) => {
             const progress = Math.round(
