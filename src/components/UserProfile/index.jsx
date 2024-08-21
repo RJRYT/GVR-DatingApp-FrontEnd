@@ -1,15 +1,15 @@
-import React, { useState, useContext,useEffect } from "react";
-import { Link ,useParams} from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import AccessDenied from "../AccessDenied";
 import axios from '../../Instance/Axios'
-import profilePicture from "../../assets/profile/profilePic.png"; 
+import profilePicture from "../../assets/profile/profilePic.png";
 import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
 
 const sampleUser = {
-  profilePicture, 
+  profilePicture,
   name: "Alfredo Calzoni",
   age: "20",
   location: "Hamburg, Germany",
@@ -25,38 +25,37 @@ const sampleUser = {
 // ];
 
 const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
-  const [activeLine, setActiveLine] = useState(1); 
+  const [activeLine, setActiveLine] = useState(1);
   const { authState, loading } = useContext(AuthContext);
-const {userId} =useParams()
-const [user,setUser]=useState(true)
+  const { userId } = useParams();
+  const [user, setUser] = useState(true);
 
-useEffect(()=>{
- const fetchUserProfile=async ()=>{
-  try{
- if(OwnProfile){
-  setUser(authState.user)
- }else{
-  const response = await axios.get(`/profile/${userId}`)
-  setUser(response.data)
- }
-  }catch(error){
-    console.error("Error fetching user profile",error);
-    
-  }finally{
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        if (OwnProfile) {
+          setUser(authState.user)
+        } else {
+          const response = await axios.get(`/users/profile/${userId}`);
+          if (response.data.success) {
+            setUser(response.data.user);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user profile", error);
+      }
+    }
+    if (!loading && authState.isAuthenticated) fetchUserProfile();
+  }, [OwnProfile, userId, authState, loading])
 
-  }
- }
- if (!loading && authState.isAuthenticated) fetchUserProfile();
-},[OwnProfile,userId,authState,loading])
- 
   const handleLineClick = (lineNumber) => {
-    setActiveLine(lineNumber); 
+    setActiveLine(lineNumber);
   };
-  
+
   const handleBackClick = () => {
-    window.history.back(); 
+    window.history.back();
   };
-  
+
   if (loading) return <Loading />;
 
   if (!loading && !authState.isAuthenticated) return <AccessDenied />;
@@ -134,15 +133,13 @@ useEffect(()=>{
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
             <div
               onClick={() => handleLineClick(1)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 1 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 1 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
             <div
               onClick={() => handleLineClick(2)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 2 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 2 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
           </div>
           {/* User Details Section */}
