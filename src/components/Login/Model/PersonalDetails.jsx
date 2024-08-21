@@ -194,8 +194,8 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
           },
         });
         if (res.data.success) {
-          //modelToggle("JobStatus");
-          //updateUser({ ...formData, personalInfoSubmitted: true });
+          modelToggle("JobStatus");
+          updateUser({ ...formData, personalInfoSubmitted: true });
           toast.update(uploadToastId, {
             render: "Section Completed.",
             type: "success",
