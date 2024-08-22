@@ -32,6 +32,7 @@ import GroupList from "./components/groups/Groups";
 import AddCard from "./components/UserProfile/Settings/AddCard";
 import PayMethods from "./components/UserProfile/Pages/PayMethods";
 import AccessDenied from "./components/AccessDenied";
+import ChatBox from "./components/UserProfile/Pages/chat/ChatBox";
 
 function App() {
   return (
@@ -90,6 +91,7 @@ function App() {
               <Route path="/dashboard/story" element={<Stories />} />
               <Route path="/dashboard/@me/reject" element={<Reject />} />
               <Route path="/dashboard/@me/messages" element={<Messages />} />
+              <Route path="/dashboard/@me/chat" element={<ChatBox />} />
               <Route path="/dashboard/@me/accept" element={<Accept />} />
               <Route
                 path="/dashboard/@me"
