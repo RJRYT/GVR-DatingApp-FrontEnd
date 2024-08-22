@@ -1,16 +1,15 @@
-import React, { useState ,useEffect,useContext} from "react";
-import {  useParams ,useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axios from '../../../Instance/Axios'
 
 const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
-  console.log('hello.........')
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [hasPassword,setHasPassword]=useState(false)
+  const [hasPassword, setHasPassword] = useState(true)
   const [loadingPassword, setLoadingPassword] = useState(true);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -18,43 +17,39 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
   const { authState, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    console.log('Effect running: Authenticated:', authState.isAuthenticated);
-    const fetchUserPassword = async ()=>{   
-      console.log("effect..........") 
-      try{
-        const response= await axios.get(`/users/checkPass`)
-       
-        if(response.data.success){
-          setHasPassword(!!response.data.user.password)
+  useEffect(() => {
+    const fetchUserPassword = async () => {
+      try {
+        const response = await axios.get(`/users/password/check`);
+        if (response.data.success) {
+          setHasPassword(response.data.hasPassword)
         }
-      }catch(error){
+      } catch (error) {
         console.error("Error fetching user profile", error);
       } finally {
         setLoadingPassword(false); // Set loading to false after API call
       }
-      
-    }
-    if ( authState.isAuthenticated)
-      {
-        fetchUserPassword()
-      }
-  },[authState.isAuthenticated])
 
-  const handleChangePassword= async() =>{
-    try{
-      const response= await axios.put(`/users/change-password`,{
-        currentPassword:hasPassword ? currentPassword : null,
+    }
+    if (authState.isAuthenticated) {
+      fetchUserPassword()
+    }
+  }, [authState.isAuthenticated])
+
+  const handleChangePassword = async () => {
+    try {
+      const response = await axios.put(`/users/password/change`, {
+        currentPassword: hasPassword ? currentPassword : null,
         newPassword,
         confirmPassword
-      })
-      if(response.data.success){
+      }) 
+      if (response.data.success) {
         navigate('/dashboard/@me/changepass')
       }
-    }catch(error){
+    } catch (error) {
       console.error("Error changing password", error);
     }
-   
+
   }
 
   const toggleCurrentPasswordVisibility = () => {
@@ -89,12 +84,12 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
 
         {/* Current Password */}
         {hasPassword && (
-            <div className="flex px-6 pb-4 py-4 border-b">
+          <div className="flex px-6 pb-4 py-4 border-b">
             <input
               type={currentPasswordVisible ? 'text' : 'password'}
               placeholder="Current password"
               value={currentPassword}
-              onChange={(e)=>setCurrentPassword(e.target.value)}
+              onChange={(e) => setCurrentPassword(e.target.value)}
               className="font-sm text-medium focus:outline-none"
             />
             <div className="ml-auto cursor-pointer" onClick={toggleCurrentPasswordVisibility}>
@@ -106,7 +101,7 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
             </div>
           </div>
         )}
-      
+
 
         {/* New Password */}
         <div className="flex px-6 py-4 border-b">
@@ -114,7 +109,7 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
             type={newPasswordVisible ? 'text' : 'password'}
             placeholder="New password"
             value={newPassword}
-            onChange={(e)=>setNewPassword(e.target.value)}
+            onChange={(e) => setNewPassword(e.target.value)}
             className="font-sm text-medium focus:outline-none"
           />
           <div className="ml-auto cursor-pointer" onClick={toggleNewPasswordVisibility}>
@@ -132,7 +127,7 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
             type={confirmPasswordVisible ? 'text' : 'password'}
             placeholder="Confirm password"
             value={confirmPassword}
-            onChange={(e)=>setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="font-sm text-medium focus:outline-none"
           />
           <div className="ml-auto cursor-pointer" onClick={toggleConfirmPasswordVisibility}>
@@ -145,8 +140,11 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
         </div>
 
         <div className="text-center">
-          <button className="bg-fuchsia-950 font-semibold text-white rounded-full py-4 px-24 mt-64 md:mt-36" 
-          onClick={handleChangePassword}>
+          <button 
+          className="bg-fuchsia-950 font-semibold text-white rounded-full py-4 px-24 mt-64 md:mt-36"
+            onClick={handleChangePassword}
+            disabled={loadingPassword}
+            >
             Update
           </button>
         </div>
