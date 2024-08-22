@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { AuthContext } from "../../../contexts/AuthContext";
-import axios from '../../../Instance/Axios'
+import axios from '../../../Instance/Axios';
+import Loading from "../../Loading";
+import AccessDenied from "../../AccessDenied";
+import { toast } from "react-toastify";
 
-const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
+const ChangePassword = () => {
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -15,7 +17,6 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { authState, loading } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserPassword = async () => {
@@ -29,7 +30,6 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
       } finally {
         setLoadingPassword(false); // Set loading to false after API call
       }
-
     }
     if (authState.isAuthenticated) {
       fetchUserPassword()
@@ -44,12 +44,17 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
         confirmPassword
       }) 
       if (response.data.success) {
-        navigate('/dashboard/@me/changepass')
+        toast.success(response.data.message);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      }else{
+        toast.error(response.data.message);
       }
     } catch (error) {
+      toast.error("Failed to update password");
       console.error("Error changing password", error);
     }
-
   }
 
   const toggleCurrentPasswordVisibility = () => {
@@ -63,6 +68,10 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
+
+  if (loading || loadingPassword) return <Loading />;
+
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <div className="items-center justify-center min-h-screen bg-fuchsia-950">
@@ -143,7 +152,6 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
           <button 
           className="bg-fuchsia-950 font-semibold text-white rounded-full py-4 px-24 mt-64 md:mt-36"
             onClick={handleChangePassword}
-            disabled={loadingPassword}
             >
             Update
           </button>
