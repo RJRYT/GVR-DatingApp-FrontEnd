@@ -6,32 +6,35 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import axios from '../../../Instance/Axios'
 
 const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
- 
+  console.log('hello.........')
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [hasPassword,setHasPassword]=useState(false)
+  const [loadingPassword, setLoadingPassword] = useState(true);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { authState, loading } = useContext(AuthContext);
-  const { userId } = useParams();
   const navigate = useNavigate();
 
   useEffect(()=>{
-    const fetchUserPassword = async ()=>{
+    console.log('Effect running: Authenticated:', authState.isAuthenticated);
+    const fetchUserPassword = async ()=>{    
       try{
-        const response= await axios.get(`/users/profile/${userId}`)
+        const response= await axios.get(`/users/checkPass`)
        
         if(response.data.success){
           setHasPassword(!!response.data.user.password)
         }
       }catch(error){
         console.error("Error fetching user profile", error);
+      } finally {
+        setLoadingPassword(false); // Set loading to false after API call
       }
-      if (!loading && authState.isAuthenticated)fetchUserPassword()
+      if ( authState.isAuthenticated)fetchUserPassword()
     }
-  },[userId,loading,authState.isAuthenticated])
+  },[authState.isAuthenticated])
 
   const handleChangePassword= async() =>{
     try{
