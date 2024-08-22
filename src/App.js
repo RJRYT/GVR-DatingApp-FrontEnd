@@ -32,6 +32,7 @@ import GroupList from "./components/groups/Groups";
 import AddCard from "./components/UserProfile/Settings/AddCard";
 import PayMethods from "./components/UserProfile/Pages/PayMethods";
 import AccessDenied from "./components/AccessDenied";
+import Spin from "./components/Dashboard/Spin";
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
                 path="/dashboard/userprofile/upgrade"
                 element={<UserProfile upgrade={true} />}
               />
+              <Route path="/dashboard/@me/spin" element={<Spin />}/>
               <Route path="/dashboard/@me/profile" element={<Profile />} />
               <Route path="/dashboard/@me/privacy" element={<Privacy />} />
               <Route path="/dashboard/@me/filter" element={<Filter />} />
