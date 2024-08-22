@@ -20,7 +20,8 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
 
   useEffect(()=>{
     console.log('Effect running: Authenticated:', authState.isAuthenticated);
-    const fetchUserPassword = async ()=>{    
+    const fetchUserPassword = async ()=>{   
+      console.log("effect..........") 
       try{
         const response= await axios.get(`/users/checkPass`)
        
@@ -32,8 +33,12 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
       } finally {
         setLoadingPassword(false); // Set loading to false after API call
       }
-      if ( authState.isAuthenticated)fetchUserPassword()
+      
     }
+    if ( authState.isAuthenticated)
+      {
+        fetchUserPassword()
+      }
   },[authState.isAuthenticated])
 
   const handleChangePassword= async() =>{
