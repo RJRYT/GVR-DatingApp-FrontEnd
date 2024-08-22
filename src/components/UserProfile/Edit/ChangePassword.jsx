@@ -1,11 +1,53 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect,useContext} from "react";
+import {  useParams ,useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { AuthContext } from "../../../contexts/AuthContext";
+import axios from '../../../Instance/Axios'
 
-const ChangePassword = () => {
+const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
+ 
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [hasPassword,setHasPassword]=useState(false)
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { authState, loading } = useContext(AuthContext);
+  const { userId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    const fetchUserPassword = async ()=>{
+      try{
+        const response= await axios.get(`/users/profile/${userId}`)
+       
+        if(response.data.success){
+          setHasPassword(!!response.data.user.password)
+        }
+      }catch(error){
+        console.error("Error fetching user profile", error);
+      }
+      if (!loading && authState.isAuthenticated)fetchUserPassword()
+    }
+  },[userId,loading,authState.isAuthenticated])
+
+  const handleChangePassword= async() =>{
+    try{
+      const response= await axios.put(`/users/change-password`,{
+        currentPassword:hasPassword ? currentPassword : null,
+        newPassword,
+        confirmPassword
+      })
+      if(response.data.success){
+        navigate('/dashboard/@me/changepass')
+      }
+    }catch(error){
+      console.error("Error changing password", error);
+    }
+   
+  }
 
   const toggleCurrentPasswordVisibility = () => {
     setCurrentPasswordVisible(!currentPasswordVisible);
@@ -38,26 +80,33 @@ const ChangePassword = () => {
         </div>
 
         {/* Current Password */}
-        <div className="flex px-6 pb-4 py-4 border-b">
-          <input
-            type={currentPasswordVisible ? 'text' : 'password'}
-            placeholder="Current password"
-            className="font-sm text-medium focus:outline-none"
-          />
-          <div className="ml-auto cursor-pointer" onClick={toggleCurrentPasswordVisibility}>
-            {currentPasswordVisible ? (
-              <AiFillEye size={24} />
-            ) : (
-              <AiFillEyeInvisible size={24} />
-            )}
+        {hasPassword && (
+            <div className="flex px-6 pb-4 py-4 border-b">
+            <input
+              type={currentPasswordVisible ? 'text' : 'password'}
+              placeholder="Current password"
+              value={currentPassword}
+              onChange={(e)=>setCurrentPassword(e.target.value)}
+              className="font-sm text-medium focus:outline-none"
+            />
+            <div className="ml-auto cursor-pointer" onClick={toggleCurrentPasswordVisibility}>
+              {currentPasswordVisible ? (
+                <AiFillEye size={24} />
+              ) : (
+                <AiFillEyeInvisible size={24} />
+              )}
+            </div>
           </div>
-        </div>
+        )}
+      
 
         {/* New Password */}
         <div className="flex px-6 py-4 border-b">
           <input
             type={newPasswordVisible ? 'text' : 'password'}
             placeholder="New password"
+            value={newPassword}
+            onChange={(e)=>setNewPassword(e.target.value)}
             className="font-sm text-medium focus:outline-none"
           />
           <div className="ml-auto cursor-pointer" onClick={toggleNewPasswordVisibility}>
@@ -74,6 +123,8 @@ const ChangePassword = () => {
           <input
             type={confirmPasswordVisible ? 'text' : 'password'}
             placeholder="Confirm password"
+            value={confirmPassword}
+            onChange={(e)=>setConfirmPassword(e.target.value)}
             className="font-sm text-medium focus:outline-none"
           />
           <div className="ml-auto cursor-pointer" onClick={toggleConfirmPasswordVisibility}>
@@ -86,7 +137,8 @@ const ChangePassword = () => {
         </div>
 
         <div className="text-center">
-          <button className="bg-fuchsia-950 font-semibold text-white rounded-full py-4 px-24 mt-64 md:mt-36">
+          <button className="bg-fuchsia-950 font-semibold text-white rounded-full py-4 px-24 mt-64 md:mt-36" 
+          onClick={handleChangePassword}>
             Update
           </button>
         </div>
