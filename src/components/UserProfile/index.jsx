@@ -161,7 +161,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                 Interest
               </h4>
               <div className="flex flex-wrap gap-2 mb-2">
-                {user.interests.map((interest, index) => (
+                {user?.interests?.map((interest, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"
@@ -170,7 +170,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                     {interest.label}
                   </div>
                 ))}
-                {authState.user.hobbies.map((hobbie, index) => (
+                {user?.hobbies?.map((hobbie, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"
