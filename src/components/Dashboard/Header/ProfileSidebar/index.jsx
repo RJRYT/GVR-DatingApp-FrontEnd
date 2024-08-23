@@ -1,7 +1,10 @@
-import React from 'react';
-import {  IoLogOutOutline } from 'react-icons/io5';
+import React, {useContext} from 'react';
+import { Link } from 'react-router-dom';
+import { IoLogOutOutline } from 'react-icons/io5';
+import { AuthContext } from "../../../../contexts/AuthContext";
 
 const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
+  const { logout } = useContext(AuthContext);
   const menuItems = [
     'My Profile', 'Sent Request', 'Viewed My Profile', 'Accept Request',
     'Reject', 'Received', 'Shortlisted By', 'Shortlisted', 'Contacted',
@@ -9,21 +12,12 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
   ];
 
   const handleItemClick = (item) => {
-    console.log(`${item} clicked`); // Log the item clicked for debugging
-    toggleProfileModal();  // Close the modal when an item is clicked
+    console.log(`${item} clicked`); 
+    toggleProfileModal(); 
 
-    // Add specific action for Logout
     if (item === 'Logout') {
-      // Perform logout action
-      handleLogout();
+      logout();
     }
-  };
-
-  const handleLogout = () => {
-    console.log('Logging out...');
-    // Perform logout action here, e.g., clearing user data, redirecting to login page
-    //localStorage.clear(); // Uncomment and modify as per your logic
-     //window.location.href = '/login'; // Uncomment and modify as per your logic
   };
 
   return (
@@ -81,7 +75,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
             ))}
             <li
               className="flex items-center justify-center  py-4 text-sm space-x-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
-              onClick={handleLogout}
+              onClick={() => handleItemClick("Logout")}
             >
               <IoLogOutOutline className="mr-2 text-white"/>
               <span>Logout</span>

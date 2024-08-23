@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const Interested = ({ isVisible, modelToggle }) => {
   const navigate = useNavigate();
-  const { authState, loading } = useContext(AuthContext);
+  const { authState, checkAuthStatus, loading } = useContext(AuthContext);
 
   useEffect(() => {
     if (!loading && !authState.isAuthenticated) modelToggle();
@@ -18,6 +18,7 @@ const Interested = ({ isVisible, modelToggle }) => {
 
   const handleDatingClick = (e) => {
     e.preventDefault();
+    checkAuthStatus(true);
     toast.success("Redirecting to dating dashboard");
     navigate("/dashboard");
   };

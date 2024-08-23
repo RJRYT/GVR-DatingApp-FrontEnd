@@ -16,7 +16,7 @@ const JobStatus = ({ isVisible, modelToggle, setLoading, setProfessionType }) =>
     setProfessionType(jobRole);
     if (jobRole === "employee" || jobRole === "employer") {
       modelToggle("JobDetails1");
-    } else if (jobRole === "jobSeeker") modelToggle("JobDetails2");
+    } else if (jobRole === "jobseeker") modelToggle("JobDetails2");
     else setError("Choose a option to continue");
   };
 
@@ -56,7 +56,7 @@ const JobStatus = ({ isVisible, modelToggle, setLoading, setProfessionType }) =>
               <input
                 type="radio"
                 name="jobRole"
-                value="jobSeeker"
+                value="jobseeker"
                 onChange={(e) => setJobRole(e.target.value)}
                 className="mr-2"
               />

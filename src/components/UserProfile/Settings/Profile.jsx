@@ -53,7 +53,7 @@ const settingsOptions = [
 ];
 const users = [
   { name: "Nazrul Islam", src: Profile, description: "Never give up 💪" },
-];
+];    
 
 const ProfileSettings = () => {
   return (
