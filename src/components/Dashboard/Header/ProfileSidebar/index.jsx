@@ -6,15 +6,21 @@ import { AuthContext } from "../../../../contexts/AuthContext";
 const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
   const { logout } = useContext(AuthContext);
   const menuItems = [
-    'My Profile', 'Sent Request', 'Viewed My Profile', 'Accept Request',
-    'Reject', 'Received', 'Shortlisted By', 'Shortlisted', 'Contacted',
-    'Message', 'Settings'
+    { label: "My Profile", path: "/dashboard/profile" },
+    { label: "Sent Request", path: "/dashboard/@me/sent" },
+    { label: "Viewed My Profile", path: "/dashboard/@me/myprofile" },
+    { label: "Accept Request", path: "/dashboard/@me/accept" },
+    { label: "Reject", path: "/dashboard/@me/reject" },
+    { label: "Received", path: "/dashboard/@me/received" },
+    { label: "Shortlisted By", path: "/dashboard/@me/shortlisted-by" },
+    { label: "Shortlisted", path: "/dashboard/@me/shortlist" },
+    { label: "Contacted", path: "/dashboard/@me/contacted" },
+    { label: "Message", path: "/dashboard/@me/messages" },
+    { label: "Settings", path: "/dashboard/@me/profile" },
   ];
 
   const handleItemClick = (item) => {
-    console.log(`${item} clicked`); 
     toggleProfileModal(); 
-
     if (item === 'Logout') {
       logout();
     }
@@ -66,11 +72,11 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
           <ul>
             {menuItems.map((item, index) => (
               <li
-                key={item}
+                key={index}
                 onClick={() => handleItemClick(item)}
                 className="flex items-center  py-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
               >
-                {item}
+                <Link to={item.path}>{item.label}</Link>
               </li>
             ))}
             <li
