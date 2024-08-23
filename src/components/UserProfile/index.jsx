@@ -1,44 +1,64 @@
-import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import AccessDenied from "../AccessDenied";
-import profilePicture from "../../assets/profile/profilePic.png"; 
+import axios from '../../Instance/Axios'
+import profilePicture from "../../assets/profile/profilePic.png";
 import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
 
 const sampleUser = {
-  profilePicture, 
+  profilePicture,
   name: "Alfredo Calzoni",
   age: "20",
   location: "Hamburg, Germany",
   about: `A good listener. I love having a good talk to know each other's side.`,
 };
 
-const interests = [
-  { text: "Nature", emoji: "🌳" },
-  { text: "Travel", emoji: "🌍" },
-  { text: "Writing", emoji: "✍️" },
-  { text: "People", emoji: "🙂" },
-  { text: "Gym & Fitness", emoji: "💪" },
-];
+// const interests = [
+//   { text: "Nature", emoji: "🌳" },
+//   { text: "Travel", emoji: "🌍" },
+//   { text: "Writing", emoji: "✍️" },
+//   { text: "People", emoji: "🙂" },
+//   { text: "Gym & Fitness", emoji: "💪" },
+// ];
 
 const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
-  const [activeLine, setActiveLine] = useState(1); 
+  const [activeLine, setActiveLine] = useState(1);
   const { authState, loading } = useContext(AuthContext);
+  const { userId } = useParams();
+  const [user, setUser] = useState(true);
 
-  
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        if (OwnProfile) {
+          setUser(authState.user)
+        } else {
+          const response = await axios.get(`/users/profile/${userId}`);
+          if (response.data.success) {
+            setUser(response.data.user);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user profile", error);
+      }
+    }
+    if (!loading && authState.isAuthenticated) fetchUserProfile();
+  }, [OwnProfile, userId, authState, loading])
+
   const handleLineClick = (lineNumber) => {
-    setActiveLine(lineNumber); 
+    setActiveLine(lineNumber);
   };
-  
+
   const handleBackClick = () => {
-    window.history.back(); 
+    window.history.back();
   };
-  
+
   if (loading) return <Loading />;
 
-  if(!loading && !authState.isAuthenticated) return <AccessDenied />;
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <>
@@ -46,7 +66,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${OwnProfile && authState.user ? authState.user.profilePic.url : sampleUser.profilePicture})` }}
+          style={{ backgroundImage: `url(${user.profilePic?.url || profilePicture})` }}
         >
           <button
             onClick={handleBackClick}
@@ -98,10 +118,10 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
 
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
-              {authState.user.username}, {authState.user.age}
+              {user.username}, {user.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
-              {authState.user.location}
+              {user.location}
             </p>
             {OwnProfile ? (
               <MatchButton progress={75} text="Profile Complete" />
@@ -113,15 +133,13 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
             <div
               onClick={() => handleLineClick(1)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 1 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 1 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
             <div
               onClick={() => handleLineClick(2)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 2 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 2 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
           </div>
           {/* User Details Section */}
@@ -143,7 +161,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                 Interest
               </h4>
               <div className="flex flex-wrap gap-2 mb-2">
-                {authState.user.interests.map((interest, index) => (
+                {user?.interests?.map((interest, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"
@@ -152,7 +170,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                     {interest.label}
                   </div>
                 ))}
-                {authState.user.hobbies.map((hobbie, index) => (
+                {user?.hobbies?.map((hobbie, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"

@@ -10,7 +10,7 @@ function DashboardLayout() {
 
   if (loading) return <Loading />;
 
-  //if (!loading && !authState.isAuthenticated) return <AccessDenied />;
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <div className="font-sans">

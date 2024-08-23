@@ -98,6 +98,7 @@ function Login() {
     if (token) {
       checkAuthStatus();
       checkRegistrationStatus();
+      navigate("/login");
     }
   }, []);
 
