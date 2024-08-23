@@ -5,8 +5,8 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axios from '../../../Instance/Axios'
 
-const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
-  console.log('hello.........')
+const ChangePassword = () => {
+ 
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -19,9 +19,9 @@ const ChangePassword = ({ OwnProfile = false, upgrade = false }) => {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    console.log('Effect running: Authenticated:', authState.isAuthenticated);
+
     const fetchUserPassword = async ()=>{   
-      console.log("effect..........") 
+
       try{
         const response= await axios.get(`/users/checkPass`)
        
