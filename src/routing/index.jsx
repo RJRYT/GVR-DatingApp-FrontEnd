@@ -31,7 +31,7 @@ import Spin from "../components/Dashboard/Spin";
 import ChatBox from "../components/UserProfile/Pages/chat/ChatBox";
 
 
-export default Routing = () => {
+function Routing() {
   return (
     <BrowserRouter>
       <Routes>
@@ -141,3 +141,5 @@ export default Routing = () => {
     </BrowserRouter>
   );
 };
+
+export default Routing;
