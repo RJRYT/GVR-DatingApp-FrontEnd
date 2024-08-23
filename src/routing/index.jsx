@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Layout from "../components/Layout/Main";
 import DefaultPage from "../components/Default";
@@ -71,27 +71,37 @@ function Routing() {
               element={<Matches upgrade={true} />}
             />
           </Route>
-          <Route path="/dashboard/groups" element={<GroupList />} />
-          <Route path="/dashboard/userprofile" element={<UserProfile />} />
+          <Route
+            path="/dashboard/profile"
+            element={<Navigate to={"/dashboard/profile/@me"} />}
+          />
+          <Route
+            path="/dashboard/profile/edit"
+            element={<Navigate to={"/dashboard/profile/@me/edit"} />}
+          />
+          <Route
+            path="/dashboard/profile/:userId"
+            element={<UserProfile />}
+          />
+          <Route
+            path="/dashboard/profile/@me/edit"
+            element={<EditProfile />}
+          />
           <Route
             path="/dashboard/userprofile/upgrade"
             element={<UserProfile upgrade={true} />}
           />
+          <Route path="/dashboard/groups" element={<GroupList />} />
           <Route path="/dashboard/@me/spin" element={<Spin />} />
           <Route path="/dashboard/@me/profile" element={<Profile />} />
           <Route path="/dashboard/@me/privacy" element={<Privacy />} />
           <Route path="/dashboard/@me/filter" element={<Filter />} />
-          <Route path="/dashboard/@me/edit" element={<EditProfile />} />
           <Route path="/dashboard/@me/addcard" element={<AddCard />} />
           <Route path="/dashboard/story" element={<Stories />} />
           <Route path="/dashboard/@me/reject" element={<Reject />} />
           <Route path="/dashboard/@me/messages" element={<Messages />} />
           <Route path="/dashboard/@me/chat" element={<ChatBox />} />
           <Route path="/dashboard/@me/accept" element={<Accept />} />
-          <Route
-            path="/dashboard/@me"
-            element={<UserProfile OwnProfile={true} />}
-          />
           <Route
             path="/dashboard/@me/subscription"
             element={<Subscription />}

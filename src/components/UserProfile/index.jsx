@@ -24,7 +24,7 @@ const sampleUser = {
 //   { text: "Gym & Fitness", emoji: "💪" },
 // ];
 
-const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
+const UserProfile = ({ upgrade = false }) => {
   const [activeLine, setActiveLine] = useState(1);
   const { authState, loading } = useContext(AuthContext);
   const { userId } = useParams();
@@ -33,8 +33,8 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        if (OwnProfile) {
-          setUser(authState.user)
+        if (userId === "@me") {
+          setUser(authState.user);
         } else {
           const response = await axios.get(`/users/profile/${userId}`);
           if (response.data.success) {
@@ -46,7 +46,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
       }
     }
     if (!loading && authState.isAuthenticated) fetchUserProfile();
-  }, [OwnProfile, userId, authState, loading])
+  }, [userId, authState, loading])
 
   const handleLineClick = (lineNumber) => {
     setActiveLine(lineNumber);
@@ -87,9 +87,9 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
               />
             </svg>
           </button>
-          {OwnProfile ? (
+          {userId === "@me" ? (
             <Link
-              to={"/dashboard/@me/edit"}
+              to={"/dashboard/profile/edit"}
               className="absolute top-4 right-4 flex items-center justify-center rounded-3xl border py-1 px-3 gap-1 border-gray-300 shadow-md text-gray-300 backdrop-blur-md bg-white bg-opacity-30"
             >
               <span className="text-gray-300 text-sm">Edit</span>
@@ -123,7 +123,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
               {user.location}
             </p>
-            {OwnProfile ? (
+            {userId === "@me" ? (
               <MatchButton progress={75} text="Profile Complete" />
             ) : (
               <MatchButton />
@@ -183,7 +183,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
             </div>
           </div>
         </div>
-        {!OwnProfile && (
+        {userId !== "@me" && (
           <nav className="fixed bottom-4 z-12 left-1/2 transform -translate-x-1/2 w-[calc(100%-46px)] xl:w-[728px] bg-white border-t border-gray-200 rounded-full shadow-lg">
             <div className="flex justify-around p-4">
               <Link to="./" className="text-gray-400">
