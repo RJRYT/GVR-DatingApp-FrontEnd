@@ -109,20 +109,3 @@ body {
 body{
   background-color: #FDF7FD;
 }
-
-/* CHAT */
-.chatbox-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* Full viewport height */
-}
-
-footer {
-  flex-shrink: 0; /* Ensure footer doesn't shrink */
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 20px;
-  width: auto; /* Make footer span the full width */
-  /* background-color: rgb(121, 3, 121); Optional: Add background color */
-  color: black; /* Optional: Add text color */
-}

@@ -1,37 +1,27 @@
-import { Box, Button, TextField } from '@mui/material';
 import React from 'react';
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import SendIcon from '@mui/icons-material/Send';
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import IconButton from '@mui/material/IconButton';
-import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
-
+import { FaSmile } from 'react-icons/fa';
+import { IoSend } from "react-icons/io5";
+import { AiFillAudio } from "react-icons/ai";
 
 const Footer = () => {
   return (
-    <footer>
-     <Paper
-      component="form"
-      sx={{  marginLeft: " 20px" , display: 'flex', alignItems: 'center', width: "60vw" , maxWidth: 700 , minWidth: "100%"}}
-    >
-      <IconButton>
-        <InsertEmoticonIcon />
-      </IconButton>
-      <IconButton>
-        <KeyboardVoiceIcon />
-      </IconButton>
-      <InputBase
-        sx={{ ml: 1, flex: 1  }}
-        placeholder="Type your message"
-        inputProps={{ 'aria-label': 'Type your message' }}
-      />
-      <IconButton type="button" sx={{ p: '10px', right: 0 }} aria-label="send">
-        <SendIcon />
-      </IconButton>
-      
-    </Paper>
-    
+    <footer className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[calc(100%-46px)] xl:w-[728px] bg-white border-b border-gray-400 rounded-xl shadow-sm">
+      <form className="flex items-center w-full bg-gray-100 p-2 rounded-xl">
+        <button type="button" className="text-xl text-gray-600">
+          <FaSmile />
+        </button>
+        <button type="button" className="text-xl text-gray-600 ml-2">
+          <AiFillAudio />
+        </button>
+        <input
+          type="text"
+          placeholder="Type your message"
+          className="flex-1 bg-transparent outline-none ml-4"
+        />
+        <button type="submit" className="text-xl text-gray-600 ml-2">
+          <IoSend />
+        </button>
+      </form>
     </footer>
   );
 };
