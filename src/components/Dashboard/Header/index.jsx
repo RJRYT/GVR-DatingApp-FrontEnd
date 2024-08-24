@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Header = ({ toggleModal, toggleNotificationModal,toggleProfileModal }) => {
+const Header = ({ toggleModal, toggleNotificationModal,toggleProfileModal, user }) => {
   return (
     <div className="relative">
       <header className="flex items-center justify-between p-4 bg-white">
@@ -53,9 +53,9 @@ const Header = ({ toggleModal, toggleNotificationModal,toggleProfileModal }) => 
             </svg>
           {/* </a> */}
           </button>
-          <button  aria-label="ToggleProfileMenu" className="bg-white rounded-full  p-2">
+          <button  aria-label="ToggleProfileMenu" className="bg-white rounded-full p-2">
             <img onClick={toggleProfileModal}
-              src="https://i.imgur.com/sjLMNDM.png"
+              src={user && user.profilePic ? user.profilePic.url : "https://i.imgur.com/sjLMNDM.png"}
               alt="Profile"
               className="w-10 h-10 rounded-full"
             />

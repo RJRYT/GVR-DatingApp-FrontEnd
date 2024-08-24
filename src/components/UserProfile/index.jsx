@@ -87,7 +87,7 @@ const UserProfile = ({ upgrade = false }) => {
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${user?.profilePic.url || profilePicture})` }}
+          style={{ backgroundImage: `url(${user?.profilePic?.url || profilePicture})` }}
         >
           <button
             onClick={handleBackClick}

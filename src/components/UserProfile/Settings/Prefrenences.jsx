@@ -4,8 +4,8 @@ import Slider from "../Components/Slider";
 import Select from "../../UserProfile/Components/Select";
 import Navbar from "../../Dashboard/Navbar";
 import axiosInstance from "../../../Instance/Axios"
+import { useNavigate } from "react-router-dom";
 import {
-  gender,
   locations,
   interests,
   hobbies,
@@ -17,7 +17,7 @@ import {
 import { toast } from "react-toastify";
 
 function PrefrenencesSettings() {
-
+const navigate = useNavigate();
   const [preferences, setPreferences] = useState({
     AgeRange: { min: 18, max: 35 },
     HeightRange: { min: 100, max: 220 },
@@ -55,7 +55,10 @@ function PrefrenencesSettings() {
     try {
       const response = await axiosInstance.post("/matches/preferences", preferences);
       if (response.data.success) {
-        toast.success(response.data.message)
+        toast.success(response.data.message);
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get("redirect");
+        if(redirect)navigate(redirect);
       } else {
         toast.error(response.data.message)
       }
@@ -114,7 +117,11 @@ function PrefrenencesSettings() {
               Gender
               <Select
                 onChange={(selectedOption) => handleSelectChange(selectedOption, 'Gender')}
-                options={gender}
+                options={[
+                  { label: "Male", value: "male" },
+                  { label: "Famale", value: "female" },
+                  { label: "Both", value: "both" },
+                ]}
                 value={preferences.Gender}
               />
             </div>
