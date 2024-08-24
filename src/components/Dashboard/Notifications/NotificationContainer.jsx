@@ -119,7 +119,7 @@ const NotificationsContainer = ({ toggleNotificationModal }) => {
     {
       id: 15,
       type: "alert",
-      link: "/dashboard/@me/preferences/:userId",
+      link: "/dashboard/@me/preferences",
       title: "Preferences",
       message: "Update your partner preferences",
       time: "Just now",
