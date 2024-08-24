@@ -1,52 +1,93 @@
-import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
+import LoadingOverlay from "../Loading/LoadingOverlay";
 import AccessDenied from "../AccessDenied";
-import profilePicture from "../../assets/profile/profilePic.png"; 
+import axios from '../../Instance/Axios'
+import profilePicture from "../../assets/profile/profilePic.png";
 import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
+import { toast } from "react-toastify";
 
 const sampleUser = {
-  profilePicture, 
+  profilePicture,
   name: "Alfredo Calzoni",
   age: "20",
   location: "Hamburg, Germany",
   about: `A good listener. I love having a good talk to know each other's side.`,
 };
 
-const interests = [
-  { text: "Nature", emoji: "🌳" },
-  { text: "Travel", emoji: "🌍" },
-  { text: "Writing", emoji: "✍️" },
-  { text: "People", emoji: "🙂" },
-  { text: "Gym & Fitness", emoji: "💪" },
-];
+// const interests = [
+//   { text: "Nature", emoji: "🌳" },
+//   { text: "Travel", emoji: "🌍" },
+//   { text: "Writing", emoji: "✍️" },
+//   { text: "People", emoji: "🙂" },
+//   { text: "Gym & Fitness", emoji: "💪" },
+// ];
 
-const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
-  const [activeLine, setActiveLine] = useState(1); 
+const UserProfile = ({ upgrade = false }) => {
+  const [activeLine, setActiveLine] = useState(1);
   const { authState, loading } = useContext(AuthContext);
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
+  const [loadingOverlay, setLoadingOverlay] = useState(false);
 
-  
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        if (userId === "@me") {
+          setUser(authState.user);
+        } else {
+          const response = await axios.get(`/users/profile/${userId}`);
+          if (response.data.success) {
+            setUser(response.data.user);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user profile", error);
+      }
+    }
+    if (!loading && authState.isAuthenticated) fetchUserProfile();
+  }, [userId, authState, loading])
+
   const handleLineClick = (lineNumber) => {
-    setActiveLine(lineNumber); 
+    setActiveLine(lineNumber);
   };
-  
+
   const handleBackClick = () => {
-    window.history.back(); 
+    window.history.back();
   };
-  
+
+  const handleSendMessageClick = async () => {
+    setLoadingOverlay(true);
+    try {
+      const response = await axios.post("/chats/requests", { recipientId: userId });
+      if (response.data.success) {
+        toast.success(`Message request has sended to ${user.username}`);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send request");
+    } finally {
+      setLoadingOverlay(false);
+    }
+  }
+
   if (loading) return <Loading />;
 
-  if(!loading && !authState.isAuthenticated) return <AccessDenied />;
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <>
       {upgrade && <Upgrade />}
+      {loadingOverlay && <LoadingOverlay />}
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${OwnProfile && authState.user ? authState.user.profilePic.url : sampleUser.profilePicture})` }}
+          style={{ backgroundImage: `url(${user.profilePic?.url || profilePicture})` }}
         >
           <button
             onClick={handleBackClick}
@@ -67,9 +108,9 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
               />
             </svg>
           </button>
-          {OwnProfile ? (
+          {userId === "@me" ? (
             <Link
-              to={"/dashboard/@me/edit"}
+              to={"/dashboard/profile/edit"}
               className="absolute top-4 right-4 flex items-center justify-center rounded-3xl border py-1 px-3 gap-1 border-gray-300 shadow-md text-gray-300 backdrop-blur-md bg-white bg-opacity-30"
             >
               <span className="text-gray-300 text-sm">Edit</span>
@@ -98,12 +139,12 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
 
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
-              {authState.user.username}, {authState.user.age}
+              {user.username}, {user.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
-              {authState.user.location}
+              {user.location}
             </p>
-            {OwnProfile ? (
+            {userId === "@me" ? (
               <MatchButton progress={75} text="Profile Complete" />
             ) : (
               <MatchButton />
@@ -113,15 +154,13 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
             <div
               onClick={() => handleLineClick(1)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 1 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 1 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
             <div
               onClick={() => handleLineClick(2)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 2 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 2 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
           </div>
           {/* User Details Section */}
@@ -143,7 +182,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                 Interest
               </h4>
               <div className="flex flex-wrap gap-2 mb-2">
-                {authState.user.interests.map((interest, index) => (
+                {user?.interests?.map((interest, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"
@@ -152,7 +191,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                     {interest.label}
                   </div>
                 ))}
-                {authState.user.hobbies.map((hobbie, index) => (
+                {user?.hobbies?.map((hobbie, index) => (
                   <div
                     key={index}
                     className="bg-white text-black chakra-petch-medium left-0 px-2 py-1 rounded-full border border-gray-400 flex items-center justify-center"
@@ -165,11 +204,11 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
             </div>
           </div>
         </div>
-        {!OwnProfile && (
+        {userId !== "@me" && (
           <nav className="fixed bottom-4 z-12 left-1/2 transform -translate-x-1/2 w-[calc(100%-46px)] xl:w-[728px] bg-white border-t border-gray-200 rounded-full shadow-lg">
             <div className="flex justify-around p-4">
               <Link to="./" className="text-gray-400">
-                <button className="rounded-full hover:bg-gray-100 flex items-center justify-center text-white bg-rose-300 w-12 h-12">
+                <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-rose-300 w-12 h-12">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -183,7 +222,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                 </button>
               </Link>
               <Link to="./" className="text-gray-400">
-                <button className="rounded-full hover:bg-gray-100 flex items-center justify-center text-white bg-purple-950 w-12 h-12">
+                <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-purple-950 w-12 h-12">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -200,7 +239,7 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                 </button>
               </Link>
               <Link to="./" className="text-gray-400">
-                <button className="rounded-full hover:bg-gray-100 flex items-center justify-center text-white bg-rose-400 w-12 h-12">
+                <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-rose-400 w-12 h-12">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -216,23 +255,21 @@ const UserProfile = ({ OwnProfile = false, upgrade = false }) => {
                   </svg>
                 </button>
               </Link>
-              <Link to="./" className="text-gray-400">
-                <button className="rounded-full hover:bg-gray-100 flex items-center justify-center text-white bg-purple-600 w-12 h-12">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z"
-                      fill="white"
-                    ></path>
-                  </svg>
-                </button>
-              </Link>
+              <button onClick={handleSendMessageClick} className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-purple-600 w-12 h-12">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z"
+                    fill="white"
+                  ></path>
+                </svg>
+              </button>
             </div>
           </nav>
         )}

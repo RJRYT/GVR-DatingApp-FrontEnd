@@ -1,74 +1,62 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileCard from "./ProfileCard";
+import axiosInstance from "../../../Instance/Axios";
+import { AuthContext } from "../../../contexts/AuthContext";
 
-// Import profile images
-import m4 from "../../../assets/matches/profilePics/m4.jpg";
-import m5 from "../../../assets/matches/profilePics/m5.jpg";
-import m6 from "../../../assets/matches/profilePics/m6.jpg";
-import w4 from "../../../assets/matches/profilePics/w4.jpg";
-import w5 from "../../../assets/matches/profilePics/w5.jpg";
-import w6 from "../../../assets/matches/profilePics/w6.jpg";
+const ProfileGrid = ({ activeTab }) => {
+  const [users, setUsers] = useState([]);
+  const { authState } = useContext(AuthContext);
+  
+  const userLocation = authState.user.location; 
+  const userQualifications = authState.user.qualification;
+  const userInterests = authState.user.interests;
+  const userId = authState.user.id; // Unique identifier for the current user
 
-const profiles = [
-  {
-    name: "Sithara Nair",
-    gender: "F",
-    age: " 25yrs",
-    occupation: "Developer",
-    location: "Hyderabad",
-    image: w4,
-  },
-  {
-    name: "Christina",
-    gender: "F",
-    age: "18yrs",
-    occupation: "Architect",
-    location: "Hyderabad",
-    image: w5,
-  },
-  {
-    name: "Aleena",
-    gender: "F",
-    age: "23yrs",
-    occupation: "Developer",
-    location: "Hyderabad",
-    image: w6,
-  },
-  {
-    name: "Alex",
-    gender: "M",
-    age: "25yrs",
-    occupation: "Designer",
-    location: "Kerala",
-    image: m4,
-  },
-  {
-    name: "Chris",
-    gender: "M",
-    age: "19yrs",
-    occupation: "Developer",
-    location: "karnataka",
-    image: m5,
-  },
-  {
-    name: "John",
-    gender: "M",
-    age: "30yrs",
-    occupation: "Teacher",
-    location: "Bangalore",
-    image: m6,
-  },
-];
+  useEffect(() => {
+    axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/users/users`)
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          let filteredUsers = [];
 
-const ProfileGrid = () => {
+          // Filter based on the activeTab value and exclude the current user
+          if (activeTab === "nearby") {
+            filteredUsers = response.data.filter(profile => profile.location === userLocation && profile.id !== userId);
+          } else if (activeTab === "qualification") {
+            filteredUsers = response.data.filter(profile => 
+              profile.id !== userId && 
+              profile.qualification.some(q => 
+                userQualifications.some(uq => uq.value === q.value)
+              )
+            );
+          } else if (activeTab === "interests") {
+            filteredUsers = response.data.filter(profile => 
+              profile.id !== userId && 
+              profile.interests.some(i => 
+                userInterests.some(ui => ui.value === i.value)
+              )
+            );
+          }
+
+          setUsers(filteredUsers);
+        } else {
+          console.error("Unexpected data format:", response.data);
+        }
+      })
+      .catch(error => console.error('Error fetching users:', error));
+  }, [userLocation, activeTab, userInterests, userQualifications, userId]);
+
   return (
     <div className="grid grid-cols-2 gap-4 mt-4">
-      {profiles.map((profile, index) => (
-        <Link key={index} to={"/dashboard/userprofile"}>
-          <ProfileCard profile={profile} />
-        </Link>
-      ))}
+      {Array.isArray(users) && users.length > 0 ? (
+        users.map((profile, index) => (
+          <Link key={index} to={`/dashboard/profile/${profile.id}`} >
+            <ProfileCard profile={profile} />
+          </Link>
+        ))
+      ) : (
+        <p>No profiles found</p>
+      )}
     </div>
   );
 };

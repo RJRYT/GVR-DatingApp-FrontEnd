@@ -6,6 +6,7 @@ import { AuthContext } from "../../../contexts/AuthContext";
 const Login = ({ isVisible, modelToggle, setLoading }) => {
   const { authState, checkAuthStatus, loading } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
+  const [forceCheck, setForceCheck] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -60,7 +61,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
       try {
         const res = await axiosInstance.post("/auth/email/login", formData);
         if (res.data.success) {
-          checkAuthStatus();
+          checkAuthStatus(forceCheck);
           toast.success("Login Success");
           modelToggle();
         } else {
@@ -73,6 +74,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
         );
       } finally {
         setLoading(false);
+        setForceCheck(false);
       }
     }
   };

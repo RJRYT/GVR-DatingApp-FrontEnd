@@ -5,13 +5,15 @@ import chat from "../../../assets/matches/chat.svg";
 import more from "../../../assets/matches/more.svg";
 
 const ProfileCard = ({ profile }) => {
+ 
   return (
     <div className="relative bg-white rounded-xl overflow-hidden shadow-lg">
       <img
-        src={profile.image}
-        alt={profile.name}
+        src={profile.profilePic.url}
+        alt={profile.username}
         className="w-full max-md:h-[200px] md:h-[200px] lg:h-[230px] object-cover"
       />
+      
 
       <div className="absolute top-0 left-0 right-0   p-2 text-white">
         <div className="flex justify-between items-top">
@@ -22,17 +24,16 @@ const ProfileCard = ({ profile }) => {
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-1 flex ">
         <div className="text-white ">
-          <span className="block text-xs font-bold ">{profile.name}</span>
+          <span className="block text-xs font-bold ">{profile.username}</span>
           <span className="block text-xs uppercase">
             {profile.gender} {profile.age}
           </span>
           <span className="block text-xs uppercase">
-            {profile.occupation}, {profile.location}
+            {profile.designation}, {profile.location}
           </span>
         </div>
       </div>
-      {/* Interaction Icons */}
-
+      
       <div
         className="absolute bottom-0 top-[50%] mt-[-70px] right-0  bg-transparent h-[150px] w-[60px] flex justify-center bg-center gap-2 bg-no-repeat items-center flex-col"
         style={{ backgroundImage: `url(${backgroundImage})` }}

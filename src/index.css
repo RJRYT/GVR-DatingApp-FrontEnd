@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes expand {
+  from {
+      transform: scale(1);
+      opacity: 1;
+  }
+  to {
+      transform: scale(1.5);
+      opacity: 0;
+  }
+}
+
+.animation-expand {
+  animation: expand 3s ease-in-out forwards;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap');
 
@@ -93,21 +108,4 @@ body {
 }
 body{
   background-color: #FDF7FD;
-}
-
-/* CHAT */
-.chatbox-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* Full viewport height */
-}
-
-footer {
-  flex-shrink: 0; /* Ensure footer doesn't shrink */
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 20px;
-  width: auto; /* Make footer span the full width */
-  /* background-color: rgb(121, 3, 121); Optional: Add background color */
-  color: black; /* Optional: Add text color */
 }

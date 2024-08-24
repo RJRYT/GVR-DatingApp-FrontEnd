@@ -1,46 +1,22 @@
-import React from 'react'
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import CallIcon from '@mui/icons-material/Call';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Typography } from '@mui/material';
-import sender from "../../../../assets/story/profile1.png"
-
+import React from 'react';
+import { FaArrowLeft, FaPhone } from 'react-icons/fa';
+import { BsCameraVideoFill } from "react-icons/bs";
+import sender from "../../../../assets/story/profile1.png";
 
 const Header = () => {
   return (
-       
-          <Card sx={{ background: "rgb(121,3,121)" , borderRadius: 0 , color: "white" }}>
-      <CardHeader
-  
-        avatar={
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1  }}>
-          <ArrowBackIcon  sx={{ marginRight: 2}}/>
-          <Avatar sx={{ width: 56, height: 56 , fontSize: 30}} src={sender}></Avatar> 
-          </Box>
-        }
-        action={
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 , paddingTop: 1 , marginRight: 1}}>
-          <IconButton sx={{ color: "primary.contrastText"}}>
-            <CallIcon/>
-          </IconButton>
-          <IconButton sx={{ color: "primary.contrastText"}}>
-            <VideocamIcon/>
-          </IconButton>
-          </Box>
-        }
-        
-        title={<Typography sx={{ fontSize: "24px" , marginLeft: 2 }}>Fathima</Typography>}
-        // subheader={<Typography variant='caption' sx={{ fontSize: "12px" , marginLeft: 2 }}>Full Stack Developer</Typography>}
-        
-      />
-      </Card>
-      
+    <div className="bg-fuchsia-950 text-white rounded-none p-4 flex justify-between items-center">
+      <div className="flex items-center gap-4 mr-auto">
+        <FaArrowLeft className="text-xl" />
+        <img src={sender} alt="Sender" className="w-10 h-10 rounded-full object-cover" />
+        <h1 className="text-xl">Fathima</h1>
+      </div>
+      <div className="flex items-center gap-4 ml-auto">
+        <FaPhone className="text-white text-xl" />
+        <BsCameraVideoFill className="text-white text-xl" />
+      </div>
+    </div>
+  );
+};
 
-  )
-}
-
-export default Header
+export default Header;

@@ -5,11 +5,10 @@ import Footer from './Footer'
 
 const ChatBox = () => {
   return (
-    <div className="chatbox-container">
-    <Header/>
-    <ChatArea/>
-    <Footer/>
-        
+    <div className="flex flex-col h-dvh">
+      <Header />
+      <ChatArea />
+      <Footer />
     </div>
   )
 }

@@ -11,7 +11,9 @@ import ProfileSidebar from "./Header/ProfileSidebar";
 function HomePage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
-  const [isProfileModalVisible,setIsProfileModalVisible] = useState(false);
+  const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState("nearby");
+
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
@@ -26,11 +28,16 @@ function HomePage() {
     <>
       <div className='mx-auto'>
         <Interested />
-        <Header isModalVisible={isModalVisible} toggleModal={toggleModal} toggleNotificationModal={toggleNotificationModal} toggleProfileModal={toggleProfileModal} />
+        <Header 
+          isModalVisible={isModalVisible} 
+          toggleModal={toggleModal} 
+          toggleNotificationModal={toggleNotificationModal} 
+          toggleProfileModal={toggleProfileModal} 
+        />
         <Story />
         <div className="p-[25px]">
-          <Tab />
-          <ProfileGrid />
+          <Tab activeTab={activeTab} setActiveTab={setActiveTab} />
+          <ProfileGrid activeTab={activeTab} />
         </div>
       </div>
       {isModalVisible && <HeaderNav toggleModal={toggleModal} />}

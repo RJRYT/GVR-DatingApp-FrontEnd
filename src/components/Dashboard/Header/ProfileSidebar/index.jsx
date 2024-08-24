@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Link } from 'react-router-dom';
 import { IoLogOutOutline } from 'react-icons/io5';
+import { AuthContext } from "../../../../contexts/AuthContext";
 
 const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
+  const { logout } = useContext(AuthContext);
   const menuItems = [
-    { label: "My Profile", path: "/dashboard/@me" },
+    { label: "My Profile", path: "/dashboard/profile" },
     { label: "Sent Request", path: "/dashboard/@me/sent" },
     { label: "Viewed My Profile", path: "/dashboard/@me/myprofile" },
     { label: "Accept Request", path: "/dashboard/@me/accept" },
@@ -18,21 +20,10 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
   ];
 
   const handleItemClick = (item) => {
-    console.log(`${item} clicked`); // Log the item clicked for debugging
-    toggleProfileModal();  // Close the modal when an item is clicked
-
-    // Add specific action for Logout
+    toggleProfileModal(); 
     if (item === 'Logout') {
-      // Perform logout action
-      handleLogout();
+      logout();
     }
-  };
-
-  const handleLogout = () => {
-    console.log('Logging out...');
-    // Perform logout action here, e.g., clearing user data, redirecting to login page
-    // localStorage.clear(); // Uncomment and modify as per your logic
-    // window.location.href = '/login'; // Uncomment and modify as per your logic
   };
 
   return (
@@ -60,15 +51,15 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
 
         <div className="p-4">
           <div  className="relative flex space-x-2 mb-6">
-          <div className="relative bg-pink-500 rounded-full block p-0.5 h-[50px] w-[50px]">
+          <div className=" relative bg-pink-500 rounded-full  block p-1 h-[50px] w-[50px]">
             <img
               onClick={toggleProfileModal}
               src="https://i.imgur.com/sjLMNDM.png"
               alt="Profile"
-              className="w-full h-full rounded-full"
+              className=" w-10 h-10 rounded-full "
             /> 
              {/* {isOnline && ( */}
-              <span className="absolute top-0 right-1 block h-3 w-3 bg-green-500 rounded-full"></span>
+              <span className="absolute top-0 right-0 block h-3 w-3 bg-green-500 rounded-full"></span>
             {/* )} */}
             </div>
             <div >
@@ -82,7 +73,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
             {menuItems.map((item, index) => (
               <li
                 key={index}
-                onClick={() => handleItemClick(item.label)}
+                onClick={() => handleItemClick(item)}
                 className="flex items-center  py-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
               >
                 <Link to={item.path}>{item.label}</Link>
@@ -90,7 +81,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
             ))}
             <li
               className="flex items-center justify-center  py-4 text-sm space-x-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
-              onClick={handleLogout}
+              onClick={() => handleItemClick("Logout")}
             >
               <IoLogOutOutline className="mr-2 text-white"/>
               <span>Logout</span>

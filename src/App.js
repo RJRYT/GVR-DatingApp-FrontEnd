@@ -1,43 +1,16 @@
 import "react-toastify/dist/ReactToastify.min.css";
 import React, { Suspense } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
+import { SocketProvider } from "./contexts/SocketContext";
 import { ToastContainer } from "react-toastify";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Loading from "./components/Loading";
-import Layout from "./components/Layout/Main";
-import DefaultPage from "./components/Default";
-import Login from "./components/Login";
-import Dashboard from "./components/Dashboard";
-import DashboardLayout from "./components/Layout/Dashboard";
-import Matches from "./components/Matches";
-import NotFound from "./components/NotFound";
-import DiscoverHeader from "./components/Dashboard/Discover";
-import Profile from "./components/UserProfile/Settings/Profile";
-import Privacy from "./components/UserProfile/Settings/Privacy";
-import ChangePassword from "./components/UserProfile/Edit/ChangePassword";
-import Prefrenences from "./components/UserProfile/Settings/Prefrenences";
-import Filter from "./components/UserProfile/Filter/Filter";
-import EditProfile from "./components/UserProfile/Edit/Profile";
-import Stories from "./components/UserProfile/Story/Story";
-import UserProfile from "./components/UserProfile";
-import Subscription from "./components/UserProfile/Pages/Subscription";
-import CreateGroup from "./components/groups/CreateGroup";
-import Reject from "./components/UserProfile/Pages/Reject";
-import Sent from "./components/UserProfile/Pages/Sent";
-import Received from "./components/UserProfile/Pages/Recived";
-import Messages from "./components/UserProfile/Pages/Messages";
-import Accept from "./components/UserProfile/Pages/Accept";
-import GroupList from "./components/groups/Groups";
-import AddCard from "./components/UserProfile/Settings/AddCard";
-import PayMethods from "./components/UserProfile/Pages/PayMethods";
-import AccessDenied from "./components/AccessDenied";
-import ChatBox from "./components/UserProfile/Pages/chat/ChatBox";
+import Routing from "./routing";
 
 function App() {
   return (
     <Suspense fallback={<Loading />}>
       <AuthProvider>
+<<<<<<< HEAD
         <ToastContainer newestOnTop={true} theme="colored" />
         <BrowserRouter>
           <Routes>
@@ -144,6 +117,12 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+=======
+        <SocketProvider>
+          <ToastContainer newestOnTop={true} theme="colored" />
+          <Routing />
+        </SocketProvider>
+>>>>>>> 62ac446f4a12d7cc3b4fc0f488be184e5f3042f7
       </AuthProvider>
     </Suspense>
   );

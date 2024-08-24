@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const JobDetails = ({ isVisible, modelToggle, setLoading, professionType }) => {
   const [expertLvlShown, setExpertLvlShown] = useState(false);
   const [errors, setErrors] = useState({});
-  const { authState, loading } = useContext(AuthContext);
+  const { authState, updateUser, loading } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     professionType: professionType,
     expertiseLevel: "",
@@ -53,6 +53,7 @@ const JobDetails = ({ isVisible, modelToggle, setLoading, professionType }) => {
         const res = await axiosInstance.post("/users/update/professionalinfo", formData);
         if(res.data.success){
           modelToggle("RelationShip");
+          updateUser({...formData, professionalInfoSubmitted: true});
           toast.success("Section Completed");
         }else{
           toast.error(res.data.message);
