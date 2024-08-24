@@ -111,7 +111,7 @@ function App() {
                 element={<ChangePassword />}
               />
               <Route
-                path="/dashboard/@me/preferences"
+                path="/dashboard/@me/preferences/:userId"
                 element={<Prefrenences />}
               />
               <Route
