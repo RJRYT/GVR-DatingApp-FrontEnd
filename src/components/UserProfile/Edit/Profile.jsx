@@ -1,9 +1,39 @@
-import React from "react";
-import {Link} from 'react-router-dom'
+import React, { useState,useContext,useEffect } from "react";
+import {Link ,useParams } from 'react-router-dom'
+import { AuthContext } from "../../../contexts/AuthContext";
+import axios from '../../../Instance/Axios'
 import { FaArrowLeft } from "react-icons/fa";
 import Profile from "../../../assets/profile/profilePic.png";
 
 const EditProfile = () => {
+  const { authState, loading } = useContext(AuthContext);
+  const { userId } = useParams();
+ 
+  const [formData,setFormData] =useState({
+  username:'',
+  email:'',
+  phoneNumber:'',
+  
+  })
+  useEffect(()=>{
+    const fetchUserProfile= async ()=>{
+      try{
+        const response= await axios.get(`/users/profile/${userId}`)
+        console.log(response.data,"response")
+        if(response.data.success){
+          setFormData({
+            username:response.data.user.username,
+            email:response.data.user.email,
+            phoneNumber:response.data.user.phoneNumber
+          })
+        }
+      }catch(error){
+        console.error("Error fetching user profile", error);
+      }
+    }
+    fetchUserProfile();
+  },[userId])
+ 
   return (
     <div className="items-center justify-center min-h-screen bg-fuchsia-950">
       <div className="flex p-6">
