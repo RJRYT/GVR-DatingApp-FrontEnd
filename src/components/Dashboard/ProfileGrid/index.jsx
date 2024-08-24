@@ -9,34 +9,42 @@ const ProfileGrid = ({ activeTab }) => {
   const { authState } = useContext(AuthContext);
   
   const userLocation = authState.user.location; 
-  const userQualification = authState.user.qualifications;
-  console.log("userQualification",userQualification)
-  const userInterests = authState.user.interests; // Ensure this matches exactly with your data key
-  console.log("userInterests" ,userInterests)
+  const userQualifications = authState.user.qualification;
+  const userInterests = authState.user.interests;
+  const userId = authState.user.id; // Unique identifier for the current user
+
   useEffect(() => {
     axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/users/users`)
       .then(response => {
         if (Array.isArray(response.data)) {
           let filteredUsers = [];
-          console.log("Active Tab:", activeTab);
 
-          // Filter based on the activeTab value
+          // Filter based on the activeTab value and exclude the current user
           if (activeTab === "nearby") {
-            filteredUsers = response.data.filter(profile => profile.location === userLocation);
+            filteredUsers = response.data.filter(profile => profile.location === userLocation && profile.id !== userId);
           } else if (activeTab === "qualification") {
-            filteredUsers = response.data.filter(profile => profile.qualification === userQualification);
+            filteredUsers = response.data.filter(profile => 
+              profile.id !== userId && 
+              profile.qualification.some(q => 
+                userQualifications.some(uq => uq.value === q.value)
+              )
+            );
           } else if (activeTab === "interests") {
-            filteredUsers = response.data.filter(profile => profile.interests === userInterests);
+            filteredUsers = response.data.filter(profile => 
+              profile.id !== userId && 
+              profile.interests.some(i => 
+                userInterests.some(ui => ui.value === i.value)
+              )
+            );
           }
 
-          console.log("Filtered Users:", filteredUsers);
           setUsers(filteredUsers);
         } else {
           console.error("Unexpected data format:", response.data);
         }
       })
       .catch(error => console.error('Error fetching users:', error));
-  }, [userLocation, activeTab, userInterests, userQualification]);
+  }, [userLocation, activeTab, userInterests, userQualifications, userId]);
 
   return (
     <div className="grid grid-cols-2 gap-4 mt-4">
