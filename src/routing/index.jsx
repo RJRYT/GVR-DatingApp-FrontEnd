@@ -91,6 +91,13 @@ function Routing() {
             path="/dashboard/userprofile/upgrade"
             element={<UserProfile upgrade={true} />}
           />
+          <Route
+            path="/dashboard/preferences"
+            element={<Prefrenences />}
+          />
+
+          {/**split**/}
+
           <Route path="/dashboard/groups" element={<GroupList />} />
           <Route path="/dashboard/@me/spin" element={<Spin />} />
           <Route path="/dashboard/@me/profile" element={<Profile />} />
@@ -114,10 +121,6 @@ function Routing() {
           <Route
             path="/dashboard/@me/changepass"
             element={<ChangePassword />}
-          />
-          <Route
-            path="/dashboard/@me/preferences"
-            element={<Prefrenences />}
           />
           <Route
             path="/dashboard/@me/creategroup"

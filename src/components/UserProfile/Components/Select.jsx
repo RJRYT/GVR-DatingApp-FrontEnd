@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
 
-function CustomSelect({ value, options, onChange , isMulti }) {
+function CustomSelect({ value, options, onChange, isMulti = false }) {
   return (
     <Select
       value={value}

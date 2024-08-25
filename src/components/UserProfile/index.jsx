@@ -87,7 +87,7 @@ const UserProfile = ({ upgrade = false }) => {
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${user.profilePic?.url || profilePicture})` }}
+          style={{ backgroundImage: `url(${user?.profilePic?.url || profilePicture})` }}
         >
           <button
             onClick={handleBackClick}
@@ -139,10 +139,10 @@ const UserProfile = ({ upgrade = false }) => {
 
           <div className="w-full h-full bg-gradient-to-t from-fuchsia-800 via-transparent to-transparent p-4 text-white md:p-6 flex flex-col gap-3 items-center justify-center">
             <h1 className="text-3xl text-center mt-auto aldrich-regular">
-              {user.username}, {user.age}
+              {user?.username}, {user?.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
-              {user.location}
+              {user?.location}
             </p>
             {userId === "@me" ? (
               <MatchButton progress={75} text="Profile Complete" />

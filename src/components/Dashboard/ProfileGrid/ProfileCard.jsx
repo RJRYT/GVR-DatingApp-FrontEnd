@@ -5,11 +5,10 @@ import chat from "../../../assets/matches/chat.svg";
 import more from "../../../assets/matches/more.svg";
 
 const ProfileCard = ({ profile }) => {
- 
   return (
-    <div className="relative bg-white rounded-xl overflow-hidden shadow-lg">
+    <div className="relative bg-gray-500 rounded-xl overflow-hidden shadow-lg">
       <img
-        src={profile.profilePic.url}
+        src={profile?.profilePic?.url}
         alt={profile.username}
         className="w-full max-md:h-[200px] md:h-[200px] lg:h-[230px] object-cover"
       />

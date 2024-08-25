@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { AuthContext } from "../../../../contexts/AuthContext";
 
-const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
+const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
   const { logout } = useContext(AuthContext);
   const menuItems = [
     { label: "My Profile", path: "/dashboard/profile" },
@@ -51,19 +51,19 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
 
         <div className="p-4">
           <div  className="relative flex space-x-2 mb-6">
-          <div className=" relative bg-pink-500 rounded-full  block p-1 h-[50px] w-[50px]">
+          <div className="relative bg-pink-500 rounded-full block p-0.5 h-[50px] w-[50px]">
             <img
               onClick={toggleProfileModal}
-              src="https://i.imgur.com/sjLMNDM.png"
+              src={user && user.profilePic ? user.profilePic.url : "https://i.imgur.com/sjLMNDM.png"}
               alt="Profile"
-              className=" w-10 h-10 rounded-full "
+              className="w-full h-full rounded-full"
             /> 
              {/* {isOnline && ( */}
-              <span className="absolute top-0 right-0 block h-3 w-3 bg-green-500 rounded-full"></span>
+              <span className="absolute top-0 right-1 block h-3 w-3 bg-green-500 rounded-full"></span>
             {/* )} */}
             </div>
             <div >
-              <p className=" font-bold">Stone Stellar</p>
+              <p className=" font-bold">{user && user.username ? user.username : "Unknown"}</p>
               <p className=" text-sm">Prime Member</p>
               <p className=" text-sm text-green-500">Online</p>
             </div>
