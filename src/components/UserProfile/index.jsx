@@ -4,7 +4,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
 import AccessDenied from "../AccessDenied";
-import axios from '../../Instance/Axios'
+import axios from "../../Instance/Axios";
 import profilePicture from "../../assets/profile/profilePic.png";
 import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
@@ -47,9 +47,9 @@ const UserProfile = ({ upgrade = false }) => {
       } catch (error) {
         console.error("Error fetching user profile", error);
       }
-    }
+    };
     if (!loading && authState.isAuthenticated) fetchUserProfile();
-  }, [userId, authState, loading])
+  }, [userId, authState, loading]);
 
   const handleLineClick = (lineNumber) => {
     setActiveLine(lineNumber);
@@ -59,12 +59,14 @@ const UserProfile = ({ upgrade = false }) => {
     window.history.back();
   };
 
-  const handleSendMessageClick = async () => {
+  const handleSendFrndReqClick = async () => {
     setLoadingOverlay(true);
     try {
-      const response = await axios.post("/chats/requests", { recipientId: userId });
+      const response = await axios.post("/users/friends/request", {
+        recipientId: userId,
+      });
       if (response.data.success) {
-        toast.success(`Message request has sended to ${user.username}`);
+        toast.success(`Friend request has sended to ${user.username}`);
       } else {
         toast.error(response.data.message);
       }
@@ -74,7 +76,7 @@ const UserProfile = ({ upgrade = false }) => {
     } finally {
       setLoadingOverlay(false);
     }
-  }
+  };
 
   if (loading) return <Loading />;
 
@@ -87,7 +89,9 @@ const UserProfile = ({ upgrade = false }) => {
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
           className="bg-cover bg-center w-full h-[55%] absolute top-0 left-[50%] transform -translate-x-1/2"
-          style={{ backgroundImage: `url(${user?.profilePic?.url || profilePicture})` }}
+          style={{
+            backgroundImage: `url(${user?.profilePic?.url || profilePicture})`,
+          }}
         >
           <button
             onClick={handleBackClick}
@@ -154,13 +158,15 @@ const UserProfile = ({ upgrade = false }) => {
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
             <div
               onClick={() => handleLineClick(1)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 1 ? "bg-white" : "bg-gray-500"
-                }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${
+                activeLine === 1 ? "bg-white" : "bg-gray-500"
+              }`}
             ></div>
             <div
               onClick={() => handleLineClick(2)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 2 ? "bg-white" : "bg-gray-500"
-                }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${
+                activeLine === 2 ? "bg-white" : "bg-gray-500"
+              }`}
             ></div>
           </div>
           {/* User Details Section */}
@@ -238,24 +244,10 @@ const UserProfile = ({ upgrade = false }) => {
                   </svg>
                 </button>
               </Link>
-              <Link to="./" className="text-gray-400">
-                <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-rose-400 w-12 h-12">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z"
-                      fill="white"
-                    ></path>
-                  </svg>
-                </button>
-              </Link>
-              <button onClick={handleSendMessageClick} className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-purple-600 w-12 h-12">
+              <button
+                onClick={handleSendFrndReqClick}
+                className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-rose-400 w-12 h-12"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6"
@@ -265,11 +257,33 @@ const UserProfile = ({ upgrade = false }) => {
                   strokeWidth={2}
                 >
                   <path
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z"
+                    d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z"
                     fill="white"
                   ></path>
                 </svg>
               </button>
+              {authState.user &&
+                authState.user.friends &&
+                authState.user.friends.length &&
+                authState.user.friends.includes(userId) ? (
+                  <Link to="./" className="text-gray-400">
+                    <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-purple-600 w-12 h-12">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z"
+                          fill="white"
+                        ></path>
+                      </svg>
+                    </button>
+                  </Link>
+                ): null}
             </div>
           </nav>
         )}
