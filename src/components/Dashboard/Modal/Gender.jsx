@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 const genderArray = [
   { label: "Male", value: "male" },
   { label: "Famale", value: "female" },
-  { label: "Others", value: "other" },
+  { label: "Both", value: "both" },
 ];
 
 const Gender = ({ preferences }) => {
