@@ -29,6 +29,7 @@ import PayMethods from "../components/UserProfile/Pages/PayMethods";
 import AccessDenied from "../components/AccessDenied";
 import Spin from "../components/Dashboard/Spin";
 import ChatBox from "../components/UserProfile/Pages/chat/ChatBox";
+import Personal from "../components/UserProfile/Pages/chat/Personal";
 
 
 function Routing() {
@@ -108,6 +109,7 @@ function Routing() {
           <Route path="/dashboard/@me/reject" element={<Reject />} />
           <Route path="/dashboard/@me/messages" element={<Messages />} />
           <Route path="/dashboard/@me/chat" element={<ChatBox />} />
+          <Route path="/dashboard/@me/perschat" element={<Personal/>}/>
           <Route path="/dashboard/@me/accept" element={<Accept />} />
           <Route
             path="/dashboard/@me/subscription"
