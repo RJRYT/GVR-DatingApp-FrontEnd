@@ -100,6 +100,8 @@ function Routing() {
           <Route path="/dashboard/story" element={<Stories />} />
           <Route path="/dashboard/@me/messages" element={<Messages />} />
           <Route path="/dashboard/@me/chat" element={<ChatBox />} />
+          <Route path="/dashboard/@me/perschat" element={<Personal />} />
+
           <Route
             path="/dashboard/@me/subscription"
             element={<Subscription />}
