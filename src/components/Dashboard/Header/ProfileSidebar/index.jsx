@@ -7,10 +7,10 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
   const { logout } = useContext(AuthContext);
   const menuItems = [
     { label: "My Profile", path: "/dashboard/profile" },
-    { label: "Sent Request", path: "/dashboard/@me/sent" },
+    { label: "Sent Request", path: "/dashboard/requests/sent" },
     { label: "Viewed My Profile", path: "/dashboard/@me/myprofile" },
-    { label: "Accept Request", path: "/dashboard/@me/accept" },
-    { label: "Reject", path: "/dashboard/@me/reject" },
+    { label: "Accept Request", path: "/dashboard/requests/accepted" },
+    { label: "Reject", path: "/dashboard/requests/rejected" },
     { label: "Received", path: "/dashboard/@me/received" },
     { label: "Shortlisted By", path: "/dashboard/@me/shortlisted-by" },
     { label: "Shortlisted", path: "/dashboard/@me/shortlist" },

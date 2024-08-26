@@ -63,9 +63,7 @@ function Routing() {
             />
             <Route
               path="/dashboard/matches/my"
-              element={
-                <Matches title="Viewed my profile" profileView={true} />
-              }
+              element={<Matches title="Viewed my profile" profileView={true} />}
             />
             <Route
               path="/dashboard/matches/upgrade"
@@ -80,22 +78,16 @@ function Routing() {
             path="/dashboard/profile/edit"
             element={<Navigate to={"/dashboard/profile/@me/edit"} />}
           />
-          <Route
-            path="/dashboard/profile/:userId"
-            element={<UserProfile />}
-          />
-          <Route
-            path="/dashboard/profile/@me/edit"
-            element={<EditProfile />}
-          />
+          <Route path="/dashboard/profile/:userId" element={<UserProfile />} />
+          <Route path="/dashboard/profile/@me/edit" element={<EditProfile />} />
           <Route
             path="/dashboard/userprofile/upgrade"
             element={<UserProfile upgrade={true} />}
           />
-          <Route
-            path="/dashboard/preferences"
-            element={<Prefrenences />}
-          />
+          <Route path="/dashboard/preferences" element={<Prefrenences />} />
+          <Route path="/dashboard/requests/sent" element={<Sent />} />
+          <Route path="/dashboard/requests/rejected" element={<Reject />} />
+          <Route path="/dashboard/requests/accepted" element={<Accept />} />
 
           {/**split**/}
 
@@ -106,11 +98,8 @@ function Routing() {
           <Route path="/dashboard/@me/filter" element={<Filter />} />
           <Route path="/dashboard/@me/addcard" element={<AddCard />} />
           <Route path="/dashboard/story" element={<Stories />} />
-          <Route path="/dashboard/@me/reject" element={<Reject />} />
           <Route path="/dashboard/@me/messages" element={<Messages />} />
           <Route path="/dashboard/@me/chat" element={<ChatBox />} />
-          <Route path="/dashboard/@me/perschat" element={<Personal/>}/>
-          <Route path="/dashboard/@me/accept" element={<Accept />} />
           <Route
             path="/dashboard/@me/subscription"
             element={<Subscription />}
@@ -124,15 +113,11 @@ function Routing() {
             path="/dashboard/@me/changepass"
             element={<ChangePassword />}
           />
-          <Route
-            path="/dashboard/@me/creategroup"
-            element={<CreateGroup />}
-          />
+          <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
           <Route
             path="/dashboard/@me/received"
             element={<Received sidemenutitle={"Received"} />}
           />
-          <Route path="/dashboard/@me/sent" element={<Sent />} />
           <Route
             path="/dashboard/@me/shortlist"
             element={<Received sidemenutitle={"Shortlist"} />}
