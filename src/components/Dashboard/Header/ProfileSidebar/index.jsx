@@ -6,7 +6,7 @@ import { AuthContext } from "../../../../contexts/AuthContext";
 const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
   const { logout } = useContext(AuthContext);
   const menuItems = [
-    { label: "My Profile", path: "/dashboard/@me" },
+    { label: "My Profile", path: "/dashboard/profile" },
     { label: "Sent Request", path: "/dashboard/@me/sent" },
     { label: "Viewed My Profile", path: "/dashboard/@me/myprofile" },
     { label: "Accept Request", path: "/dashboard/@me/accept" },
