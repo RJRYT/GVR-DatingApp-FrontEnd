@@ -15,14 +15,25 @@ const EditProfile = () => {
     email: authState?.user?.email || "",
     phoneNumber: authState?.user?.phoneNumber || "",
   });
- 
+  const [profilePic, setProfilePic] = useState({
+    file: null,
+    url: authState?.user?.profilePic?.url || '',
+  });
   const [imagePreviews, setImagePreviews] = useState(
     authState?.user?.images || [null, null, null]
   );
   const [shortReelPreview, setShortReelPreview] = useState(
     authState?.user?.shortReel || ""
   );
-
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePic({
+        file,
+        url: URL.createObjectURL(file),
+      });
+    }
+  };
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
@@ -75,19 +86,33 @@ const EditProfile = () => {
     e.preventDefault();    
   
     try {
-      // Prepare the form data
-      const updatedData = {
-        username: formData.username,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        bio: formData.bio,
-        images: imagePreviews,
-        shortReel: shortReelPreview,
-      };
+
+      const updatedData = new FormData();
+      updatedData.append('username', formData.username);
+      updatedData.append('email', formData.email);
+      updatedData.append('phoneNumber', formData.phoneNumber);
+      updatedData.append('bio', formData.bio);
   
-      // Send the data to the backend
-      const response = await axios.put('/users/update/profile', updatedData);
+      if (profilePic.file) {
+        updatedData.append("profilePic", profilePic.file);
+      }
+
+      imagePreviews.forEach((image, index) => {
+        if (image.file) {
+          updatedData.append(`images`, image.file);
+        }
+      });
   
+
+      if (shortReelPreview.file) {
+        updatedData.append('shortreels', shortReelPreview.file);
+      }
+  
+
+      const response = await axios.put('/users/update/profile', updatedData,{
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      console.log('Response:', response.data);
       if (response.data) {
         toast.success('Profile updated successfully!');
       }
@@ -116,9 +141,10 @@ const EditProfile = () => {
           <div className="flex items-center">
             <div className="w-16 h-16 rounded-full overflow-hidden">
               <img
-                src={Profile}
-                alt=""
-                className="w-full h-full object-cover"
+                src={profilePic.url}
+                alt="Profile"
+                className="w-full h-full object-cover cursor-pointer"
+                 onClick={() => document.getElementById("profilePicInput").click()}
               />
               <div className="absolute transform translate-x-6 -translate-y-4 bg-gray-500 p-1 h-4 w-4 rounded-full border">
                 <svg
@@ -135,10 +161,17 @@ const EditProfile = () => {
                   />
                 </svg>
               </div>
+                            <input
+                type="file"
+                id="profilePicInput"
+                accept="image/*,.png,.jpg,.jpeg,.jfif"
+                style={{ display: "none" }}
+                onChange={handleProfilePicChange}
+              />
             </div>
             <div className="flex-1 ml-6">
               <h3 className="text-black flex-1 font-bold text-lg">
-                Nazrul Islam
+              {authState?.user?.username}
               </h3>
               <p className="text-sm">Never give up 💪</p>
             </div>
@@ -185,7 +218,8 @@ const EditProfile = () => {
             </div>
             <div className="mb-4">
               <label className="block text-gray-700">Bio</label>
-              <input className="w-full  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700"></input>
+              <input className="w-full  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700"value={formData.bio}
+                onChange={handleChange}></input>
             </div>
              <div className="mb-4">
               <label className="block text-gray-700">Images</label>
@@ -206,7 +240,7 @@ const EditProfile = () => {
                     <input
                       type="file"
                       id={`imageInput-${index}`}
-                      accept="image/*,.png,.jpg,.jpeg"
+                      accept="image/*,.png,.jpg,.jpeg,.jfif"
                       style={{ display: "none" }}
                       onChange={(e) => handleImageChange(e, index)}
                     />

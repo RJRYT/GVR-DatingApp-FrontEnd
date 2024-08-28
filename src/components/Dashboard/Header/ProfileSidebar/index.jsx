@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { AuthContext } from "../../../../contexts/AuthContext";
 
-const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
+const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
   const { logout } = useContext(AuthContext);
   const menuItems = [
     { label: "My Profile", path: "/dashboard/profile" },
-    { label: "Sent Request", path: "/dashboard/@me/sent" },
+    { label: "Sent Request", path: "/dashboard/requests/sent" },
     { label: "Viewed My Profile", path: "/dashboard/@me/myprofile" },
-    { label: "Accept Request", path: "/dashboard/@me/accept" },
-    { label: "Reject", path: "/dashboard/@me/reject" },
+    { label: "Accept Request", path: "/dashboard/requests/accepted" },
+    { label: "Reject", path: "/dashboard/requests/rejected" },
     { label: "Received", path: "/dashboard/@me/received" },
     { label: "Shortlisted By", path: "/dashboard/@me/shortlisted-by" },
     { label: "Shortlisted", path: "/dashboard/@me/shortlist" },
@@ -20,9 +20,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
   ];
 
   const handleItemClick = (item) => {
-    console.log(`${item} clicked`); 
     toggleProfileModal(); 
-
     if (item === 'Logout') {
       logout();
     }
@@ -56,7 +54,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
           <div className="relative bg-pink-500 rounded-full block p-0.5 h-[50px] w-[50px]">
             <img
               onClick={toggleProfileModal}
-              src="https://i.imgur.com/sjLMNDM.png"
+              src={user && user.profilePic ? user.profilePic.url : "https://i.imgur.com/sjLMNDM.png"}
               alt="Profile"
               className="w-full h-full rounded-full"
             /> 
@@ -65,7 +63,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
             {/* )} */}
             </div>
             <div >
-              <p className=" font-bold">Stone Stellar</p>
+              <p className=" font-bold">{user && user.username ? user.username : "Unknown"}</p>
               <p className=" text-sm">Prime Member</p>
               <p className=" text-sm text-green-500">Online</p>
             </div>
@@ -75,7 +73,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline }) => {
             {menuItems.map((item, index) => (
               <li
                 key={index}
-                onClick={() => handleItemClick(item.label)}
+                onClick={() => handleItemClick(item)}
                 className="flex items-center  py-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
               >
                 <Link to={item.path}>{item.label}</Link>

@@ -31,7 +31,7 @@ function CustomSlider({onChange, value, min, max}) {
         },
       ]}
       railStyle={{ backgroundColor: "grey", height: "7px" }}
-      onChangeComplete={onChange}
+      onChange={onChange}
     />
   );
 }
