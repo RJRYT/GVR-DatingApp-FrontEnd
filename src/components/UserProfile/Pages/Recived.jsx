@@ -37,7 +37,7 @@ const pageDefinition = {
   },
   myProfileView: {
     title: "Viewed my profile",
-    apiRoute: "/users/profile/views",
+    apiRoute: "/users/views",
     responsePath: "viewers",
     dataIsOnSubProperty: false,
   },
@@ -60,6 +60,7 @@ const Received = ({ page }) => {
       );
       if (response.data.success) {
         toast.success("Request accepted");
+        setUsers([]);
         fetchRequests();
       } else {
         toast.error(response.data.message);
@@ -74,7 +75,7 @@ const Received = ({ page }) => {
 
   const HandleRejectClick = async (user) => {
     if (!currentPage) return;
-    if (!user.reqId) return;
+    if (page === "received" && !user.reqId) return;
     setLoadingOverlay(true);
     try {
       let response = "";
@@ -89,6 +90,7 @@ const Received = ({ page }) => {
       } else return;
       if (response.data.success) {
         toast.success(response.data.message);
+        setUsers([]);
         fetchRequests();
       } else {
         toast.error(response.data.message);

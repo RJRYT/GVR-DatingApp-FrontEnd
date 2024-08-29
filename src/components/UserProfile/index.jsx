@@ -41,7 +41,6 @@ const UserProfile = ({ upgrade = false }) => {
           setUser(authState.user);
         } else {
           const response = await axios.get(`/users/profile/${userId}`);
-          console.log(response.data)
           if (response.data.success) {
             setUser(response.data.user);
           }
