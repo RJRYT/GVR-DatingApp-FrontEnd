@@ -115,23 +115,23 @@ function Routing() {
           <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
           <Route
             path="/dashboard/@me/received"
-            element={<Received sidemenutitle={"Received"} />}
+            element={<Received page={"received"} />}
           />
           <Route
             path="/dashboard/@me/shortlist"
-            element={<Received sidemenutitle={"Shortlist"} />}
+            element={<Received page={"shortlisted"} />}
           />
           <Route
             path="/dashboard/@me/contacted"
-            element={<Received sidemenutitle={"Contacted"} />}
+            element={<Received page={"contacted"} />}
           />
           <Route
             path="/dashboard/@me/shortlisted-by"
-            element={<Received sidemenutitle={"Shortlisted By"} />}
+            element={<Received page={"shortlistedBy"} />}
           />
           <Route
             path="/dashboard/@me/myprofile"
-            element={<Received sidemenutitle={"Viewed My Profile"} />}
+            element={<Received page={"myProfileView"} />}
           />
           <Route path="/403" element={<AccessDenied />} />
         </Route>
