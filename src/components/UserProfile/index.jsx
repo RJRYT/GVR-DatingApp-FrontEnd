@@ -27,6 +27,7 @@ const sampleUser = {
 // ];
 
 const UserProfile = ({ upgrade = false }) => {
+
   const [activeLine, setActiveLine] = useState(1);
   const { authState, loading } = useContext(AuthContext);
   const { userId } = useParams();
@@ -40,6 +41,7 @@ const UserProfile = ({ upgrade = false }) => {
           setUser(authState.user);
         } else {
           const response = await axios.get(`/users/profile/${userId}`);
+          console.log(response.data)
           if (response.data.success) {
             setUser(response.data.user);
           }

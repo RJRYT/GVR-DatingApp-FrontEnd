@@ -172,7 +172,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
         autoClose: false,
       });
       try {
-        const res = await axiosInstance.post("/users/update/personalinfo/v2", formDataToSend, {
+        const res = await axiosInstance.post("/users/update/personalinfo", formDataToSend, {
           headers: { "Content-Type": "multipart/form-data" },
           onUploadProgress: (progressEvent) => {
             const progress = Math.round(
