@@ -7,14 +7,14 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
   const { logout } = useContext(AuthContext);
   const menuItems = [
     { label: "My Profile", path: "/dashboard/profile" },
-    { label: "Sent Request", path: "/dashboard/requests/sent" },
-    { label: "Viewed My Profile", path: "/dashboard/@me/myprofile" },
-    { label: "Accept Request", path: "/dashboard/requests/accepted" },
-    { label: "Reject", path: "/dashboard/requests/rejected" },
-    { label: "Received", path: "/dashboard/@me/received" },
-    { label: "Shortlisted By", path: "/dashboard/@me/shortlisted-by" },
-    { label: "Shortlisted", path: "/dashboard/@me/shortlist" },
-    { label: "Contacted", path: "/dashboard/@me/contacted" },
+    { label: "Pending Requests", path: "/dashboard/requests/sent" },
+    { label: "Viewed My Profile", path: "/dashboard/users/profile-viewers" },
+    { label: "Accepts Requests", path: "/dashboard/requests/accepted" },
+    { label: "Rejected Requests", path: "/dashboard/requests/rejected" },
+    { label: "Incoming Requests", path: "/dashboard/requests/received" },
+    { label: "Shortlisted By", path: "/dashboard/users/shortlisted-by" },
+    { label: "Shortlisted", path: "/dashboard/users/shortlist" },
+    { label: "Contacted", path: "/dashboard/users/contacted" },
     { label: "Message", path: "/dashboard/@me/messages" },
     { label: "Settings", path: "/dashboard/@me/profile" },
   ];

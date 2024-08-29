@@ -87,6 +87,26 @@ function Routing() {
           <Route path="/dashboard/requests/sent" element={<Sent />} />
           <Route path="/dashboard/requests/rejected" element={<Reject />} />
           <Route path="/dashboard/requests/accepted" element={<Accept />} />
+          <Route
+            path="/dashboard/requests/received"
+            element={<Received page={"received"} />}
+          />
+          <Route
+            path="/dashboard/users/shortlist"
+            element={<Received page={"shortlisted"} />}
+          />
+          <Route
+            path="/dashboard/users/shortlisted-by"
+            element={<Received page={"shortlistedBy"} />}
+          />
+          <Route
+            path="/dashboard/users/contacted"
+            element={<Received page={"contacted"} />}
+          />
+          <Route
+            path="/dashboard/users/profile-viewers"
+            element={<Received page={"myProfileView"} />}
+          />
 
           {/**split**/}
 
@@ -113,26 +133,6 @@ function Routing() {
             element={<ChangePassword />}
           />
           <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
-          <Route
-            path="/dashboard/@me/received"
-            element={<Received page={"received"} />}
-          />
-          <Route
-            path="/dashboard/@me/shortlist"
-            element={<Received page={"shortlisted"} />}
-          />
-          <Route
-            path="/dashboard/@me/contacted"
-            element={<Received page={"contacted"} />}
-          />
-          <Route
-            path="/dashboard/@me/shortlisted-by"
-            element={<Received page={"shortlistedBy"} />}
-          />
-          <Route
-            path="/dashboard/@me/myprofile"
-            element={<Received page={"myProfileView"} />}
-          />
           <Route path="/403" element={<AccessDenied />} />
         </Route>
         <Route path="*" element={<NotFound />} />
