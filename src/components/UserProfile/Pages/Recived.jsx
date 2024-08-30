@@ -1,132 +1,254 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import Navbar from "../../Dashboard/Navbar";
 import { CiSearch } from "react-icons/ci";
-import imgAfrin from "../../../assets/profile/Afrin.png";
-import imgAdil from "../../../assets/profile/Adil.png";
-import imgAlice from "../../../assets/profile/Alice.png";
-import imgCatherine from "../../../assets/story/profile1.png";
-import imgRyan from "../../../assets/story/profile5.png";
-import imgSelena from "../../../assets/story/profile2.png";
-import {FaRegHeart} from "react-icons/fa";
-import {RiCloseLine} from "react-icons/ri";
+import { FaRegHeart } from "react-icons/fa";
+import { RiCloseLine } from "react-icons/ri";
+import { toast } from "react-toastify";
+import LoadingOverlay from "../../Loading/LoadingOverlay";
+import Loading from "../../Loading";
+import AccessDenied from "../../AccessDenied";
+import axios from "../../../Instance/Axios";
+import { AuthContext } from "../../../contexts/AuthContext";
 
-// Example user data with profile pictures
-const initialUsers = [
-  {
-    id: 1,
-    name: "Afrin Sabila",
-    profilePicture: imgAfrin,
-    description: "Life is beautiful 👌",
+const pageDefinition = {
+  received: {
+    title: "Received",
+    apiRoute: "/users/friends/pending",
+    responsePath: "pending",
+    dataIsOnSubProperty: "sender",
   },
-  {
-    id: 2,
-    name: "Adil Adnan",
-    profilePicture: imgAdil,
-    description: "Be your own hero 💪",
+  shortlisted: {
+    title: "Shortlisted",
+    apiRoute: "/users/shortlist",
+    responsePath: "shortlist",
+    dataIsOnSubProperty: false,
   },
-  {
-    id: 3,
-    name: "Alice George",
-    profilePicture: imgAlice,
-    description: "Keep working ✍️",
+  contacted: {
+    title: "Contacted",
+    apiRoute: "/users/friends/?type=declined",
+    responsePath: "declined",
+    dataIsOnSubProperty: "recipient",
   },
-  {
-    id: 4,
-    name: "Catherine Teressa",
-    profilePicture: imgCatherine,
-    description: "Make yourself proud 😍",
+  shortlistedBy: {
+    title: "Shortlisted by",
+    apiRoute: "/users/shortlist/by",
+    responsePath: "shortlist",
+    dataIsOnSubProperty: false,
   },
-  {
-    id: 5,
-    name: "Ryan David",
-    profilePicture: imgRyan,
-    description: "Flowers are beautiful 🌸",
+  myProfileView: {
+    title: "Viewed my profile",
+    apiRoute: "/users/views",
+    responsePath: "viewers",
+    dataIsOnSubProperty: false,
   },
-  {
-    id: 6,
-    name: "Selena Sebastian",
-    profilePicture: imgSelena,
-    description: "Follow along for a journey through music and creativity ✨",
-  },
-];
+};
 
-const Received = ({ sidemenutitle }) => {
+const Received = ({ page }) => {
   // State to hold the users
-  const [users, setUsers] = useState(initialUsers);
+  const [currentPage, setCurrentPage] = useState(pageDefinition[page]);
+  const [users, setUsers] = useState(null);
+  const { authState, loading } = useContext(AuthContext);
+  const [loadingOverlay, setLoadingOverlay] = useState(true);
+
+  const HandleApproveClick = async (user) => {
+    if (!currentPage) return;
+    if (!user.reqId) return;
+    setLoadingOverlay(true);
+    try {
+      const response = await axios.put(
+        `/users/friends/request/${user.reqId}/accept`
+      );
+      if (response.data.success) {
+        toast.success("Request accepted");
+        setUsers([]);
+        fetchRequests();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update");
+    } finally {
+      setLoadingOverlay(false);
+    }
+  };
+
+  const HandleRejectClick = async (user) => {
+    if (!currentPage) return;
+    if (page === "received" && !user.reqId) return;
+    setLoadingOverlay(true);
+    try {
+      let response = "";
+      if (page === "received") {
+        response = await axios.put(
+          `/users/friends/request/${user.reqId}/decline`
+        );
+      } else if (page === "shortlisted") {
+        response = await axios.post(`/users/shortlist`, {
+          userId: user.id,
+        });
+      } else return;
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setUsers([]);
+        fetchRequests();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update");
+    } finally {
+      setLoadingOverlay(false);
+    }
+  };
+
+  const fetchRequests = useCallback(async () => {
+    if (!currentPage) return;
+    try {
+      const response = await axios.get(currentPage.apiRoute);
+      if (response.data.success) {
+        const sortedUsers = sortUsersAlphabetically(
+          response.data[currentPage.responsePath]
+        );
+        const splicedUsers = SplitUsersByFirstName(sortedUsers);
+        setUsers(splicedUsers);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingOverlay(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentPage) fetchRequests();
+  }, [currentPage, fetchRequests]);
 
   // Function to sort users alphabetically by name
   const sortUsersAlphabetically = (users) => {
-    return [...users].sort((a, b) => a.name.localeCompare(b.name));
+    if (currentPage.dataIsOnSubProperty) {
+      return users.sort((a, b) =>
+        a[currentPage.dataIsOnSubProperty].username.localeCompare(
+          b[currentPage.dataIsOnSubProperty].username
+        )
+      );
+    } else {
+      return users.sort((a, b) => a.username.localeCompare(b.username));
+    }
   };
 
-  // Sorted users
-  const sortedUsers = sortUsersAlphabetically(users);
-
   // Split users into groups based on their first letter
-  const groupedUsers = sortedUsers.reduce((groups, user) => {
-    const firstLetter = user.name.charAt(0).toUpperCase();
-    if (!groups[firstLetter]) {
-      groups[firstLetter] = [];
+  const SplitUsersByFirstName = (users) => {
+    if (currentPage.dataIsOnSubProperty) {
+      return users.reduce((groups, user) => {
+        const firstLetter = user[currentPage.dataIsOnSubProperty].username
+          .charAt(0)
+          .toUpperCase();
+        if (!groups[firstLetter]) {
+          groups[firstLetter] = [];
+        }
+        user[currentPage.dataIsOnSubProperty].reqId = user._id;
+        groups[firstLetter].push(user[currentPage.dataIsOnSubProperty]);
+        return groups;
+      }, {});
+    } else {
+      return users.reduce((groups, user) => {
+        const firstLetter = user.username.charAt(0).toUpperCase();
+        if (!groups[firstLetter]) {
+          groups[firstLetter] = [];
+        }
+        groups[firstLetter].push(user);
+        return groups;
+      }, {});
     }
-    groups[firstLetter].push(user);
-    return groups;
-  }, {});
+  };
+
+  if (loading) return <Loading />;
+
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
-    <div className="items-center justify-center min-h-screen bg-fuchsia-950">
-      <div className="p-6 flex items-center">
-        <div className="w-14 h-14 bg-fuchsia-400 rounded-full flex items-center justify-center border-2 border-white">
-          <CiSearch className="text-white text-3xl" />
-        </div>
-        <h3 className="flex-grow text-center text-white text-2xl font-bold aldrich-regular">
-          {sidemenutitle}
-        </h3>
-      </div>
-
-      <div className="bg-white rounded-t-3xl min-h-screen p-6 h-96 mt-4 relative">
-        {/* Horizontal Line at the Top Center */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-full">
-          <div
-            className="w-16 h-1 bg-gray-200 mx-auto mt-0 rounded-full"
-          ></div>
+    <>
+      {loadingOverlay && <LoadingOverlay />}
+      <div className="items-center justify-center min-h-screen bg-fuchsia-950">
+        <div className="p-6 flex items-center">
+          <div className="w-14 h-14 bg-fuchsia-400 rounded-full flex items-center justify-center border-2 border-white">
+            <CiSearch className="text-white text-3xl" />
+          </div>
+          <h3 className="flex-grow text-center text-white text-2xl font-bold aldrich-regular">
+            {currentPage ? currentPage.title : ""}
+          </h3>
         </div>
 
-        <div>
-          {Object.keys(groupedUsers).map((letter) => (
-            <div key={letter} className="pb-10">
-              <h2 className="text-2xl font-semibold chakra-petch-medium mt-3 mb-2">
-                {letter}
-              </h2>
-              <ul className="list-none p-0 mb-1">
-                {groupedUsers[letter].map((user) => (
-                  <li key={user.id} className="flex items-center relative mb-4">
-                    <img
-                      src={user.profilePicture}
-                      alt={user.name}
-                      className="w-20 h-20 rounded-full object-cover mr-4"
-                    />
-                    <div className="flex-grow">
-                      <span className="text-lg font-semibold">{user.name}</span>
-                      <p className="text-sm text-gray-600 mt-1 chakra-petch-light">
-                        {user.description}
-                      </p>
-                    </div>
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex space-x-2">
-                      <FaRegHeart className="text-gray-500 cursor-pointer" />
-                      <RiCloseLine className="text-gray-500 cursor-pointer" />
-                    </div>
-                  </li>
-                ))}
-              </ul>
+        <div className="bg-white rounded-t-3xl min-h-screen p-6 h-96 mt-4 relative">
+          {/* Horizontal Line at the Top Center */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-full">
+            <div className="w-16 h-1 bg-gray-200 mx-auto mt-0 rounded-full"></div>
+          </div>
+
+          {users ? (
+            <div className="pb-16">
+              {Object.keys(users).map((letter) => (
+                <div key={letter} className="pb-10">
+                  <h2 className="text-2xl font-semibold chakra-petch-medium mt-3 mb-2">
+                    {letter}
+                  </h2>
+                  <ul className="list-none p-0 mb-1">
+                    {users[letter].map((user, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center relative mb-4"
+                      >
+                        <img
+                          src={user.profilePic.url}
+                          alt={user.username}
+                          className="w-20 h-20 rounded-full object-cover mr-4"
+                        />
+                        <div className="flex-grow">
+                          <span className="text-lg font-semibold">
+                            {user.username}
+                          </span>
+                          <p className="text-sm text-gray-600 mt-1 chakra-petch-light">
+                            ...
+                          </p>
+                        </div>
+                        {page === "received" || page === "shortlisted" ? (
+                          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex gap-2">
+                            {page === "received" ? (
+                              <FaRegHeart
+                                onClick={() => {
+                                  HandleApproveClick(user);
+                                }}
+                                className="cursor-pointer h-6 text-gray-500 w-12"
+                              />
+                            ) : null}
+                            <RiCloseLine
+                              onClick={() => {
+                                HandleRejectClick(user);
+                              }}
+                              className="cursor-pointer h-8 text-gray-500 w-12"
+                            />
+                          </div>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          ) : (
+            <p className="p-6 text-center flex items-center justify-center text-xl text-gray-700">
+              Nothing to show
+            </p>
+          )}
 
-        <div>
-          <Navbar />
+          <div>
+            <Navbar />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
