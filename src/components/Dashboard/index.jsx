@@ -9,11 +9,16 @@ import NotificationsContainer from "./Notifications/NotificationContainer";
 import ProfileSidebar from "./Header/ProfileSidebar";
 import apiInstance from "../../Instance/Axios";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useSocket } from "../../contexts/SocketContext";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../Loading/LoadingOverlay";
 
 function HomePage() {
   const {authState} = useContext(AuthContext);
+  const socket = useSocket();
+  const [notifications, setNotifications] = useState(
+    authState.user.notifications || []
+  );
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [preferences, setPreferences] = useState(null);
@@ -32,6 +37,37 @@ function HomePage() {
     setIsProfileModalVisible(!isProfileModalVisible);
   };
 
+  useEffect(()=>{
+    if(!socket) return;
+    socket.on("newNotification", (notification) => {
+      setNotifications((prev) => [...prev, notification]);
+    });
+
+    socket.on("notificationRead", ({ notificationId }) => {
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) =>
+          notification._id === notificationId
+            ? { ...notification, read: true }
+            : notification
+        )
+      );
+    });
+
+    socket.on("notificationDeleted", ({ notificationId }) => {
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter(
+          (notification) => notification._id !== notificationId
+        )
+      );
+    });
+
+    return () => {
+      socket.off("newNotification");
+      socket.off("notificationRead");
+      socket.off("notificationDeleted");
+    };
+  },[socket])
+
   useEffect(() => {
     apiInstance.get("/matches/preferences")
       .then((res) => {
@@ -48,14 +84,17 @@ function HomePage() {
   return (
     <>
       {loading && <LoadingOverlay />}
-      <div className='mx-auto'>
-        {preferences && !preferences?.Gender && !loading && <Interested preferences={preferences} />}
+      <div className="mx-auto">
+        {preferences && !preferences?.Gender && !loading && (
+          <Interested preferences={preferences} />
+        )}
         <Header
           isModalVisible={isModalVisible}
           toggleModal={toggleModal}
           toggleNotificationModal={toggleNotificationModal}
           toggleProfileModal={toggleProfileModal}
           user={authState?.user || null}
+          notifications={notifications}
         />
         <Story />
         <div className="p-[25px]">
@@ -64,8 +103,18 @@ function HomePage() {
         </div>
       </div>
       {isModalVisible && <HeaderNav toggleModal={toggleModal} />}
-      {isNotificationVisible && <NotificationsContainer toggleNotificationModal={toggleNotificationModal} />}
-      {isProfileModalVisible && <ProfileSidebar toggleProfileModal={toggleProfileModal} user={authState?.user || null}/>}
+      {isNotificationVisible && (
+        <NotificationsContainer
+          toggleNotificationModal={toggleNotificationModal}
+          notifications={notifications}
+        />
+      )}
+      {isProfileModalVisible && (
+        <ProfileSidebar
+          toggleProfileModal={toggleProfileModal}
+          user={authState?.user || null}
+        />
+      )}
     </>
   );
 }
