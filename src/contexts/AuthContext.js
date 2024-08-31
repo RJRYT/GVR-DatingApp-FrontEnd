@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       setAuthState({ isAuthenticated: false, user: null });
       await axiosInstance.post("/auth/logout").then(() => {
         toast.warning("Logout completed");
-        window.history.location = "/login";
+        window.location.replace("/login");
       })
     } catch (error) {
       console.error("Logout failed", error);
