@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
+import moment from "moment";
 import NavBar from "../../Dashboard/Navbar";
+import LoadingOverlay from "../../Loading/LoadingOverlay";
+import Loading from "../../Loading";
+import AccessDenied from "../../AccessDenied";
+import axios from "../../../Instance/Axios";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { useSocket } from "../../../contexts/SocketContext";
 
 const recentMatches = [
   {
@@ -24,71 +32,94 @@ const recentMatches = [
   },
 ];
 
-const messages = [
-  {
-    name: "Alfredo Calzoni",
-    message: "What about that new jacket if I ...",
-    time: "09:18",
-    avatar:
-      "https://media.istockphoto.com/photos/portrait-of-a-beautifull-smiling-man-picture-id499907722?k=6&m=499907722&s=612x612&w=0&h=MYOvvCDGwVuKDQKPhkdQ_-hCqNST3AsMJv2CnO0AhNg=",
-    isNew: true,
-  },
-  {
-    name: "Clara Hazel",
-    message: "I know right 😏",
-    time: "12:44",
-    avatar:
-      "https://i.postimg.cc/LXrZ5YxG/collage-portraits-different-people-men-women-posing-over-multicolored-background-neon-lights-collage.webp",
-    isNew: true,
-  },
-  {
-    name: "Brandon",
-    message: "Already registered, can’t wai...",
-    time: "08:06",
-    avatar:
-      "https://i.postimg.cc/sgYF0kFW/close-young-fun-happy-successful-600nw-2250641791.webp",
-    isNew: true,
-  },
-  {
-    name: "Amina Mina",
-    message: "It will have two lines of heading ...",
-    time: "09:32",
-    avatar: "https://i.postimg.cc/7PRyC1M5/istockphoto-1204482432-612x612.jpg",
-    isNew: true,
-  },
-  {
-    name: "Clara Hazel",
-    message: "I know right 😏",
-    time: "12:44",
-    avatar:
-      "https://i.postimg.cc/LXrZ5YxG/collage-portraits-different-people-men-women-posing-over-multicolored-background-neon-lights-collage.webp",
-    isNew: true,
-  },
-  {
-    name: "Brandon",
-    message: "Already registered, can’t wai...",
-    time: "08:06",
-    avatar:
-      "https://i.postimg.cc/sgYF0kFW/close-young-fun-happy-successful-600nw-2250641791.webp",
-    isNew: true,
-  },
-  {
-    name: "Amina Mina",
-    message: "It will have two lines of heading ...",
-    time: "09:32",
-    avatar: "https://i.postimg.cc/7PRyC1M5/istockphoto-1204482432-612x612.jpg",
-    isNew: true,
-  },
-];
+function formatChatTime(timestamp) {
+  const now = moment();
+  const time = moment(timestamp);
+
+  // If the timestamp is from today
+  if (time.isSame(now, "day")) {
+    return time.format("h:mm A"); // Example: "9:34 AM"
+  }
+
+  // If the timestamp is from yesterday
+  if (time.isSame(now.subtract(1, "day"), "day")) {
+    return "Yesterday";
+  }
+
+  // If the timestamp is older than yesterday
+  return time.format("DD/MM/YYYY"); // Example: "21/12/2024"
+}
+
+const MessageTimeStamp = ({ timestamp }) => {
+  return <span>{formatChatTime(timestamp)}</span>;
+};
 
 const Messages = () => {
+  // State to hold the users
+  const [chats, setChats] = useState(null);
+  const { authState, loading } = useContext(AuthContext);
+  const [loadingOverlay, setLoadingOverlay] = useState(true);
+  const socket = useSocket();
+
+  const fetchChats = useCallback(async () => {
+    try {
+      const response = await axios.get("/chats/list");
+      if (response.data.success) {
+        setChats(response.data.chats);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingOverlay(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading && authState.isAuthenticated) fetchChats();
+  }, [fetchChats, loading, authState]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("UpdateLastMessage", (newMessage, chatId) => {
+      console.log("UpdateLastMessage")
+      setChats((prevChats) => {
+        const updatedChats = prevChats.map((chat) =>
+          chat.chatId === chatId
+            ? {
+                ...chat,
+                lastMessage: {
+                  text: newMessage.content,
+                  read: newMessage.read,
+                  timestamp: newMessage.createdAt,
+                },
+                isNew: !newMessage.read,
+              }
+            : chat
+        );
+        return updatedChats;
+      });
+    });
+
+    return () => {
+      socket.off("UpdateLastMessage");
+    };
+  }, [socket]);
+
+  if (loading) return <Loading />;
+
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
+
   return (
-    <div className="bg-[#4b104d]">
-      <Header />
-      <RecentMatches matches={recentMatches} />
-      <MessageList messages={messages} />
-      <NavBar />
-    </div>
+    <>
+      {loadingOverlay && <LoadingOverlay />}
+      <div className="bg-[#4b104d]">
+        <Header />
+        <RecentMatches matches={recentMatches} />
+        <MessageList messages={chats} />
+        <NavBar />
+      </div>
+    </>
   );
 };
 
@@ -100,11 +131,11 @@ const Header = () => (
         width="24"
         height="24"
         viewBox="0 0 24 24"
-        stroke-width="2"
+        strokeWidth="2"
         stroke="currentColor"
         fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
@@ -153,36 +184,48 @@ const RecentMatches = ({ matches }) => (
   </div>
 );
 
-const MessageList = ({ messages }) => (
-  <div className="bg-white rounded-t-3xl p-5 mt-10 overflow-auto">
-    {messages.map((message, index) => (
-      <div
-        key={index}
-        className="flex items-center border-b border-gray-100 py-6"
-      >
-        <div className="flex-none w-16 h-16 rounded-full overflow-hidden">
-          <img
-            src={message.avatar}
-            alt={message.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="ml-4 flex-1">
-          <div className="flex justify-between items-center">
-            <h3 className="text-black text-2xl font-normal">{message.name}</h3>
-            <span className="text-gray-500 text-lg ml-4">{message.time}</span>
+const MessageList = ({ messages }) =>
+  messages ? (
+    <div className="bg-white rounded-t-3xl p-5 mt-10 overflow-auto pb-16">
+      {messages.map((message, index) => (
+        <Link
+        to={`/dashboard/chat/${message.chatId}`}
+          key={index}
+          className="flex items-center border-b border-gray-100 py-6"
+        >
+          <div className="flex-none w-16 h-16 rounded-full overflow-hidden">
+            <img
+              src={message.user.profilePic.url}
+              alt={message.user.username}
+              className="w-full h-full object-cover"
+            />
           </div>
-          <p className="text-gray-800 text-lg font-semibold truncate">
-            {message.message}
-          </p>
-        </div>
+          <div className="ml-4 flex-1">
+            <div className="flex justify-between items-center">
+              <h3 className="text-black text-2xl font-normal">
+                {message.user.username}
+              </h3>
+              <span className="text-gray-500 text-lg ml-4">
+                {message.lastMessage.timestamp ? (
+                  <MessageTimeStamp timestamp={message.lastMessage.timestamp} />
+                ) : null}
+              </span>
+            </div>
+            <p className="text-gray-800 text-lg font-semibold truncate">
+              {message.lastMessage.text}
+            </p>
+          </div>
 
-        {message.isNew && message.name !== "Amina Mina" && (
-          <span className="w-4 h-4 bg-[#da6fde] rounded-full"></span>
-        )}
-      </div>
-    ))}
-  </div>
-);
+          {(message.isNew || !message.lastMessage.read) && (
+            <span className="w-3 h-3 bg-[#da6fde] rounded-full"></span>
+          )}
+        </Link>
+      ))}
+    </div>
+  ) : (
+    <p className="p-6 text-center flex items-center justify-center text-xl text-gray-700">
+      Nothing to show
+    </p>
+  );
 
 export default Messages;
