@@ -47,6 +47,7 @@ const ChatBox = () => {
 
     socket.on("message", (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
+      socket.emit("messagesSeen", authState.user.id);
     });
 
     socket.on("userOnline", (userId) => {
@@ -69,12 +70,35 @@ const ChatBox = () => {
       }
     });
 
+    socket.on("messagesSeen", (userId) => {
+      if (userId === user?.id) {
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) => ({ ...msg, read: true }))
+        );
+      }
+    });
+
     return () => {
       socket.off("message");
       socket.off("userOnline");
       socket.off("userOffline");
+      socket.off("messagesSeen");
     };
   }, [socket]);
+
+  useEffect(() => {
+    const markMessagesARead = async () => {
+      if (messages && authState.user && messages.some((msg) => !msg.read && msg.sender !== authState.user.id)) {
+        try {
+          await axios.post(`/chats/messages/private/${chatId}/markread`);
+        } catch (error) {
+          console.error("Error marking messages as read", error);
+        }
+      }
+    };
+  
+    markMessagesARead();
+  }, [messages, chatId, authState]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();

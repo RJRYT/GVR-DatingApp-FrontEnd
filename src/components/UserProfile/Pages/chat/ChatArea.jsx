@@ -87,7 +87,7 @@ const ChatArea = ({ messages, user }) => {
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   )}
-                  <div className="bg-white px-4 py-2 rounded-xl max-w-full md:max-w-[calc(100%-150px)]">
+                  <div style={{wordBreak:"break-word"}} className="bg-white px-4 py-2 rounded-xl break-words max-w-full md:max-w-[calc(100%-150px)]">
                     <div className="flex justify-between items-center gap-2">
                       <div>
                         <p className="font-bold">
@@ -100,7 +100,7 @@ const ChatArea = ({ messages, user }) => {
                         </p>
                       </div>
                       <span className="text-xs text-gray-500 text-nowrap mt-auto">
-                        {moment(message.createdAt).format("h:mm A")}
+                       {(message.sender === authState.user.id && message.read) ? "seen | " : "" } {" "} {moment(message.createdAt).format("h:mm A")}
                       </span>
                     </div>
                   </div>
