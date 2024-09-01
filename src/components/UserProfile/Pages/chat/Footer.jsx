@@ -20,7 +20,7 @@ const Footer = ({ content, setContent, onSend }) => {
         <input
           type="text"
           value={content}
-          onChange={(e)=>{setContent(e.target.value)}}
+          onChange={setContent}
           placeholder="Type your message"
           className="flex-1 bg-transparent outline-none ml-4"
         />

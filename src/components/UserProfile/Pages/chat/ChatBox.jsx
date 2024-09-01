@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { useSocket } from "../../../../contexts/SocketContext";
 import Loading from "../../../Loading";
@@ -15,10 +15,13 @@ const ChatBox = () => {
   const { chatId } = useParams();
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isUserTyping, setUserIsTyping] = useState(false);
   const [content, setContent] = useState("");
   const [loadingOverlay, setLoadingOverlay] = useState(false);
   const { authState, loading } = useContext(AuthContext);
   const socket = useSocket();
+  const typingTimeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -31,7 +34,7 @@ const ChatBox = () => {
               : response.data.users[0];
           setUser(messagingUser);
           setMessages(response.data.chats);
-          socket.emit("joinRoom", {chatId});
+          socket.emit("joinRoom", { chatId });
         }
       } catch (error) {
         console.error("Error fetching user chats", error);
@@ -47,7 +50,6 @@ const ChatBox = () => {
 
     socket.on("message", (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-      socket.emit("messagesSeen", authState.user.id);
     });
 
     socket.on("userOnline", (userId) => {
@@ -59,13 +61,13 @@ const ChatBox = () => {
       }
     });
 
-    // Listen for offline status updates
     socket.on("userOffline", (userId) => {
       if (userId === user?.id) {
+        setUserIsTyping(false);
         setUser((prevUser) => ({
           ...prevUser,
           isOnline: false,
-          lastActive: new Date(), // Set the last active time to the current time
+          lastActive: new Date(), 
         }));
       }
     });
@@ -78,34 +80,84 @@ const ChatBox = () => {
       }
     });
 
+    socket.on("typing", ({ userId }) => {
+      if (userId === user?.id) {
+        setUserIsTyping(true);
+      }
+    });
+
+    socket.on("stopTyping", ({ userId }) => {
+      if (userId === user?.id) {
+        setUserIsTyping(false);
+      }
+    });
+
     return () => {
       socket.off("message");
       socket.off("userOnline");
       socket.off("userOffline");
       socket.off("messagesSeen");
+      socket.off("typing");
+      socket.off("stopTyping");
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     };
-  }, [socket]);
+  }, [socket, isUserTyping]);
 
   useEffect(() => {
     const markMessagesARead = async () => {
-      if (messages && authState.user && messages.some((msg) => !msg.read && msg.sender !== authState.user.id)) {
+      if (socket && messages && user && authState.user && messages.some((msg) => !msg.read && msg.sender !== authState.user.id)) {
         try {
-          await axios.post(`/chats/messages/private/${chatId}/markread`);
+          await socket.emit("markMessagesAsRead", { chatId });
         } catch (error) {
           console.error("Error marking messages as read", error);
         }
       }
     };
-  
+
     markMessagesARead();
-  }, [messages, chatId, authState]);
+  }, [messages, chatId, authState, user, socket]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!content) return;
     socket.emit("sendMessage", { chatId, content });
     setContent("");
+    socket.emit("stopTyping", { chatId });
+    setIsTyping(false);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
     return;
+  };
+
+  const emitTypingEvent = useCallback((chatId) => {
+    if (!isTyping) {
+      setIsTyping(true);
+      socket.emit("typing", { chatId });
+    }
+  })
+
+  const updateContent = (e) => {
+    setContent(e.target.value);
+    if (content.length > 0) {
+      emitTypingEvent(chatId);
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      typingTimeoutRef.current = setTimeout(() => {
+        setIsTyping(false);
+        socket.emit("stopTyping", { chatId });
+      }, 5000)
+    } else {
+      socket.emit("stopTyping", { chatId });
+      setIsTyping(false);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    }
   };
 
   if (loading) return <Loading />;
@@ -116,11 +168,11 @@ const ChatBox = () => {
     <>
       {loadingOverlay && <LoadingOverlay />}
       <div className="flex flex-col h-dvh">
-        <Header user={user} />
+        <Header user={user} typing={isUserTyping} />
         <ChatArea messages={messages} user={user} />
         <Footer
           content={content}
-          setContent={setContent}
+          setContent={updateContent}
           onSend={handleSendMessage}
         />
       </div>

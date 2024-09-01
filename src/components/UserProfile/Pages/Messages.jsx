@@ -92,23 +92,6 @@ const Messages = () => {
                 read: newMessage.sender === authState.user.id ? true : newMessage.read,
                 timestamp: newMessage.createdAt,
               },
-              isNew: !newMessage.read,
-            }
-            : chat
-        );
-        return updatedChats;
-      });
-    });
-
-    socket.on("UpdateLastMessageSeen", (chatId) => {
-      setChats((prevChats) => {
-        const updatedChats = prevChats.map((chat) =>
-          chat.chatId === chatId
-            ? {
-              ...chat,
-              lastMessage: {
-                read: true,
-              },
               isNew: false,
             }
             : chat
@@ -119,7 +102,6 @@ const Messages = () => {
 
     return () => {
       socket.off("UpdateLastMessage");
-      socket.off("UpdateLastMessageSeen");
     };
   }, [socket]);
 
@@ -203,7 +185,7 @@ const RecentMatches = ({ matches }) => (
 
 const MessageList = ({ messages }) =>
   messages ? (
-    <div className="bg-white rounded-t-3xl p-5 mt-10 overflow-auto pb-16">
+    <div className="bg-white rounded-t-3xl p-5 mt-10 overflow-auto pb-20">
       {messages.map((message, index) => (
         <Link
           to={`/dashboard/chat/${message.chatId}`}
@@ -228,7 +210,7 @@ const MessageList = ({ messages }) =>
                 ) : null}
               </span>
             </div>
-            <p className="text-gray-800 text-lg font-semibold truncate">
+            <p className={`text-gray-800 text-lg ${(message.isNew || !message.lastMessage.read) ? "font-semibold" : ""}  truncate`}>
               {trimMessage(message.lastMessage.text,30)}
             </p>
           </div>

@@ -4,8 +4,7 @@ import { BsCameraVideoFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
-const Header = ({ user }) => {
-  
+const Header = ({ user, typing }) => {
   return (
     <div className="bg-fuchsia-950 text-white rounded-none p-4 flex justify-between items-center">
       <div className="flex items-center gap-4 mr-auto">
@@ -23,6 +22,11 @@ const Header = ({ user }) => {
         {(user && !user.isOnline) ? (
           <p className="text-sm">
            Last active: <LastActiveTimeStamp timestamp={user.lastActive} />
+          </p>
+        ) : ""}
+        {(user && typing) ? (
+          <p className="text-sm">
+           Typing...
           </p>
         ) : ""}
       </div>
