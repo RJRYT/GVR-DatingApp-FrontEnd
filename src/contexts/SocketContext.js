@@ -21,11 +21,24 @@ export const SocketProvider = ({ children }) => {
       setSocket(newSocket);
 
       newSocket.on("connect", () => {
-        console.log("Connected to the server");
+        console.log("[Server]: Connection established");
       });
 
-      newSocket.on("disconnect", () => {
-        console.log("Disconnected from the server");
+      newSocket.on("connect_error", (error) => {
+        if(newSocket.active){
+          console.log("[Server]: A temporary failure occoured. will reconnect.");
+        }else{
+          console.log("[Server]: An error occoured on connection ",error);
+        }
+      });
+
+      newSocket.on("disconnect", (reason, details) => {
+        console.log("[Server]: Disconnected...!");
+        console.log("[Server]: reason: ", reason);
+      });
+
+      newSocket.onAny((eventname, ...args)=>{
+        console.log(`[Server]: Event triggered: ${eventname} `,...args);
       });
 
       return () => newSocket.close();

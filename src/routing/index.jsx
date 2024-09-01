@@ -88,6 +88,8 @@ function Routing() {
           <Route path="/dashboard/requests/sent" element={<Sent />} />
           <Route path="/dashboard/requests/rejected" element={<Reject />} />
           <Route path="/dashboard/requests/accepted" element={<Accept />} />
+          <Route path="/dashboard/messages" element={<Messages />} />
+          <Route path="/dashboard/chat/:chatId" element={<ChatBox />} />
           <Route
             path="/dashboard/requests/received"
             element={<Received page={"received"} />}
@@ -118,10 +120,6 @@ function Routing() {
           <Route path="/dashboard/@me/filter" element={<Filter />} />
           <Route path="/dashboard/@me/addcard" element={<AddCard />} />
           <Route path="/dashboard/story" element={<Stories />} />
-          <Route path="/dashboard/@me/messages" element={<Messages />} />
-          <Route path="/dashboard/@me/chat" element={<ChatBox />} />
-          
-
           <Route
             path="/dashboard/@me/subscription"
             element={<Subscription />}

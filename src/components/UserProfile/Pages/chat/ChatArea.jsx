@@ -1,90 +1,129 @@
-import React from 'react';
-import { IoCallOutline } from 'react-icons/io5';
+import React, { useContext, useRef, useEffect } from "react";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import Loading from "../../../Loading";
+import AccessDenied from "../../../AccessDenied";
+import moment from "moment"; // Use moment.js to handle date formatting
 
-const ChatArea = () => {
-  const handleBackClick = () => {
-    window.history.back();
+const ChatArea = ({ messages, user }) => {
+  const { authState, loading } = useContext(AuthContext);
+  const chatEndRef = useRef(null);
+
+  const groupMessagesByDate = () => {
+    const groupedMessages = {};
+    messages.forEach((message) => {
+      const messageDate = moment(message.timestamp).startOf("day");
+      const today = moment().startOf("day");
+      const yesterday = moment().subtract(1, "days").startOf("day");
+
+      let dateKey;
+
+      if (messageDate.isSame(today)) {
+        dateKey = "Today";
+      } else if (messageDate.isSame(yesterday)) {
+        dateKey = "Yesterday";
+      } else {
+        dateKey = messageDate.format("DD/MM/YYYY");
+      }
+
+      if (!groupedMessages[dateKey]) {
+        groupedMessages[dateKey] = [];
+      }
+
+      groupedMessages[dateKey].push(message);
+    });
+
+    return groupedMessages;
   };
 
-  // Define chat messages and dates
-  const messages = [
-    { text: "Hello, how are you?", time: "10:00", date: "Yesterday", type: "received" },
-    { text: "I am good, thank you! How about you?", time: "13:05", date: "Yesterday", type: "sent" },
-    { text: "I’m doing well, thanks for asking.", time: "20:30", date: "Yesterday", type: "received" },
-    { text: "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", time: "20:30", date: "Yesterday", type: "received" },
-    { text: "How's your day going?", time: "21:25", date: "Yesterday", type: "sent" },
-    { text: "Pretty good, just a bit tired.", time: "21:30", date: "Yesterday", type: "received" },
-    { text: "I understand, hope you get some rest soon!", time: "21:35", date: "Yesterday", type: "sent" },
-    { text: "Thanks!", time: "21:40", date: "Today", type: "received" },
-    { text: "How's your day going?", time: "21:25", date: "Today", type: "sent" },
-    { text: "Pretty good, just a bit tired.", time: "21:30", date: "Today", type: "received" },
-    { text: "I understand, hope you get some rest soon!", time: "21:35", date: "Today", type: "sent" },
-    { text: "Thanks!", time: "21:40", date: "Today", type: "received" },
-  ];
+  const groupedMessages = groupMessagesByDate();
 
-  // Extract unique dates from messages
-  const uniqueDates = [...new Set(messages.map(msg => msg.date))];
+  // Function to scroll to the bottom of the chat
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    // Scroll to bottom when component mounts (on join)
+    scrollToBottom();
+  }, []);
+
+  useEffect(() => {
+    // Scroll to bottom when new message comes in
+    scrollToBottom();
+  }, [messages]);
+
+  if (loading) return <Loading />;
+
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
-    <div className="bg-fuchsia-950 min-h-screen flex flex-col">
-      <div className="flex items-center justify-between p-6">
-        <button
-          className="border w-9 h-9 rounded-full flex items-center justify-center"
-          onClick={handleBackClick}
-        >
-          <svg
-            className="h-7 w-7 text-stone-100"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <polyline points="15 6 9 12 15 18" />
-          </svg>
-        </button>
-
-        <h3 className="text-white text-xl font-medium aldrich-regular text-center flex-grow">
-          Catherine Teressa
-        </h3>
-
-        <IoCallOutline className="h-6 w-6 text-yellow-400" />
-      </div>
-
-      {/* Chat Area */}
-      <div className="bg-white rounded-t-3xl flex-grow flex flex-col">
-        <div className="flex-grow overflow-y-auto">
-          <div className="space-y-4">
-            {uniqueDates.map((date, index) => (
-              <div key={index}>
-                <div className="flex justify-center">
-                  <span className="bg-sky-100 text-xs py-1 px-2 rounded-xl mt-1">{date}</span>
-                </div>
-
-                {messages
-                  .filter(msg => msg.date === date)
-                  .map((msg, i) => (
-                    <div
-                      key={i}
-                      className={`flex ${msg.type === "received" ? "justify-start" : "justify-end"} mb-2`}
-                    >
-                      <div
-                        className={`p-3 rounded-r-lg relative max-w-[60%] pb-6 ${msg.type === "received" ? "bg-[#7f699b] text-white" : "bg-sky-100 text-black rounded-l-lg pb-6"} ${i > 0 && messages[messages.indexOf(msg) - 1].type === msg.type ? "mt-2" : "mt-4"} `}
-                      >
-                        <p className="text-sm">{msg.text}</p>
-                        <span className="absolute bottom-1 right-2 text-xs">{msg.time}</span>
+    <div className="bg-gray-200 overflow-y-auto">
+      <ul className="p-4 space-y-4 pb-10">
+        <li className="flex justify-center">
+          <span className="bg-gray-300 text-xs py-1 px-2 rounded-xl">
+            This is the very beginning of your legendary conversation with{" "}
+            {user?.username}
+          </span>
+        </li>
+        {messages.length ? (
+          Object.keys(groupedMessages).map((dateKey, index) => (
+            <React.Fragment key={index}>
+              <li className="flex justify-center">
+                <span className="bg-gray-300 text-xs py-1 px-2 rounded-xl">
+                  {dateKey}
+                </span>
+              </li>
+              {groupedMessages[dateKey].map((message, idx) => (
+                <li
+                  key={idx}
+                  className={`flex items-start gap-2 ${
+                    message.sender === authState.user.id ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  {message.sender !== authState.user.id && (
+                    <img
+                      src={user.profilePic.url} 
+                      alt={user.username}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  )}
+                  <div style={{wordBreak:"break-word"}} className="bg-white px-4 py-2 rounded-xl break-words max-w-full md:max-w-[calc(100%-150px)]">
+                    <div className="flex justify-between items-center gap-2">
+                      <div>
+                        <p className="font-bold">
+                          {message.sender === authState.user.id
+                            ? "You"
+                            : user.username}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {message.content}
+                        </p>
                       </div>
+                      <span className="text-xs text-gray-500 text-nowrap mt-auto">
+                       {(message.sender === authState.user.id && message.read) ? "seen | " : "" } {" "} {moment(message.createdAt).format("h:mm A")}
+                      </span>
                     </div>
-                  ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+                  </div>
+                  {message.sender === authState.user.id && (
+                    <img
+                      src={authState.user?.profilePic.url}
+                      alt={authState.user?.username}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  )}
+                </li>
+              ))}
+            </React.Fragment>
+          ))
+        ) : (
+          <li className="flex justify-center">
+            <span className="bg-gray-300 text-xs py-1 px-2 rounded-xl">
+              Welcome to the chat! Say hi and start the conversation.
+            </span>
+          </li>
+        )}
+        <div ref={chatEndRef} />
+      </ul>
     </div>
   );
 };
