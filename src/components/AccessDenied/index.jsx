@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 function AccessDenied() {
+  const { authState } = useContext(AuthContext);
+
+  const handleGoBackClick = () =>{
+    if(!authState.isAuthenticated) return window.location.replace("/login");
+    window.history.back()
+  };
+
   return (
     <div className="flex items-center aldrich-regular justify-center h-svh bg-fuchsia-950">
       <div className="text-center">

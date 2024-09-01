@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Header = ({ toggleModal, toggleNotificationModal,toggleProfileModal, user }) => {
+const Header = ({
+  toggleModal,
+  toggleNotificationModal,
+  toggleProfileModal,
+  user,
+  notifications,
+}) => {
   return (
     <div className="relative">
       <header className="flex items-center justify-between p-4 bg-white">
@@ -28,11 +34,7 @@ const Header = ({ toggleModal, toggleNotificationModal,toggleProfileModal, user 
           <div className="text-xl font-bold text-fuchsia-800">BuddyPair</div>
         </div>
 
-        <div className="flex items-center space-x-3" >
-          {/* <a
-            href="#" onClick={notificationModal}
-            className="h-10 w-10 rounded-full p-2 block border border-fuchsia-300"
-          > */}
+        <div className="flex items-center space-x-3">
           <button
             className="h-10 w-10 rounded-full p-2 block border border-fuchsia-300"
             onClick={toggleNotificationModal}
@@ -51,11 +53,19 @@ const Header = ({ toggleModal, toggleNotificationModal,toggleProfileModal, user 
               <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
               <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
             </svg>
-          {/* </a> */}
+            {notifications.length ? <span className="absolute top-[35px] right-[95px] block h-1 w-1 bg-pink-500 rounded-full"></span>:null}
           </button>
-          <button  aria-label="ToggleProfileMenu" className="bg-white rounded-full p-2">
-            <img onClick={toggleProfileModal}
-              src={user && user.profilePic ? user.profilePic.url : "https://i.imgur.com/sjLMNDM.png"}
+          <button
+            aria-label="ToggleProfileMenu"
+            className="bg-white rounded-full p-2"
+          >
+            <img
+              onClick={toggleProfileModal}
+              src={
+                user && user.profilePic
+                  ? user.profilePic.url
+                  : "https://i.imgur.com/sjLMNDM.png"
+              }
               alt="Profile"
               className="w-10 h-10 rounded-full"
             />

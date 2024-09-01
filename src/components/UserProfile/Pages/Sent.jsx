@@ -21,6 +21,7 @@ const Sent = () => {
       const response = await axios.put(`/users/friends/request/${request._id}/cancel`);
       if (response.data.success) {
         toast.success("Request cancelled");
+        setUsers([]);
         fetchSendRequests();
       }else{
         toast.error(response.data.message);

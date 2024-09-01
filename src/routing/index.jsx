@@ -89,6 +89,28 @@ function Routing() {
           <Route path="/dashboard/requests/sent" element={<Sent />} />
           <Route path="/dashboard/requests/rejected" element={<Reject />} />
           <Route path="/dashboard/requests/accepted" element={<Accept />} />
+          <Route path="/dashboard/messages" element={<Messages />} />
+          <Route path="/dashboard/chat/:chatId" element={<ChatBox />} />
+          <Route
+            path="/dashboard/requests/received"
+            element={<Received page={"received"} />}
+          />
+          <Route
+            path="/dashboard/users/shortlist"
+            element={<Received page={"shortlisted"} />}
+          />
+          <Route
+            path="/dashboard/users/shortlisted-by"
+            element={<Received page={"shortlistedBy"} />}
+          />
+          <Route
+            path="/dashboard/users/contacted"
+            element={<Received page={"contacted"} />}
+          />
+          <Route
+            path="/dashboard/users/profile-viewers"
+            element={<Received page={"myProfileView"} />}
+          />
 
           {/**split**/}
 
@@ -99,8 +121,6 @@ function Routing() {
           <Route path="/dashboard/@me/filter" element={<Filter />} />
           <Route path="/dashboard/@me/addcard" element={<AddCard />} />
           <Route path="/dashboard/story" element={<Stories />} />
-          <Route path="/dashboard/@me/messages" element={<Messages />} />
-          <Route path="/dashboard/@me/chat" element={<ChatBox />} />
           <Route
             path="/dashboard/@me/subscription"
             element={<Subscription />}
@@ -115,26 +135,6 @@ function Routing() {
             element={<ChangePassword />}
           />
           <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
-          <Route
-            path="/dashboard/@me/received"
-            element={<Received sidemenutitle={"Received"} />}
-          />
-          <Route
-            path="/dashboard/@me/shortlist"
-            element={<Received sidemenutitle={"Shortlist"} />}
-          />
-          <Route
-            path="/dashboard/@me/contacted"
-            element={<Received sidemenutitle={"Contacted"} />}
-          />
-          <Route
-            path="/dashboard/@me/shortlisted-by"
-            element={<Received sidemenutitle={"Shortlisted By"} />}
-          />
-          <Route
-            path="/dashboard/@me/myprofile"
-            element={<Received sidemenutitle={"Viewed My Profile"} />}
-          />
           <Route path="/403" element={<AccessDenied />} />
         </Route>
         <Route path="*" element={<NotFound />} />
