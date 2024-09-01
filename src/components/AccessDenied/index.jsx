@@ -1,3 +1,4 @@
+
 import React, { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -19,8 +20,7 @@ function AccessDenied() {
         </p>
         <button
           className="flex items-center mx-auto justify-center border-2 border-white text-white hover:text-slate-300 px-4 py-2 rounded"
-          onClick={() => window.location.href = "/login"}
-          
+          onClick={handleGoBackClick}
         >
           <span>Go back to previous page</span>
           <svg
