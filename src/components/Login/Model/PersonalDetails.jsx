@@ -34,32 +34,52 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
     age: "",
     dateOfBirth: "",
     gender: "",
-    location: JSON.stringify({ latitude: "", longitude: "" }),
+    location:JSON.stringify({ latitude: "", longitude: "",placeName:"" }),
     hobbies: [],
     interests: [],
     smokingHabits: "",
     drinkingHabits: "",
     qualification: [],
   });
-
   const getLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const newLocation = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        setLocation(newLocation);
-        setFormData({ ...formData, location: JSON.stringify(newLocation) }); 
-        setLocationError('');
-      }, (error) => {
-        setLocationError('Unable to fetch location');
-      });
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const placeName = await getPlaceName(latitude, longitude);
+  
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            location: JSON.stringify({ latitude, longitude ,placeName}),
+            placeName: placeName, // Update form data with place name
+          }));
+  
+          setLocation({ latitude, longitude, placeName });
+          setLocationError('');
+        },
+        (error) => {
+          // handle errors
+        }
+      );
     } else {
       setLocationError('Geolocation is not supported by this browser.');
     }
   };
-
+  
+  const getPlaceName = async (latitude, longitude) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch place name');
+      }
+      const data = await response.json();
+      return data.display_name || 'Place name not available';
+    } catch (error) {
+      console.error('Error fetching place name:', error);
+      return 'Error fetching place name';
+    }
+  };
+  
 
   useEffect(() => {
     if (!loading && !authState.isAuthenticated) modelToggle();
