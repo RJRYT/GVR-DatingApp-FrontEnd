@@ -11,7 +11,7 @@ const ChatArea = ({ messages, user }) => {
   const groupMessagesByDate = () => {
     const groupedMessages = {};
     messages.forEach((message) => {
-      const messageDate = moment(message.timestamp).startOf("day");
+      const messageDate = moment(message.createdAt).startOf("day");
       const today = moment().startOf("day");
       const yesterday = moment().subtract(1, "days").startOf("day");
 
@@ -24,7 +24,7 @@ const ChatArea = ({ messages, user }) => {
       } else {
         dateKey = messageDate.format("DD/MM/YYYY");
       }
-
+      
       if (!groupedMessages[dateKey]) {
         groupedMessages[dateKey] = [];
       }
@@ -57,73 +57,69 @@ const ChatArea = ({ messages, user }) => {
   if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
-    <div className="bg-gray-200 overflow-y-auto">
-      <ul className="p-4 space-y-4 pb-10">
-        <li className="flex justify-center">
-          <span className="bg-gray-300 text-xs py-1 px-2 rounded-xl">
-            This is the very beginning of your legendary conversation with{" "}
-            {user?.username}
-          </span>
-        </li>
-        {messages.length ? (
-          Object.keys(groupedMessages).map((dateKey, index) => (
-            <React.Fragment key={index}>
-              <li className="flex justify-center">
-                <span className="bg-gray-300 text-xs py-1 px-2 rounded-xl">
-                  {dateKey}
-                </span>
-              </li>
-              {groupedMessages[dateKey].map((message, idx) => (
-                <li
-                  key={idx}
-                  className={`flex items-start gap-2 ${
-                    message.sender === authState.user.id ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  {message.sender !== authState.user.id && (
-                    <img
-                      src={user.profilePic.url} 
-                      alt={user.username}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                  )}
-                  <div style={{wordBreak:"break-word"}} className="bg-white px-4 py-2 rounded-xl break-words max-w-full md:max-w-[calc(100%-150px)]">
-                    <div className="flex justify-between items-center gap-2">
-                      <div>
-                        <p className="font-bold">
-                          {message.sender === authState.user.id
-                            ? "You"
-                            : user.username}
-                        </p>
-                        <p className="text-xs text-gray-600">
-                          {message.content}
-                        </p>
-                      </div>
-                      <span className="text-xs text-gray-500 text-nowrap mt-auto">
-                       {(message.sender === authState.user.id && message.read) ? "seen | " : "" } {" "} {moment(message.createdAt).format("h:mm A")}
-                      </span>
-                    </div>
-                  </div>
-                  {message.sender === authState.user.id && (
-                    <img
-                      src={authState.user?.profilePic.url}
-                      alt={authState.user?.username}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                  )}
-                </li>
-              ))}
-            </React.Fragment>
-          ))
-        ) : (
+    <div className="bg-white rounded-t-3xl flex-grow flex flex-col">
+      <div className="flex-grow overflow-y-auto">
+        <ul className="space-y-4 pb-10">
           <li className="flex justify-center">
-            <span className="bg-gray-300 text-xs py-1 px-2 rounded-xl">
-              Welcome to the chat! Say hi and start the conversation.
+            <span className="bg-gray-300 text-xs py-1 px-4 rounded-lg border">
+              This is the very beginning of your legendary conversation with{" "}
+              {user?.username}
             </span>
           </li>
-        )}
-        <div ref={chatEndRef} />
-      </ul>
+          {messages.length ? (
+            Object.keys(groupedMessages).map((dateKey, index) => (
+              <React.Fragment key={index}>
+                <li className="flex justify-center">
+                  <span className="bg-gray-300 text-xs py-1 px-4 rounded-lg border">
+                    {dateKey}
+                  </span>
+                </li>
+                {groupedMessages[dateKey].map((message, idx) => (
+                  <li
+                    key={idx}
+                    className={`flex ${
+                      message.sender === authState.user.id
+                        ? "justify-end"
+                        : "justify-start"
+                    }`}
+                  >
+                    <div
+                      style={{ wordBreak: "break-word" }}
+                      className={`p-3 rounded-none relative break-words min-w-[20%] max-w-[60%] ${
+                        message.sender === authState.user.id
+                          ? "bg-sky-100 text-black rounded-l-lg"
+                          : "bg-[#7f699b] text-white rounded-r-lg"
+                      } ${
+                        idx > 0 &&
+                        groupedMessages[dateKey][
+                          groupedMessages[dateKey].indexOf(message) - 1
+                        ].sender === message.sender
+                          ? "mt-2"
+                          : "mt-4"
+                      } `}
+                    >
+                      <p className="text-sm mb-2">{message.content}</p>
+                      <span className="absolute bottom-1 text-nowrap right-2 text-xs">
+                        {message.sender === authState.user.id && message.read
+                          ? "seen | "
+                          : ""}{" "}
+                        {moment(message.createdAt).format("h:mm A")}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </React.Fragment>
+            ))
+          ) : (
+            <li className="flex justify-center">
+              <span className="bg-gray-300 text-xs py-1 px-4 rounded-lg border">
+                Welcome to the chat! Say hi and start the conversation.
+              </span>
+            </li>
+          )}
+          <div ref={chatEndRef} />
+        </ul>
+      </div>
     </div>
   );
 };
