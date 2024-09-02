@@ -1,39 +1,37 @@
 import React from "react";
-import { FaArrowLeft, FaPhone } from "react-icons/fa";
-import { BsCameraVideoFill } from "react-icons/bs";
+import { FaArrowLeft } from "react-icons/fa";
+import { IoCallOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
 const Header = ({ user, typing }) => {
   return (
-    <div className="bg-fuchsia-950 text-white rounded-none p-4 flex justify-between items-center">
-      <div className="flex items-center gap-4 mr-auto">
-        <Link to={"/dashboard/messages"}>
-          <FaArrowLeft className="text-xl" />
-        </Link>
-        <img
-          src={user?.profilePic.url}
-          alt={user?.username}
-          className="w-10 h-10 rounded-full object-cover"
-        />
-        <h1 className="flex gap-2 items-center text-xl">
-            {(user && user.isOnline) ? <span className="w-2 h-2 bg-green-500 rounded-full"></span> : ""}{user ? user.username : ""}
-        </h1>
-        {(user && !user.isOnline) ? (
+    <div className="flex items-center justify-between p-6">
+      <Link
+        className="border w-9 h-9 rounded-full text-white flex items-center justify-center"
+        to={"/dashboard/messages"}
+      >
+        <FaArrowLeft className="text-xl" />
+      </Link>
+      <div className="flex gap-2 items-center text-white text-xl font-medium aldrich-regular text-center flex-grow">
+        {user && user.isOnline ? (
+          <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+        ) : (
+          ""
+        )}
+        <h3>
+          {user ? user.username : ""}
+        </h3>
+        {user && !user.isOnline ? (
           <p className="text-sm">
-           Last active: <LastActiveTimeStamp timestamp={user.lastActive} />
+            Last active: <LastActiveTimeStamp timestamp={user.lastActive} />
           </p>
-        ) : ""}
-        {(user && typing) ? (
-          <p className="text-sm">
-           Typing...
-          </p>
-        ) : ""}
+        ) : (
+          ""
+        )}
+        {user && typing ? <p className="text-sm">Typing...</p> : ""}
       </div>
-      <div className="flex items-center gap-4 ml-auto">
-        <FaPhone className="text-white text-xl" />
-        <BsCameraVideoFill className="text-white text-xl" />
-      </div>
+      <IoCallOutline className="h-6 w-6 text-yellow-400" />
     </div>
   );
 };

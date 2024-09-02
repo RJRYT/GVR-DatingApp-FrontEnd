@@ -168,8 +168,10 @@ const ChatBox = () => {
     <>
       {loadingOverlay && <LoadingOverlay />}
       <div className="flex flex-col h-dvh">
+      <div className="bg-fuchsia-950 min-h-screen flex flex-col">
         <Header user={user} typing={isUserTyping} />
         <ChatArea messages={messages} user={user} />
+      </div>
         <Footer
           content={content}
           setContent={updateContent}
