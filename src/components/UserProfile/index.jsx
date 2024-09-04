@@ -215,7 +215,7 @@ const UserProfile = ({ upgrade = false }) => {
               <div className="w-16 h-1 bg-gray-200 mx-auto mt-4 rounded-full"></div>
             </div>
             <div className="px-4">
-              {user.about && <div className="text-base mt-1 ">
+              {user?.about && <div className="text-base mt-1 ">
                 <h4 className="left-0 chakra-petch-medium text-gray-400">
                   About
                 </h4>
