@@ -50,18 +50,6 @@ function Routing() {
               element={<Matches title="Matches" />}
             />
             <Route
-              path="/dashboard/matches/qualification"
-              element={<Matches title="Qualification" />}
-            />
-            <Route
-              path="/dashboard/matches/location"
-              element={<Matches title="Location" />}
-            />
-            <Route
-              path="/dashboard/matches/designation"
-              element={<Matches title="Designation" />}
-            />
-            <Route
               path="/dashboard/matches/my"
               element={<Matches title="Viewed my profile" profileView={true} />}
             />

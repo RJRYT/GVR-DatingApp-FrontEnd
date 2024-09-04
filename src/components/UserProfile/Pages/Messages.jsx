@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import NavBar from "../../Dashboard/Navbar";
 import LoadingOverlay from "../../Loading/LoadingOverlay";
@@ -122,28 +122,31 @@ const Messages = () => {
   );
 };
 
-const Header = () => (
-  <div className="flex justify-between items-center mb-10">
-    <button className="border w-11 h-11 mt-6 ml-6 rounded-full">
-      <svg
-        className="h-8 w-8 ml-1 text-stone-100"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        strokeWidth="2"
-        stroke="currentColor"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-    </button>
-    <h1 className="text-white text-3xl mt-5 mr-7 font-medium">Messages</h1>
-    <div className="w-6"></div>
-  </div>
-);
+const Header = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="flex justify-between items-center mb-10">
+      <button onClick={() => navigate("/dashboard")} className="border w-11 h-11 mt-6 ml-6 rounded-full">
+        <svg
+          className="h-8 w-8 ml-1 text-stone-100"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+          stroke="currentColor"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <polyline points="15 6 9 12 15 18" />
+        </svg>
+      </button>
+      <h1 className="text-white text-3xl mt-5 mr-7 font-medium">Messages</h1>
+      <div className="w-6"></div>
+    </div>
+  )
+};
 
 const RecentMatches = ({ matches }) => (
   <div className="mb-10">
@@ -211,7 +214,7 @@ const MessageList = ({ messages }) =>
               </span>
             </div>
             <p className={`text-gray-800 text-lg ${(message.isNew || !message.lastMessage.read) ? "font-semibold" : ""}  truncate`}>
-              {trimMessage(message.lastMessage.text,30)}
+              {trimMessage(message.lastMessage.text, 30)}
             </p>
           </div>
 

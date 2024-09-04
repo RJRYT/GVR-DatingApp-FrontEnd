@@ -21,7 +21,7 @@ function HomePage() {
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [preferences, setPreferences] = useState(null);
+  const [preferences, setPreferences] = useState({});
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("nearby");
@@ -71,9 +71,7 @@ function HomePage() {
   useEffect(() => {
     apiInstance.get("/matches/preferences")
       .then((res) => {
-        if (!res.data.success) {
-          navigate("/dashboard/preferences/?redirect=/dashboard")
-        } else {
+        if (res.data.success) {
           setPreferences(res.data.preferences);
         }
       })
