@@ -15,11 +15,11 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = useCallback(async (force = false) => {
     try {
       if (status && !force) return;
-      const {latitude, longitude} = await getLocation();
+      // const {latitude, longitude} = await getLocation();
       let reqUrl = "/users/me";
-      if(latitude && longitude){
-        reqUrl = `${reqUrl}/?lat=${latitude}&lon=${longitude}`;
-      }
+      // if(latitude && longitude){
+      //   reqUrl = `${reqUrl}/?lat=${latitude}&lon=${longitude}`;
+      // }
       const response = await axiosInstance.get(reqUrl);
       if (response.data.success) setAuthState({ isAuthenticated: true, user: response.data.user });
       else setAuthState({ isAuthenticated: false, user: null });
