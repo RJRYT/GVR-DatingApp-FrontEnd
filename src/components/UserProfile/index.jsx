@@ -102,7 +102,7 @@ const UserProfile = ({ upgrade = false }) => {
   const handleProfileRejectClick = async () => {
     setLoadingOverlay(true);
     try {
-      const response = await axios.post("/users/profile/reject", {
+      const response = await axios.put("/users/profile/reject", {
         rejectedUserId:userId,
       });
       if (response.data.success) {
