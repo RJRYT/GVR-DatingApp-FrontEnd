@@ -70,6 +70,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
             ...prevErrors,
             location: 'Location access is needed to continue'
           }));
+        },
+        {
+          enableHighAccuracy: true, // Request the most accurate position
+          timeout: 5000,            // Time out after 5 seconds
+          maximumAge: 0             // No cached position data
         }
       );
     } else {

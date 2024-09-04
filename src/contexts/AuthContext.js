@@ -11,11 +11,17 @@ export const AuthProvider = ({ children }) => {
   });
   const [status, setStatus] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [location, setLocation] = useState({latitude: 0, longitude: 0});
 
   const checkAuthStatus = useCallback(async (force = false) => {
     try {
       if (status && !force) return;
-      const response = await axiosInstance.get("/users/me");
+      await getLocation();
+      let reqUrl = "/users/me";
+      if(location.latitude && location.longitude){
+        reqUrl = `${reqUrl}/?lat=${location.latitude}&lon=${location.longitude}`;
+      }
+      const response = await axiosInstance.get(reqUrl);
       if (response.data.success) setAuthState({ isAuthenticated: true, user: response.data.user });
       else setAuthState({ isAuthenticated: false, user: null });
     } catch (error) {
@@ -25,6 +31,27 @@ export const AuthProvider = ({ children }) => {
       setStatus(true);
     }
   }, []);
+
+  const getLocation = async() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({latitude, longitude});
+        },
+        (error) => {
+          console.log("Location error: ",error);
+        },
+        {
+          enableHighAccuracy: true, // Request the most accurate position
+          timeout: 5000,            // Time out after 5 seconds
+          maximumAge: 0             // No cached position data
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
 
   useEffect(() => {
     if (!status) checkAuthStatus();
