@@ -304,7 +304,7 @@ const UserProfile = ({ upgrade = false }) => {
                 authState.user.friends &&
                 authState.user.friends.length &&
                 authState.user.friends.includes(userId) ? (
-                <Link to={`/dashboard/chat/${user.chatId}`} className="text-gray-400">
+                <Link to={`/dashboard/chat/${user?.chatId}`} className="text-gray-400">
                   <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-purple-600 w-12 h-12">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
