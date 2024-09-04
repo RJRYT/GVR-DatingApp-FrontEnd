@@ -1,5 +1,4 @@
 import React from "react";
-import { ImAttachment } from "react-icons/im";
 import { IoSend } from "react-icons/io5";
 import { AiFillAudio } from "react-icons/ai";
 import { ImAttachment } from "react-icons/im";
