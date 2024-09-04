@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
@@ -33,6 +33,7 @@ const UserProfile = ({ upgrade = false }) => {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [loadingOverlay, setLoadingOverlay] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -57,7 +58,7 @@ const UserProfile = ({ upgrade = false }) => {
   };
 
   const handleBackClick = () => {
-    window.history.back();
+    navigate(-1);
   };
 
   const handleSendFrndReqClick = async () => {
@@ -196,12 +197,12 @@ const UserProfile = ({ upgrade = false }) => {
               <div className="w-16 h-1 bg-gray-200 mx-auto mt-4 rounded-full"></div>
             </div>
             <div className="px-4">
-              <div className="text-base mt-1 ">
+              {user.about && <div className="text-base mt-1 ">
                 <h4 className="left-0 chakra-petch-medium text-gray-400">
                   About
                 </h4>
-                <p className="chakra-petch-medium pt-2">{sampleUser.about}</p>
-              </div>
+                <p className="chakra-petch-medium pt-2">{user.about}</p>
+              </div>}
             </div>
             <div className="px-4">
               <h4 className="left-0 chakra-petch-medium text-gray-400 mb-2">

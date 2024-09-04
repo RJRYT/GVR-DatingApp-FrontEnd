@@ -13,7 +13,7 @@ const Header = ({ user, typing }) => {
       >
         <FaArrowLeft className="text-xl" />
       </Link>
-      <div className="flex gap-2 items-center text-white text-xl font-medium aldrich-regular text-center flex-grow">
+      <div className="flex gap-2 items-center text-white text-xl font-medium aldrich-regular text-center">
         {user && user.isOnline ? (
           <span className="w-2 h-2 bg-green-500 rounded-full"></span>
         ) : (
@@ -23,13 +23,13 @@ const Header = ({ user, typing }) => {
           {user ? user.username : ""}
         </h3>
         {user && !user.isOnline ? (
-          <p className="text-sm">
+          <p className="text-xs">
             Last active: <LastActiveTimeStamp timestamp={user.lastActive} />
           </p>
         ) : (
           ""
         )}
-        {user && typing ? <p className="text-sm">Typing...</p> : ""}
+        {user && typing ? <p className="text-xs">Typing...</p> : ""}
       </div>
       <IoCallOutline className="h-6 w-6 text-yellow-400" />
     </div>

@@ -4,7 +4,6 @@ import Slider from "../Components/Slider";
 import Select from "../../UserProfile/Components/Select";
 import Navbar from "../../Dashboard/Navbar";
 import axiosInstance from "../../../Instance/Axios"
-import { useNavigate } from "react-router-dom";
 import {
   locations,
   interests,
@@ -17,7 +16,6 @@ import {
 import { toast } from "react-toastify";
 
 function PrefrenencesSettings() {
-const navigate = useNavigate();
   const [preferences, setPreferences] = useState({
     AgeRange: { min: 18, max: 35 },
     HeightRange: { min: 100, max: 220 },
@@ -56,9 +54,6 @@ const navigate = useNavigate();
       const response = await axiosInstance.post("/matches/preferences", preferences);
       if (response.data.success) {
         toast.success(response.data.message);
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirect = urlParams.get("redirect");
-        if(redirect)navigate(redirect);
       } else {
         toast.error(response.data.message)
       }
