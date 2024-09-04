@@ -12,14 +12,11 @@ import {
   gender,
   hobbies,
   interests,
-  locations,
   qualifications,
   smokingHabits,
 } from "../../../assets/static/Data";
 
 const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
-  const [location, setLocation] = useState({ latitude: "", longitude: "" });
-  const [locationError, setLocationError] = useState('');;
   const [profilePicSelected, setProfilePicSelected] = useState(false);
   const [shortReelSelected, setShortReelSelected] = useState(false);
   const [imagesSelected, setImagesSelected] = useState(false);
@@ -34,53 +31,70 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
     age: "",
     dateOfBirth: "",
     gender: "",
-    location:JSON.stringify({ latitude: "", longitude: "",placeName:"" }),
+    location: {
+      latitude: 0,
+      longitude: 0,
+      shortName: "",
+      name: "",
+    },
     hobbies: [],
     interests: [],
     smokingHabits: "",
     drinkingHabits: "",
     qualification: [],
   });
+
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
           const placeName = await getPlaceName(latitude, longitude);
+
+          const placeData = {
+            latitude,
+            longitude,
+            shortName: placeName.split(",")[0],
+            name: placeName
+          }
   
           setFormData((prevFormData) => ({
             ...prevFormData,
-            location: JSON.stringify({ latitude, longitude ,placeName}),
-            placeName: placeName, // Update form data with place name
+            location: placeData,
           }));
-  
-          setLocation({ latitude, longitude, placeName });
-          setLocationError('');
         },
         (error) => {
-          // handle errors
+          console.log("Location error: ",error);
+          alert("Location access is needed to continue");
+          setErrors(prevErrors => ({
+            ...prevErrors,
+            location: 'Location access is needed to continue'
+          }));
         }
       );
     } else {
-      setLocationError('Geolocation is not supported by this browser.');
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        location: 'Geolocation is not supported by this browser.'
+      }));
     }
   };
   
   const getPlaceName = async (latitude, longitude) => {
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch place name');
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=${latitude}&lon=${longitude}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.display_name;
+      }else{
+        return "unKnown place"
       }
-      const data = await response.json();
-      return data.display_name || 'Place name not available';
     } catch (error) {
       console.error('Error fetching place name:', error);
-      return 'Error fetching place name';
+      return 'unKnown place';
     }
   };
   
-
   useEffect(() => {
     if (!loading && !authState.isAuthenticated) modelToggle();
   }, [loading, authState]);
@@ -116,9 +130,9 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
     }
 
     // // location validation
-    // if (!formData.location) {
-    //   newErrors.location = "Location is required";
-    // }
+    if (!formData.location.latitude) {
+      newErrors.location = "Location is required";
+    }
 
     // hobbies validation
     if (!formData.hobbies.length) {
@@ -195,7 +209,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
       formDataToSend.append("age", formData.age);
       formDataToSend.append("dateOfBirth", formData.dateOfBirth);
       formDataToSend.append("gender", formData.gender);
-      formDataToSend.append("location", formData.location);
+      formDataToSend.append("location", JSON.stringify(formData.location));
       formDataToSend.append("smokingHabits", formData.smokingHabits);
       formDataToSend.append("drinkingHabits", formData.drinkingHabits);
       formDataToSend.append("hobbies", JSON.stringify(formData.hobbies));
@@ -364,32 +378,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               <span className="text-red-600 text-xs">{errors.interests}</span>
             )}
           </div>
-          {/* <div>
-            <SingleSelect
-              name="location"
-              OnChange={handleInputChange}
-              Options={locations}
-              Placeholder="Location"
-              AllowNew={true}
-              ClassName={`w-full border text-gray-500 ${errors.location ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
-            />
-            {errors.location && (
-              <span className="text-red-600 text-xs">
-                {errors.location}
-              </span>
-            )}
-          </div> */}
-
           <div>
             <input
               type="text"
               placeholder="Location"
-              value={
-                location.latitude && location.longitude
-                  ? `Lat: ${location.latitude}, Lon: ${location.longitude}`
-                  : ""
-              }
+              value={formData.location.shortName}
               onClick={getLocation}
               className={`w-full p-2 border text-gray-500 ${
                 errors.location
