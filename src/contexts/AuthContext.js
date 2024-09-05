@@ -12,64 +12,74 @@ export const AuthProvider = ({ children }) => {
   const [status, setStatus] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Check authentication status
   const checkAuthStatus = useCallback(async (force = false) => {
+    if (status && !force) return; // Prevent redundant calls
     try {
-      if (status && !force) return;
-      // const {latitude, longitude} = await getLocation();
-      let reqUrl = "/users/me";
-      // if(latitude && longitude){
-      //   reqUrl = `${reqUrl}/?lat=${latitude}&lon=${longitude}`;
-      // }
-      const response = await axiosInstance.get(reqUrl);
-      if (response.data.success) setAuthState({ isAuthenticated: true, user: response.data.user });
-      else setAuthState({ isAuthenticated: false, user: null });
+      setLoading(true); // Start loading
+      const response = await axiosInstance.get("/users/me");
+      if (response.data.success) {
+        setAuthState({ isAuthenticated: true, user: response.data.user });
+        setStatus(true); // Set the status to true after successful auth
+        getLocation(); // Get location only if the user is authenticated
+      } else {
+        setAuthState({ isAuthenticated: false, user: null });
+      }
     } catch (error) {
+      console.error("Error fetching user data", error);
       setAuthState({ isAuthenticated: false, user: null });
     } finally {
-      setLoading(false);
-      setStatus(true);
+      setLoading(false); // End loading
     }
   }, []);
 
-  const getLocation = async() => {
+  // Get location using browser's Geolocation API
+  const getLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          return {latitude, longitude};
+          try {
+            await axiosInstance.get(`/users/me/?lat=${latitude}&lon=${longitude}`);
+          } catch (error) {
+            console.error("Error sending location", error);
+          }
         },
         (error) => {
-          console.log("Location error: ",error);
-          return {latitude:0, longitude:0};
+          console.warn("Geolocation error", error);
         },
         {
-          enableHighAccuracy: true, // Request the most accurate position
-          timeout: 5000,            // Time out after 5 seconds
-          maximumAge: 0             // No cached position data
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
         }
       );
     } else {
-      console.log("Geolocation is not supported by this browser.");
-      return {latitude:0, longitude:0};
+      console.warn("Geolocation is not supported by this browser.");
     }
-  };
+  }, [status]);
 
+  // Effect to check auth status once when component mounts
   useEffect(() => {
-    if (!status) checkAuthStatus();
-  }, [checkAuthStatus]);
+    if (!status) {
 
+      checkAuthStatus(); 
+    }
+  }, [checkAuthStatus, status]);
+
+  // Logout function
   const logout = async () => {
     try {
+      await axiosInstance.post("/auth/logout");
       setAuthState({ isAuthenticated: false, user: null });
-      await axiosInstance.post("/auth/logout").then(() => {
-        toast.warning("Logout completed");
-        window.location.replace("/login");
-      })
+      toast.warning("Logout completed");
+      window.location.replace("/login");
     } catch (error) {
       console.error("Logout failed", error);
     }
   };
 
+  // Update user information in context
   const updateUser = (newUserData) => {
     setAuthState((prevState) => ({
       ...prevState,
