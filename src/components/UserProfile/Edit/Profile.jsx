@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axios from "../../../Instance/Axios";
@@ -16,7 +16,7 @@ const EditProfile = () => {
     username: authState?.user?.username || "",
     email: authState?.user?.email || "",
     phoneNumber: authState?.user?.phoneNumber || "",
-    bio:authState.user?.about,
+    bio: authState.user?.about,
   });
   const [profilePic, setProfilePic] = useState({
     file: null,
@@ -28,6 +28,8 @@ const EditProfile = () => {
   const [shortReelPreview, setShortReelPreview] = useState(
     authState?.user?.shortReel || ""
   );
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const videoRef = useRef(null);
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -74,6 +76,18 @@ const EditProfile = () => {
     setImagePreviews(newImages);
   };
 
+  const handleVideoClick = () => {
+    setIsVideoOpen(true);
+  };
+
+  const handleCloseVideo = () => {
+    setIsVideoOpen(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -116,7 +130,7 @@ const EditProfile = () => {
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile. Please try again.");
-    } finally{
+    } finally {
       setLoadingOverlay(false);
     }
   };
@@ -193,6 +207,7 @@ const EditProfile = () => {
               <div className="mb-4">
                 <label className="block  text-gray-700">Name</label>
                 <input
+
                   type="text"
                   className="w-full px-3  border-b-2  border-fuchsia-800 focus:outline-none focus:border-fuchsia-800"
                 />
@@ -200,7 +215,7 @@ const EditProfile = () => {
               <div className="mb-4">
                 <label className="block text-gray-700">Username</label>
                 <input
-                  name="username"
+                  name='username'
                   type="text"
                   value={formData.username}
                   onChange={handleChange}
@@ -211,10 +226,8 @@ const EditProfile = () => {
                 <label className="block text-gray-700">Email</label>
                 <input
                   type="email"
-                  defaultValue={formData.email}
-                  readOnly
-                  className="w-full px-3  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700 readOnly aria-readonly  disabled=true"
-                />
+                  value={formData.email}
+                  className="w-full px-3  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700 readOnly aria-readonly  disabled=true" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Phone Number</label>
@@ -227,11 +240,8 @@ const EditProfile = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Bio</label>
-                <input
-                  className="w-full  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700"
-                  value={formData.bio}
-                  onChange={handleChange}
-                ></input>
+                <input className="w-full  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700" value={formData.bio}
+                  onChange={handleChange}></input>
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Images</label>
@@ -246,11 +256,7 @@ const EditProfile = () => {
                           src={image.url}
                           alt={`Preview ${index + 1}`}
                           className="h-full w-full rounded-full object-cover cursor-pointer"
-                          onClick={() =>
-                            document
-                              .getElementById(`imageInput-${index}`)
-                              .click()
-                          }
+                          onClick={() => document.getElementById(`imageInput-${index}`).click()}
                         />
                       )}
                       <input
@@ -304,15 +310,31 @@ const EditProfile = () => {
                   <div className="relative border-2 border-white shadow-md rounded-full block w-16 h-16 ">
                     <video
                       src={shortReelPreview.url}
-                      alt=""
                       className="h-full w-full rounded-full object-cover cursor-pointer"
-                      onClick={() =>
-                        document.getElementById("videoUpload").click()
-                      }
+                      onClick={handleVideoClick}
                     />
                   </div>
                 </div>
               </div>
+              {isVideoOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+                  <div className="relative bg-white p-6 rounded-lg max-w-3xl w-full">
+                    <video
+                      src={shortReelPreview?.url}
+                      className="w-full h-auto rounded-md"
+                      controls
+                      autoPlay
+                      ref={videoRef}
+                    />
+                    <button
+                      className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-2"
+                      onClick={handleCloseVideo}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
               <div className="mb-4">
                 <label className="block font-bold text-fuchsia-950">
                   <Link to={"/dashboard/@me/changepass"}>Change Password</Link>

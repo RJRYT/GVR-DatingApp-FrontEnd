@@ -12,7 +12,6 @@ import {
   gender,
   hobbies,
   interests,
-  locations,
   qualifications,
   smokingHabits,
 } from "../../../assets/static/Data";
@@ -26,13 +25,18 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
   const [uploadFiles, setUploadFiles] = useState({
     images: [],
     profilepic: null,
-    shortreels: null
-  })
+    shortreels: null,
+  });
   const [formData, setFormData] = useState({
     age: "",
     dateOfBirth: "",
     gender: "",
-    location: "",
+    location: {
+      latitude: 0,
+      longitude: 0,
+      shortName: "",
+      name: "",
+    },
     hobbies: [],
     interests: [],
     smokingHabits: "",
@@ -40,6 +44,62 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
     qualification: [],
   });
 
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const placeName = await getPlaceName(latitude, longitude);
+
+          const placeData = {
+            latitude,
+            longitude,
+            shortName: placeName.split(",")[0],
+            name: placeName
+          }
+  
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            location: placeData,
+          }));
+        },
+        (error) => {
+          console.log("Location error: ",error);
+          alert("Location access is needed to continue");
+          setErrors(prevErrors => ({
+            ...prevErrors,
+            location: 'Location access is needed to continue'
+          }));
+        },
+        {
+          enableHighAccuracy: true, // Request the most accurate position
+          timeout: 5000,            // Time out after 5 seconds
+          maximumAge: 0             // No cached position data
+        }
+      );
+    } else {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        location: 'Geolocation is not supported by this browser.'
+      }));
+    }
+  };
+  
+  const getPlaceName = async (latitude, longitude) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=${latitude}&lon=${longitude}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.display_name;
+      }else{
+        return "unKnown place"
+      }
+    } catch (error) {
+      console.error('Error fetching place name:', error);
+      return 'unKnown place';
+    }
+  };
+  
   useEffect(() => {
     if (!loading && !authState.isAuthenticated) modelToggle();
   }, [loading, authState]);
@@ -74,8 +134,8 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
       newErrors.gender = "Gender is required";
     }
 
-    // location validation
-    if (!formData.location) {
+    // // location validation
+    if (!formData.location.latitude) {
       newErrors.location = "Location is required";
     }
 
@@ -154,12 +214,15 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
       formDataToSend.append("age", formData.age);
       formDataToSend.append("dateOfBirth", formData.dateOfBirth);
       formDataToSend.append("gender", formData.gender);
-      formDataToSend.append("location", formData.location);
+      formDataToSend.append("location", JSON.stringify(formData.location));
       formDataToSend.append("smokingHabits", formData.smokingHabits);
       formDataToSend.append("drinkingHabits", formData.drinkingHabits);
       formDataToSend.append("hobbies", JSON.stringify(formData.hobbies));
       formDataToSend.append("interests", JSON.stringify(formData.interests));
-      formDataToSend.append("qualification", JSON.stringify(formData.qualification));
+      formDataToSend.append(
+        "qualification",
+        JSON.stringify(formData.qualification)
+      );
 
       // Append the file fields
       formDataToSend.append("shortreels", uploadFiles.shortreels);
@@ -172,27 +235,31 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
         autoClose: false,
       });
       try {
-        const res = await axiosInstance.post("/users/update/personalinfo", formDataToSend, {
-          headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: (progressEvent) => {
-            const progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            if (progress === 100) {
-              toast.update(uploadToastId, {
-                render: `Processing...`,
-                type: "info",
-                autoClose: false,
-              });
-            } else {
-              toast.update(uploadToastId, {
-                render: `Upload progress: ${progress}%`,
-                type: "info",
-                autoClose: false,
-              });
-            }
-          },
-        });
+        const res = await axiosInstance.post(
+          "/users/update/personalinfo",
+          formDataToSend,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (progressEvent) => {
+              const progress = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              if (progress === 100) {
+                toast.update(uploadToastId, {
+                  render: `Processing...`,
+                  type: "info",
+                  autoClose: false,
+                });
+              } else {
+                toast.update(uploadToastId, {
+                  render: `Upload progress: ${progress}%`,
+                  type: "info",
+                  autoClose: false,
+                });
+              }
+            },
+          }
+        );
         if (res.data.success) {
           modelToggle("JobStatus");
           updateUser({ ...formData, personalInfoSubmitted: true });
@@ -238,13 +305,14 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               name="age"
               value={formData.age}
               onChange={handleInputChange}
-              className={`w-full p-2 border text-gray-500 ${errors.age ? "border-red-600 focus:ring-red-700" : "border-gray-300 focus:ring-gray-400"
-                }  rounded-lg focus:outline-none focus:ring-2`}
+              className={`w-full p-2 border text-gray-500 ${
+                errors.age
+                  ? "border-red-600 focus:ring-red-700"
+                  : "border-gray-300 focus:ring-gray-400"
+              }  rounded-lg focus:outline-none focus:ring-2`}
             />
             {errors.age && (
-              <span className="text-red-600 text-xs">
-                {errors.age}
-              </span>
+              <span className="text-red-600 text-xs">{errors.age}</span>
             )}
           </div>
           <div>
@@ -255,15 +323,17 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               placeholder="DOB"
               value={formData.dateOfBirth}
               onChange={handleInputChange}
-              className={`w-full p-2 border text-gray-500 ${errors.dateOfBirth ? "border-red-600 focus:ring-red-700" : "border-gray-300 focus:ring-gray-400"
-                }  rounded-lg focus:outline-none focus:ring-2`}
+              className={`w-full p-2 border text-gray-500 ${
+                errors.dateOfBirth
+                  ? "border-red-600 focus:ring-red-700"
+                  : "border-gray-300 focus:ring-gray-400"
+              }  rounded-lg focus:outline-none focus:ring-2`}
             />
             {errors.dateOfBirth && (
-              <span className="text-red-600 text-xs">
-                {errors.dateOfBirth}
-              </span>
+              <span className="text-red-600 text-xs">{errors.dateOfBirth}</span>
             )}
           </div>
+
           <div>
             <SingleSelect
               name="gender"
@@ -271,13 +341,14 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Options={gender}
               Placeholder="Gender"
               AllowNew={false}
-              ClassName={`w-full border text-gray-500 ${errors.gender ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full border text-gray-500 ${
+                errors.gender
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
             {errors.gender && (
-              <span className="text-red-600 text-xs">
-                {errors.gender}
-              </span>
+              <span className="text-red-600 text-xs">{errors.gender}</span>
             )}
           </div>
           <div>
@@ -286,13 +357,14 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               OnChange={handleInputChange}
               Options={hobbies}
               Placeholder="Hobbies"
-              ClassName={`w-full border text-gray-500 ${errors.hobbies ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full border text-gray-500 ${
+                errors.hobbies
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
             {errors.hobbies && (
-              <span className="text-red-600 text-xs">
-                {errors.hobbies}
-              </span>
+              <span className="text-red-600 text-xs">{errors.hobbies}</span>
             )}
           </div>
           <div>
@@ -301,29 +373,31 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               OnChange={handleInputChange}
               Options={interests}
               Placeholder="Interests"
-              ClassName={`w-full border text-gray-500 ${errors.interests ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full border text-gray-500 ${
+                errors.interests
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
             {errors.interests && (
-              <span className="text-red-600 text-xs">
-                {errors.interests}
-              </span>
+              <span className="text-red-600 text-xs">{errors.interests}</span>
             )}
           </div>
           <div>
-            <SingleSelect
-              name="location"
-              OnChange={handleInputChange}
-              Options={locations}
-              Placeholder="Location"
-              AllowNew={true}
-              ClassName={`w-full border text-gray-500 ${errors.location ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+            <input
+              type="text"
+              placeholder="Location"
+              value={formData.location.shortName}
+              onClick={getLocation}
+              className={`w-full p-2 border text-gray-500 ${
+                errors.location
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg focus:outline-none focus:ring-2 hover:ring-2 `}
+              readOnly
             />
             {errors.location && (
-              <span className="text-red-600 text-xs">
-                {errors.location}
-              </span>
+              <span className="text-red-600 text-xs">{errors.location}</span>
             )}
           </div>
           <div>
@@ -333,8 +407,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Options={smokingHabits}
               Placeholder="Smoking Habits"
               AllowNew={false}
-              ClassName={`w-full border text-gray-500 ${errors.smokingHabits ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full border text-gray-500 ${
+                errors.smokingHabits
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
             {errors.smokingHabits && (
               <span className="text-red-600 text-xs">
@@ -349,8 +426,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Options={drinkingHabits}
               Placeholder="Drinking Habits"
               AllowNew={false}
-              ClassName={`w-full border text-gray-500 ${errors.drinkingHabits ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full border text-gray-500 ${
+                errors.drinkingHabits
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
             {errors.drinkingHabits && (
               <span className="text-red-600 text-xs">
@@ -364,8 +444,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               OnChange={handleInputChange}
               Options={qualifications}
               Placeholder="Qualifictions"
-              ClassName={`w-full border text-gray-500 ${errors.qualification ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full border text-gray-500 ${
+                errors.qualification
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
             {errors.qualification && (
               <span className="text-red-600 text-xs">
@@ -379,8 +462,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Placeholder="Profile Pic"
               Error={errors}
               setFileSelected={setProfilePicSelected}
-              ClassName={`w-full block text-gray-500 p-2 border ${errors.profilePic ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full block text-gray-500 p-2 border ${
+                errors.profilePic
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
           </div>
           <div>
@@ -389,8 +475,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Placeholder="Add More Images"
               Error={errors}
               setFileSelected={setImagesSelected}
-              ClassName={`w-full block text-gray-500 p-2 border ${errors.images ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full block text-gray-500 p-2 border ${
+                errors.images
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
           </div>
           <div>
@@ -399,8 +488,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Placeholder="Short Reel"
               Error={errors}
               setFileSelected={setShortReelSelected}
-              ClassName={`w-full block text-gray-500 p-2 border ${errors.shortReel ? "border-red-600 hover:ring-red-700" : "border-gray-300 hover:ring-gray-400"
-                }  rounded-lg hover:ring-2`}
+              ClassName={`w-full block text-gray-500 p-2 border ${
+                errors.shortReel
+                  ? "border-red-600 hover:ring-red-700"
+                  : "border-gray-300 hover:ring-gray-400"
+              }  rounded-lg hover:ring-2`}
             />
           </div>
           <button

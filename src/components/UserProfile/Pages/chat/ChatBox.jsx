@@ -120,9 +120,8 @@ const ChatBox = () => {
   }, [messages, chatId, authState, user, socket]);
 
   const handleSendMessage = (e) => {
-    e.preventDefault();
     if (!content) return;
-    socket.emit("sendMessage", { chatId, content });
+    socket.emit("sendMessage", { chatId, content:content.trim() });
     setContent("");
     socket.emit("stopTyping", { chatId });
     setIsTyping(false);

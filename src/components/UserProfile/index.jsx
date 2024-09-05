@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
@@ -33,6 +33,7 @@ const UserProfile = ({ upgrade = false }) => {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [loadingOverlay, setLoadingOverlay] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -57,7 +58,7 @@ const UserProfile = ({ upgrade = false }) => {
   };
 
   const handleBackClick = () => {
-    window.history.back();
+    navigate(-1);
   };
 
   const handleSendFrndReqClick = async () => {
@@ -93,6 +94,26 @@ const UserProfile = ({ upgrade = false }) => {
     } catch (error) {
       console.error(error);
       toast.error("Failed to shortlist user");
+    } finally {
+      setLoadingOverlay(false);
+    }
+  };
+
+  const handleProfileRejectClick = async () => {
+    setLoadingOverlay(true);
+    try {
+      const response = await axios.put("/users/profile/reject", {
+        rejectedUserId:userId,
+      });
+      if (response.data.success) {
+        toast.success(response.data.message);
+        navigate("/dashboard");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to reject user");
     } finally {
       setLoadingOverlay(false);
     }
@@ -178,15 +199,13 @@ const UserProfile = ({ upgrade = false }) => {
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
             <div
               onClick={() => handleLineClick(1)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 1 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 1 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
             <div
               onClick={() => handleLineClick(2)}
-              className={`w-1 h-10 rounded-full cursor-pointer ${
-                activeLine === 2 ? "bg-white" : "bg-gray-500"
-              }`}
+              className={`w-1 h-10 rounded-full cursor-pointer ${activeLine === 2 ? "bg-white" : "bg-gray-500"
+                }`}
             ></div>
           </div>
           {/* User Details Section */}
@@ -196,12 +215,12 @@ const UserProfile = ({ upgrade = false }) => {
               <div className="w-16 h-1 bg-gray-200 mx-auto mt-4 rounded-full"></div>
             </div>
             <div className="px-4">
-              <div className="text-base mt-1 ">
+              {user?.about && <div className="text-base mt-1 ">
                 <h4 className="left-0 chakra-petch-medium text-gray-400">
                   About
                 </h4>
-                <p className="chakra-petch-medium pt-2">{sampleUser.about}</p>
-              </div>
+                <p className="chakra-petch-medium pt-2">{user.about}</p>
+              </div>}
             </div>
             <div className="px-4">
               <h4 className="left-0 chakra-petch-medium text-gray-400 mb-2">
@@ -233,20 +252,18 @@ const UserProfile = ({ upgrade = false }) => {
         {userId !== "@me" && (
           <nav className="fixed bottom-4 z-12 left-1/2 transform -translate-x-1/2 w-[calc(100%-46px)] xl:w-[728px] bg-white border-t border-gray-200 rounded-full shadow-lg">
             <div className="flex justify-around p-4">
-              <Link to="./" className="text-gray-400">
-                <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-rose-300 w-12 h-12">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="white"
-                    viewBox="0 0 32 32"
-                    stroke="currentColor"
-                    strokeWidth="0"
-                  >
-                    <path d="M18.8,16l5.5-5.5c0.8-0.8,0.8-2,0-2.8l0,0C24,7.3,23.5,7,23,7c-0.5,0-1,0.2-1.4,0.6L16,13.2l-5.5-5.5 c-0.8-0.8-2.1-0.8-2.8,0C7.3,8,7,8.5,7,9.1s0.2,1,0.6,1.4l5.5,5.5l-5.5,5.5C7.3,21.9,7,22.4,7,23c0,0.5,0.2,1,0.6,1.4 C8,24.8,8.5,25,9,25c0.5,0,1-0.2,1.4-0.6l5.5-5.5l5.5,5.5c0.8,0.8,2.1,0.8,2.8,0c0.8-0.8,0.8-2.1,0-2.8L18.8,16z"></path>
-                  </svg>
-                </button>
-              </Link>
+              <button onClick={handleProfileRejectClick} className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-rose-300 w-12 h-12">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="white"
+                  viewBox="0 0 32 32"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                >
+                  <path d="M18.8,16l5.5-5.5c0.8-0.8,0.8-2,0-2.8l0,0C24,7.3,23.5,7,23,7c-0.5,0-1,0.2-1.4,0.6L16,13.2l-5.5-5.5 c-0.8-0.8-2.1-0.8-2.8,0C7.3,8,7,8.5,7,9.1s0.2,1,0.6,1.4l5.5,5.5l-5.5,5.5C7.3,21.9,7,22.4,7,23c0,0.5,0.2,1,0.6,1.4 C8,24.8,8.5,25,9,25c0.5,0,1-0.2,1.4-0.6l5.5-5.5l5.5,5.5c0.8,0.8,2.1,0.8,2.8,0c0.8-0.8,0.8-2.1,0-2.8L18.8,16z"></path>
+                </svg>
+              </button>
               <button
                 onClick={handleShortListClick}
                 className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-purple-950 w-12 h-12"
@@ -284,10 +301,10 @@ const UserProfile = ({ upgrade = false }) => {
                 </svg>
               </button>
               {authState.user &&
-              authState.user.friends &&
-              authState.user.friends.length &&
-              authState.user.friends.includes(userId) ? (
-                <Link to="./" className="text-gray-400">
+                authState.user.friends &&
+                authState.user.friends.length &&
+                authState.user.friends.includes(userId) ? (
+                <Link to={`/dashboard/chat/${user?.chatId}`} className="text-gray-400">
                   <button className="rounded-full hover:bg-opacity-85 flex items-center justify-center text-white bg-purple-600 w-12 h-12">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

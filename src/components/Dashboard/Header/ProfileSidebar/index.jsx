@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { AuthContext } from "../../../../contexts/AuthContext";
@@ -20,7 +20,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
   ];
 
   const handleItemClick = (item) => {
-    toggleProfileModal(); 
+    toggleProfileModal();
     if (item === 'Logout') {
       logout();
     }
@@ -50,17 +50,17 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
         </button>
 
         <div className="p-4">
-          <div  className="relative flex space-x-2 mb-6">
-          <div className="relative bg-pink-500 rounded-full block p-0.5 h-[50px] w-[50px]">
-            <img
-              onClick={toggleProfileModal}
-              src={user && user.profilePic ? user.profilePic.url : "https://i.imgur.com/sjLMNDM.png"}
-              alt="Profile"
-              className="w-full h-full rounded-full"
-            /> 
-             {/* {isOnline && ( */}
+          <div className="relative flex space-x-2 mb-6">
+            <div className="relative bg-pink-500 rounded-full block p-0.5 h-[50px] w-[50px]">
+              <img
+                onClick={toggleProfileModal}
+                src={user && user.profilePic ? user.profilePic.url : "https://i.imgur.com/sjLMNDM.png"}
+                alt="Profile"
+                className="w-full h-full rounded-full"
+              />
+              {/* {isOnline && ( */}
               <span className="absolute top-0 right-1 block h-3 w-3 bg-green-500 rounded-full"></span>
-            {/* )} */}
+              {/* )} */}
             </div>
             <div >
               <p className=" font-bold">{user && user.username ? user.username : "Unknown"}</p>
@@ -71,19 +71,20 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
 
           <ul>
             {menuItems.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => handleItemClick(item)}
-                className="flex items-center  py-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
-              >
-                <Link to={item.path}>{item.label}</Link>
-              </li>
+              <Link key={index} to={item.path}>
+                <li
+                  onClick={() => handleItemClick(item)}
+                  className="flex items-center  py-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
+                >
+                  {item.label}
+                </li>
+              </Link>
             ))}
             <li
               className="flex items-center justify-center  py-4 text-sm space-x-2 cursor-pointer hover:bg-[rgba(255,255,255,0.09)]"
               onClick={() => handleItemClick("Logout")}
             >
-              <IoLogOutOutline className="mr-2 text-white"/>
+              <IoLogOutOutline className="mr-2 text-white" />
               <span>Logout</span>
             </li>
           </ul>

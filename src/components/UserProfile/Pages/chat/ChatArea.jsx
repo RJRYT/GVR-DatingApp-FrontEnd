@@ -58,9 +58,9 @@ const ChatArea = ({ messages, user }) => {
 
   return (
     <div className="bg-white rounded-t-3xl flex-grow flex flex-col">
-      <div className="flex-grow overflow-y-auto">
-        <ul className="space-y-4 pb-10">
-          <li className="flex justify-center">
+      <div className="flex-grow h-[calc(100vh-84px)] hide-scrollbar overflow-y-auto rounded-t-3xl">
+        <ul className="space-y-4 pb-10 rounded-t-3xl">
+          <li className="flex justify-center pt-4">
             <span className="bg-gray-300 text-xs py-1 px-4 rounded-lg border">
               This is the very beginning of your legendary conversation with{" "}
               {user?.username}
@@ -94,7 +94,7 @@ const ChatArea = ({ messages, user }) => {
                         groupedMessages[dateKey][
                           groupedMessages[dateKey].indexOf(message) - 1
                         ].sender === message.sender
-                          ? "mt-2"
+                          ? "mt-2" 
                           : "mt-4"
                       } `}
                     >

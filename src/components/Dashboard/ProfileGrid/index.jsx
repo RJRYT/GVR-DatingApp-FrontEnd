@@ -23,7 +23,7 @@ const ProfileGrid = ({ activeTab }) => {
     <div className="grid grid-cols-2 gap-4 mt-4">
       {Array.isArray(users) && users.length > 0 ? (
         users.map((profile, index) => (
-          <Link key={index} to={`/dashboard/profile/${profile.id}`} >
+          <Link key={index} to={`/dashboard/profile/${profile._id}`} >
             <ProfileCard profile={profile} />
           </Link>
         ))
