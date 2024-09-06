@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
-import axios from "../../../Instance/Axios";
+import axiosInstance from "../../../Instance/Axios";
 import { FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../../Loading";
@@ -11,12 +11,17 @@ import AccessDenied from "../../AccessDenied";
 const EditProfile = () => {
   const { authState, loading } = useContext(AuthContext);
   const [loadingOverlay, setLoadingOverlay] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isOtpSent, setIsOtpSent] = useState(false);
 
   const [formData, setFormData] = useState({
+    firstName:authState?.user?.firstName || "",
+    lastName:authState?.user?.lastName || "",
     username: authState?.user?.username || "",
     email: authState?.user?.email || "",
     phoneNumber: authState?.user?.phoneNumber || "",
-    bio: authState.user?.about,
+    about:authState.user?.about || "",
+    otp:""
   });
   const [profilePic, setProfilePic] = useState({
     file: null,
@@ -90,21 +95,43 @@ const EditProfile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  
+    setFormData((prevData) => {
+      if (name === 'fullName') {
+        const parts = value.trim().split(/\s+/); // Split by one or more spaces
+        const firstName = parts[0] || ''; // Assign the first part to firstName
+        const lastName = parts.slice(1).join(' ') || ''; // Join the rest for lastName
+  
+        return {
+          ...prevData,
+          firstName: firstName,
+          lastName: lastName,
+        };
+      } else {
+        return {
+          ...prevData,
+          [name]: value,
+        };
+      }
+    });
   };
+  
 
   const handleSubmit = async (e) => {
+        
     e.preventDefault();
+
     setLoadingOverlay(true);
+    console.log("Updated data:", formData);
     try {
       const updatedData = new FormData();
+      updatedData.append("firstName", formData.firstName);
+      updatedData.append("lastName", formData.lastName);
       updatedData.append("username", formData.username);
       updatedData.append("email", formData.email);
       updatedData.append("phoneNumber", formData.phoneNumber);
-      updatedData.append("about", formData.bio);
+      updatedData.append("about", formData.about);
+      
 
       if (profilePic.file) {
         updatedData.append("profilepic", profilePic.file);
@@ -120,11 +147,12 @@ const EditProfile = () => {
         updatedData.append("shortreels", shortReelPreview.file);
       }
 
-      const response = await axios.put("/users/update/profile", updatedData, {
+      const response = await axiosInstance.put("/users/update/profile", updatedData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Response:", response.data);
-      if (response.data) {
+      console.log([...updatedData]); // To inspect the form data
+      if (response.data.success) {
         toast.success("Profile updated successfully!");
       }
     } catch (error) {
@@ -135,6 +163,70 @@ const EditProfile = () => {
     }
   };
 
+  const handleSendOtp = async (e) => {
+    const newErrors = {};
+    e.preventDefault();
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required";
+      setErrors(newErrors);
+    } else if (!/^[0-9]{10}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must be 10 digits long";
+      setErrors(newErrors);
+    } else {
+      setErrors({});
+      try {
+        console.log("Sending OTP to:", formData.phoneNumber);
+        const res = await axiosInstance.post("/auth/number/sendotp", {
+          phoneNumber: formData.phoneNumber,
+        });
+        console.log("Response from OTP API:", res.data);
+        if (res.data.success) {
+          setIsOtpSent(true);
+          toast.success("OTP is sent to the given number.");
+        } else {
+          toast.error(res.data.message);
+        }
+      } catch (err) {
+        console.error("Error in sending OTP:", err);
+        toast.error(
+          err.response?.data.message || "Something Broken..! Try again later"
+        );
+      } 
+    }
+  };
+  
+  const ResentOTP = (e) => {
+    e.preventDefault();
+    setIsOtpSent(false);
+    setFormData((prevData) => ({
+      ...prevData,
+      otp: "",
+    }));
+  };
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    if (!formData.otp) {
+      setErrors({ otp: "OTP is required" });
+      return;
+    }
+    try {
+      const res = await axiosInstance.post("/auth/number/verifyotp", {
+        userId: authState.user.id,
+        phoneNumber:formData.phoneNumber,
+        otp: formData.otp,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+      } else {
+        toast.error(res.data.message || "Verification failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error verifying OTP:", err);
+      toast.error(err.response?.data?.message || "Something went wrong. Try again later.");
+    }
+  };
+  
+  
   if (loading) return <Loading />;
 
   if (!loading && !authState.isAuthenticated) return <AccessDenied />;
@@ -195,7 +287,7 @@ const EditProfile = () => {
                 <h3 className="text-black flex-1 font-bold text-lg">
                   {authState?.user?.username}
                 </h3>
-                <p className="text-sm">authState?.user?.about</p>
+                <p className="text-sm text-slate-500">{formData.about}</p>
               </div>
             </div>
 
@@ -204,21 +296,24 @@ const EditProfile = () => {
               your mail will still remain un-edited.
             </p>
             <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block  text-gray-700">Name</label>
-                <input
+            <div className="mb-4">
+  <label className="block text-gray-700">Name</label>
+  <input
+    type="text"
+    className="w-full px-3 border-b-2 border-fuchsia-800 focus:outline-none focus:border-fuchsia-800"
+    value={`${formData.firstName} ${formData.lastName}`}
+    onChange={handleChange}
+    name="fullName"
+  />
+</div>
 
-                  type="text"
-                  className="w-full px-3  border-b-2  border-fuchsia-800 focus:outline-none focus:border-fuchsia-800"
-                />
-              </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Username</label>
                 <input
                   name='username'
                   type="text"
+                  readOnly
                   value={formData.username}
-                  onChange={handleChange}
                   className="w-full px-3  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700"
                 />
               </div>
@@ -233,15 +328,69 @@ const EditProfile = () => {
                 <label className="block text-gray-700">Phone Number</label>
                 <input
                   type="tel"
+                  name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleChange}
                   className="w-full px-3 py- border-b-2 border-fuchsia-800 focus:outline-none "
                 />
               </div>
+              {formData.phoneNumber.length === 10 && (
+                <div>
+              <div className="flex justify-start items-center gap-2 mt-5">
+            <button onClick={handleSendOtp} disabled={isOtpSent} className="text-sm text-gray-600 hover:underline">Generate OTP</button>
+            <br/>
+            {isOtpSent && (<button onClick={ResentOTP} className="text-sm text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.88-3.36L23 10M1 14l5.64 5.64A9 9 0 0 0 20.49 15"></path>
+              </svg>
+            </button>)}
+            {isOtpSent && (<span className="text-sm text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V13a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </span>)}
+          </div>
+          <div className="mb-4 relative">
+  {/* OTP Input Field */}
+  <input
+    type="number"
+    name="otp"
+    value={formData.otp}
+    onChange={handleChange}
+    placeholder={!isOtpSent ? "Enter OTP" : "OTP sent to given number"}
+    autoComplete="one-time-code"
+    className={`w-full px-3 py-2 border-b-2 ${
+      errors.otp ? "border-red-600 focus:border-red-600" : "border-fuchsia-800 focus:border-fuchsia-800"
+    } focus:outline-none`}
+  />
+  
+  {errors.otp && (
+    <span className="text-red-600 text-xs">{errors.otp}</span>
+  )}
+  {formData.otp.length === 6 && (
+                  <button
+                    onClick={handleVerifyOtp}
+                    className="text-sm text-gray-600 hover:underline mt-2"
+                  >
+                    Verify
+                  </button>
+                )}
+</div>
+
+              </div>
+              )}
+
               <div className="mb-4">
                 <label className="block text-gray-700">Bio</label>
-                <input className="w-full  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700" value={formData.bio}
-                  onChange={handleChange}></input>
+                <input
+                  className="w-full  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700"
+                  name="about"
+                  value={formData.about}
+                  onChange={handleChange}
+                ></input>
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Images</label>
