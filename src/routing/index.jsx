@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "../components/Layout/Main";
 import DefaultPage from "../components/Default";
 import Login from "../components/Login";
+import Login2FA from "../components/Login/2FA";
 import Dashboard from "../components/Dashboard";
 import DashboardLayout from "../components/Layout/Dashboard";
 import Matches from "../components/Matches";
@@ -39,6 +40,7 @@ function Routing() {
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<DefaultPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/2fa" element={<Login2FA />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route

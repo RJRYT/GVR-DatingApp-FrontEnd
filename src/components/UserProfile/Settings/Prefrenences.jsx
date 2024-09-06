@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { FaSearch } from "react-icons/fa";
 import Slider from "../Components/Slider";
 import Select from "../../UserProfile/Components/Select";
 import Navbar from "../../Dashboard/Navbar";
 import axiosInstance from "../../../Instance/Axios"
+import LoadingOverlay from "../../Loading/LoadingOverlay";
+import Loading from "../../Loading";
+import AccessDenied from "../../AccessDenied";
+import axios from "../../../Instance/Axios";
+import { AuthContext } from "../../../contexts/AuthContext";
 import {
   locations,
   interests,
@@ -16,6 +21,8 @@ import {
 import { toast } from "react-toastify";
 
 function PrefrenencesSettings() {
+  const { authState, loading } = useContext(AuthContext);
+  const [loadingOverlay, setLoadingOverlay] = useState(true);
   const [preferences, setPreferences] = useState({
     AgeRange: { min: 18, max: 35 },
     HeightRange: { min: 100, max: 220 },
@@ -30,7 +37,6 @@ function PrefrenencesSettings() {
     Relation: null,
     LifeStyle: []
   })
-
 
   // Generic slider change handler
   const handleSliderChange = (value, type) => {
@@ -48,8 +54,9 @@ function PrefrenencesSettings() {
     }));
   };
 
-  const addPreferences = async (e) => {
+  const addPreferences = useCallback(async (e) => {
     e.preventDefault();
+    setLoadingOverlay(true);
     try {
       const response = await axiosInstance.post("/matches/preferences", preferences);
       if (response.data.success) {
@@ -60,23 +67,38 @@ function PrefrenencesSettings() {
     } catch (error) {
       console.error(error);
       toast.error(`Error occurred: ${error.message}`);
+    } finally {
+      setLoadingOverlay(false);
     }
-  }
+  },[]);
+
+  const fetchPreferences = useCallback(async()=>{
+    try {
+      setLoadingOverlay(true);
+      const response = await axiosInstance.get("/matches/preferences");
+      if (response.data.success) {
+        setPreferences(response.data.preferences)
+      } else {
+        console.error("Preferences data is missing or incorrect.");
+      }
+    } catch (error) {
+      console.error("API Error:", error)
+    } finally {
+      setLoadingOverlay(false);
+    }
+  },[]);
 
   useEffect(() => {
-    axiosInstance.get("/matches/preferences")
-      .then((res) => {
-        if (res.data && res.data.preferences) {
-          setPreferences(res.data.preferences);
-        } else {
-          console.error("Preferences data is missing or incorrect.");
-        }
-      })
-      .catch(err => console.error("API Error:", err));
-  }, []);
+    if (!loading && authState.isAuthenticated) fetchPreferences();
+  }, [fetchPreferences, loading, authState]);
+
+  if (loading) return <Loading />;
+
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
     <>
+      {loadingOverlay && <LoadingOverlay />}
       <div className="items-center justify-center min-h-screen bg-fuchsia-950">
         <div className="flex p-6">
           <button className="rounded-full border-white border-2 p-2 bg-[#DD88CF] ml-4">
