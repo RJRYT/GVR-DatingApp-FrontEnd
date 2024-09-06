@@ -50,7 +50,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
         async (position) => {
           const { latitude, longitude } = position.coords;
           const placeName = await getPlaceName(latitude, longitude);
-
+          console.log(latitude, longitude, placeName);
           const placeData = {
             latitude,
             longitude,
@@ -71,11 +71,6 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
             location: 'Location access is needed to continue'
           }));
         },
-        {
-          enableHighAccuracy: true, // Request the most accurate position
-          timeout: 5000,            // Time out after 5 seconds
-          maximumAge: 0             // No cached position data
-        }
       );
     } else {
       setErrors(prevErrors => ({
@@ -90,6 +85,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=${latitude}&lon=${longitude}`);
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         return data.display_name;
       }else{
         return "unKnown place"
@@ -387,7 +383,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
             <input
               type="text"
               placeholder="Location"
-              value={formData.location.shortName}
+              value={formData.location.shortName || "Loading..."}
               onClick={getLocation}
               className={`w-full p-2 border text-gray-500 ${
                 errors.location

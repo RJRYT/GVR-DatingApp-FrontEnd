@@ -33,7 +33,7 @@ const Topbar = ({ title = "" }) => {
           <div className="text-2xl font-bold text-black">{title}</div>
         </div>
       )}
-      <button className="flex items-center rounded-full hover:border-black border p-2 text-black">
+      <button onClick={()=>{navigate("/dashboard/preferences")}} className="flex items-center rounded-full hover:border-black border p-2 text-black">
         <svg
           className="h-6 w-6"
           fill="none"
