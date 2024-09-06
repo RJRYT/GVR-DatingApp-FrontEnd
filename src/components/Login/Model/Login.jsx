@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import axiosInstance from "../../../Instance/Axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = ({ isVisible, modelToggle, setLoading }) => {
   const { authState, checkAuthStatus, loading } = useContext(AuthContext);
@@ -12,6 +14,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
     password: "",
     phoneNumber: "",
   });
+  const navigate=useNavigate()
 
   useEffect(() => {
     if (!loading && authState.isAuthenticated) modelToggle();
@@ -61,6 +64,10 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
       try {
         const res = await axiosInstance.post("/auth/email/login", formData);
         if (res.data.success) {
+          if (res.data.twoFA) {
+           navigate("/privacy/2fa")
+          }
+
           checkAuthStatus(forceCheck);
           toast.success("Login Success");
           modelToggle();

@@ -78,7 +78,15 @@ function Login() {
           authState.user.professionalInfoSubmitted &&
           authState.user.purposeSubmitted
         ) {
-          return navigate("/dashboard");
+
+          if(authState.user.twoFA ===  "True"){
+          
+            console.log("2fa is enabled");
+            return navigate("/dashboard");
+            //return navigate("/twoFAcheck");
+          }
+          else{
+            return navigate("/dashboard");}
         }
         if (!authState.user.personalInfoSubmitted) return ToggleModel("Personal");
         if (!authState.user.professionalInfoSubmitted)
@@ -95,10 +103,12 @@ function Login() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
+    const check2faEnabled = urlParams.get("2fa");
+    console.log(check2faEnabled)
     if (token) {
       checkAuthStatus();
       checkRegistrationStatus();
-      navigate("/login");
+      navigate( (check2faEnabled==="true")? "/login/2fa":"/login");
     }
   }, []);
 
