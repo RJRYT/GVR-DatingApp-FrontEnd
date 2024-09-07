@@ -11,6 +11,7 @@ import {
   drinkingHabits,
   gender,
   hobbies,
+  locations,
   interests,
   qualifications,
   smokingHabits,
@@ -20,6 +21,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
   const [profilePicSelected, setProfilePicSelected] = useState(false);
   const [shortReelSelected, setShortReelSelected] = useState(false);
   const [imagesSelected, setImagesSelected] = useState(false);
+  const [locationClicked, setLocationClicked] = useState(false);
   const [errors, setErrors] = useState({});
   const { authState, updateUser, loading } = useContext(AuthContext);
   const [uploadFiles, setUploadFiles] = useState({
@@ -45,37 +47,82 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
   });
 
   const getLocation = () => {
+    setLocationClicked(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const { latitude, longitude } = position.coords;
-          const placeName = await getPlaceName(latitude, longitude);
-          console.log(latitude, longitude, placeName);
-          const placeData = {
-            latitude,
-            longitude,
-            shortName: placeName.split(",")[0],
-            name: placeName
-          }
+          const { latitude, longitude, accuracy } = position.coords;
   
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            location: placeData,
-          }));
+          // Check if the accuracy is too high (not accurate)
+          const accuracyThreshold = 500; // Adjust based on your desired accuracy in meters
+          if (accuracy > accuracyThreshold) {
+            // Show standard location method if the accuracy is too high
+            setErrors((prevErrors) => ({
+              ...prevErrors,
+              location: 'Location accuracy is too low. Please select location manually.',
+            }));
+            // Optionally trigger fallback to standard location selection here
+          } else {
+            // Accuracy is acceptable, proceed with geolocation
+            const placeName = await getPlaceName(latitude, longitude);
+            const placeData = {
+              latitude,
+              longitude,
+              shortName: placeName.split(",")[0],
+              name: placeName,
+            };
+  
+            setFormData((prevFormData) => ({
+              ...prevFormData,
+              location: placeData,
+            }));
+  
+            // Clear any previous location errors
+            setErrors((prevErrors) => ({
+              ...prevErrors,
+              location: null,
+            }));
+          }
         },
         (error) => {
-          console.log("Location error: ",error);
-          alert("Location access is needed to continue");
-          setErrors(prevErrors => ({
+          // Handle different geolocation errors
+          let errorMessage = "";
+  
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "Location permission denied. Switching to manual location selection.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "Location information is unavailable. Switching to manual location selection.";
+              break;
+            case error.TIMEOUT:
+              errorMessage = "Request to get your location timed out. Switching to manual location selection.";
+              break;
+            default:
+              errorMessage = "An unknown error occurred. Switching to manual location selection.";
+              break;
+          }
+  
+          // Set the error message and log it
+          console.log("Location error: ", error);
+          setErrors((prevErrors) => ({
             ...prevErrors,
-            location: 'Location access is needed to continue'
+            location: errorMessage,
           }));
+  
+          // Optional: display an alert to the user as well
+          alert(errorMessage);
         },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        }
       );
     } else {
-      setErrors(prevErrors => ({
+      setErrors((prevErrors) => ({
         ...prevErrors,
-        location: 'Geolocation is not supported by this browser.'
+        location: "Geolocation is not supported by this browser.",
       }));
     }
   };
@@ -87,7 +134,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
         const data = await response.json();
         console.log(data);
         return data.display_name;
-      }else{
+      } else {
         return "unKnown place"
       }
     } catch (error) {
@@ -95,7 +142,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
       return 'unKnown place';
     }
   };
-  
+
   useEffect(() => {
     if (!loading && !authState.isAuthenticated) modelToggle();
   }, [loading, authState]);
@@ -131,7 +178,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
     }
 
     // // location validation
-    if (!formData.location.latitude) {
+    if (!formData.location.shortName) {
       newErrors.location = "Location is required";
     }
 
@@ -182,6 +229,11 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    //special case(location)
+    if(name === "location"){
+      setFormData({ ...formData, location:{...formData.location, shortName: value, name: value} });
+      return;
+    }
     setFormData({ ...formData, [name]: value });
   };
 
@@ -301,11 +353,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               name="age"
               value={formData.age}
               onChange={handleInputChange}
-              className={`w-full p-2 border text-gray-500 ${
-                errors.age
+              className={`w-full p-2 border text-gray-500 ${errors.age
                   ? "border-red-600 focus:ring-red-700"
                   : "border-gray-300 focus:ring-gray-400"
-              }  rounded-lg focus:outline-none focus:ring-2`}
+                }  rounded-lg focus:outline-none focus:ring-2`}
             />
             {errors.age && (
               <span className="text-red-600 text-xs">{errors.age}</span>
@@ -319,11 +370,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               placeholder="DOB"
               value={formData.dateOfBirth}
               onChange={handleInputChange}
-              className={`w-full p-2 border text-gray-500 ${
-                errors.dateOfBirth
+              className={`w-full p-2 border text-gray-500 ${errors.dateOfBirth
                   ? "border-red-600 focus:ring-red-700"
                   : "border-gray-300 focus:ring-gray-400"
-              }  rounded-lg focus:outline-none focus:ring-2`}
+                }  rounded-lg focus:outline-none focus:ring-2`}
             />
             {errors.dateOfBirth && (
               <span className="text-red-600 text-xs">{errors.dateOfBirth}</span>
@@ -337,11 +387,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Options={gender}
               Placeholder="Gender"
               AllowNew={false}
-              ClassName={`w-full border text-gray-500 ${
-                errors.gender
+              ClassName={`w-full border text-gray-500 ${errors.gender
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
             {errors.gender && (
               <span className="text-red-600 text-xs">{errors.gender}</span>
@@ -353,11 +402,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               OnChange={handleInputChange}
               Options={hobbies}
               Placeholder="Hobbies"
-              ClassName={`w-full border text-gray-500 ${
-                errors.hobbies
+              ClassName={`w-full border text-gray-500 ${errors.hobbies
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
             {errors.hobbies && (
               <span className="text-red-600 text-xs">{errors.hobbies}</span>
@@ -369,33 +417,47 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               OnChange={handleInputChange}
               Options={interests}
               Placeholder="Interests"
-              ClassName={`w-full border text-gray-500 ${
-                errors.interests
+              ClassName={`w-full border text-gray-500 ${errors.interests
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
             {errors.interests && (
               <span className="text-red-600 text-xs">{errors.interests}</span>
             )}
           </div>
           <div>
-            <input
-              type="text"
-              placeholder="Location"
-              value={formData.location.shortName || "Loading..."}
-              onClick={getLocation}
-              className={`w-full p-2 border text-gray-500 ${
-                errors.location
-                  ? "border-red-600 hover:ring-red-700"
-                  : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg focus:outline-none focus:ring-2 hover:ring-2 `}
-              readOnly
-            />
-            {errors.location && (
-              <span className="text-red-600 text-xs">{errors.location}</span>
+            {(errors.location && locationClicked) ? (
+              <>
+                {/* Fallback to the standard select menu if geolocation fails or accuracy is too low */}
+                <SingleSelect
+                  name="location"
+                  OnChange={handleInputChange}
+                  Options={locations} 
+                  Placeholder="Select your location"
+                  AllowNew={false}
+                  ClassName={`w-full border text-gray-500 ${errors.location
+                      ? "border-red-600 hover:ring-red-700"
+                      : "border-gray-300 hover:ring-gray-400"
+                    }  rounded-lg hover:ring-2`}
+                />
+                <span className="text-red-600 text-xs">{errors.location}</span>
+              </>
+            ) : (
+              <input
+                type="text"
+                placeholder="Location"
+                value={formData.location.shortName}
+                onClick={getLocation}
+                className={`w-full p-2 border text-gray-500 ${errors.location
+                    ? "border-red-600 hover:ring-red-700"
+                    : "border-gray-300 hover:ring-gray-400"
+                  }  rounded-lg focus:outline-none focus:ring-2 hover:ring-2 `}
+                readOnly
+              />
             )}
           </div>
+
           <div>
             <SingleSelect
               name="smokingHabits"
@@ -403,11 +465,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Options={smokingHabits}
               Placeholder="Smoking Habits"
               AllowNew={false}
-              ClassName={`w-full border text-gray-500 ${
-                errors.smokingHabits
+              ClassName={`w-full border text-gray-500 ${errors.smokingHabits
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
             {errors.smokingHabits && (
               <span className="text-red-600 text-xs">
@@ -422,11 +483,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Options={drinkingHabits}
               Placeholder="Drinking Habits"
               AllowNew={false}
-              ClassName={`w-full border text-gray-500 ${
-                errors.drinkingHabits
+              ClassName={`w-full border text-gray-500 ${errors.drinkingHabits
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
             {errors.drinkingHabits && (
               <span className="text-red-600 text-xs">
@@ -440,11 +500,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               OnChange={handleInputChange}
               Options={qualifications}
               Placeholder="Qualifictions"
-              ClassName={`w-full border text-gray-500 ${
-                errors.qualification
+              ClassName={`w-full border text-gray-500 ${errors.qualification
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
             {errors.qualification && (
               <span className="text-red-600 text-xs">
@@ -458,11 +517,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Placeholder="Profile Pic"
               Error={errors}
               setFileSelected={setProfilePicSelected}
-              ClassName={`w-full block text-gray-500 p-2 border ${
-                errors.profilePic
+              ClassName={`w-full block text-gray-500 p-2 border ${errors.profilePic
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
           </div>
           <div>
@@ -471,11 +529,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Placeholder="Add More Images"
               Error={errors}
               setFileSelected={setImagesSelected}
-              ClassName={`w-full block text-gray-500 p-2 border ${
-                errors.images
+              ClassName={`w-full block text-gray-500 p-2 border ${errors.images
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
           </div>
           <div>
@@ -484,11 +541,10 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               Placeholder="Short Reel"
               Error={errors}
               setFileSelected={setShortReelSelected}
-              ClassName={`w-full block text-gray-500 p-2 border ${
-                errors.shortReel
+              ClassName={`w-full block text-gray-500 p-2 border ${errors.shortReel
                   ? "border-red-600 hover:ring-red-700"
                   : "border-gray-300 hover:ring-gray-400"
-              }  rounded-lg hover:ring-2`}
+                }  rounded-lg hover:ring-2`}
             />
           </div>
           <button

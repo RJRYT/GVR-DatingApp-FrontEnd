@@ -10,22 +10,6 @@ import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
 import { toast } from "react-toastify";
 
-const sampleUser = {
-  profilePicture,
-  name: "Alfredo Calzoni",
-  age: "20",
-  location: "Hamburg, Germany",
-  about: `A good listener. I love having a good talk to know each other's side.`,
-};
-
-// const interests = [
-//   { text: "Nature", emoji: "🌳" },
-//   { text: "Travel", emoji: "🌍" },
-//   { text: "Writing", emoji: "✍️" },
-//   { text: "People", emoji: "🙂" },
-//   { text: "Gym & Fitness", emoji: "💪" },
-// ];
-
 const UserProfile = ({ upgrade = false }) => {
 
   const [activeLine, setActiveLine] = useState(1);
@@ -187,7 +171,7 @@ const UserProfile = ({ upgrade = false }) => {
               {user?.username}, {user?.age}
             </h1>
             <p className="text-md text-gray-300 text-center tracking-widest uppercase aldrich-regular">
-              {user?.location}
+              {user?.location?.shortName}
             </p>
             {userId === "@me" ? (
               <MatchButton progress={75} text="Profile Complete" />

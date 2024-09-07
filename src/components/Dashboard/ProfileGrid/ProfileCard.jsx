@@ -14,13 +14,13 @@ const ProfileCard = ({ profile }) => {
       />
       
 
-      <div className="absolute top-0 left-0 right-0   p-2 text-white">
+      {profile.isOnline && (<div className="absolute top-0 left-0 right-0 p-2 text-white">
         <div className="flex justify-between items-top">
           <div className="flex items-center">
             <span className="text-xs uppercase">Online</span>
           </div>
         </div>
-      </div>
+      </div>)}
       <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-1 flex ">
         <div className="text-white ">
           <span className="block text-xs font-bold ">{profile.username}</span>
@@ -28,7 +28,7 @@ const ProfileCard = ({ profile }) => {
             {profile.gender} {profile.age}
           </span>
           <span className="block text-xs uppercase">
-            {profile.designation}, {profile.location}
+            {profile.designation}, {profile.location?.shortName}
           </span>
         </div>
       </div>
