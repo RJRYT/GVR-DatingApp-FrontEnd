@@ -178,7 +178,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
     }
 
     // // location validation
-    if (!formData.location.latitude) {
+    if (!formData.location.shortName) {
       newErrors.location = "Location is required";
     }
 
@@ -447,7 +447,7 @@ const PersonalDetails = ({ isVisible, modelToggle, setLoading }) => {
               <input
                 type="text"
                 placeholder="Location"
-                value={formData.location.shortName || "Loading..."}
+                value={formData.location.shortName}
                 onClick={getLocation}
                 className={`w-full p-2 border text-gray-500 ${errors.location
                     ? "border-red-600 hover:ring-red-700"

@@ -7,7 +7,6 @@ import axiosInstance from "../../../Instance/Axios"
 import LoadingOverlay from "../../Loading/LoadingOverlay";
 import Loading from "../../Loading";
 import AccessDenied from "../../AccessDenied";
-import axios from "../../../Instance/Axios";
 import { AuthContext } from "../../../contexts/AuthContext";
 import {
   locations,
