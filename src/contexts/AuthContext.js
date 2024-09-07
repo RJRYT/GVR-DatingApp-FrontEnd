@@ -38,9 +38,12 @@ export const AuthProvider = ({ children }) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const { latitude, longitude } = position.coords;
+          const { latitude, longitude, accuracy } = position.coords;
           try {
+            const accuracyThreshold = 500; // Adjust based on your desired accuracy in meters
+          if (accuracy < accuracyThreshold) {
             await axiosInstance.get(`/users/me/?lat=${latitude}&lon=${longitude}`);
+          }
           } catch (error) {
             console.error("Error sending location", error);
           }
