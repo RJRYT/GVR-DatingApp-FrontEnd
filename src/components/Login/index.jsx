@@ -4,7 +4,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
 import { toast } from "react-toastify";
-
+import Cookies from 'js-cookie';
 import Phone from "../../assets/login/phone.png";
 import Google from "../../assets/login/google.png";
 import Illustration from "../../assets/login/illustration.png";
@@ -19,6 +19,7 @@ import ModelRelationShip from "./Model/RelationshipGoals";
 import ModelInterested from "./Model/Interested";
 
 function Login() {
+  
   const navigate = useNavigate();
   const { authState, checkAuthStatus, loading } = useContext(AuthContext);
   const [pageLoading, setPageLoading] = useState(false);
@@ -103,8 +104,10 @@ function Login() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
-    const check2faEnabled = urlParams.get("2fa");
-    console.log(check2faEnabled)
+    const check2faEnabled = Cookies.get("accessToken");
+    
+
+    console.log("cookies",check2faEnabled)
     if (token) {
       checkAuthStatus();
       checkRegistrationStatus();
