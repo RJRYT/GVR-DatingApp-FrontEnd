@@ -19,14 +19,14 @@ const EditProfile = () => {
   const [selectedImage, setSelectedImage] = useState(null); 
 
   const [formData, setFormData] = useState({
-    firstName:authState?.user?.firstName || "",
-    lastName:authState?.user?.lastName || "",
+    firstName: authState?.user?.firstName || "",
+    lastName: authState?.user?.lastName || "",
     username: authState?.user?.username || "",
     email: authState?.user?.email || "",
     phoneNumber: authState?.user?.phoneNumber || "",
-    about:authState.user?.about || "",
+    about: authState.user?.about || "",
     currentProfilePic: authState?.user?.profilePic?.url || "",
-    otp:""
+    otp: ""
   });
   const [profilePic, setProfilePic] = useState({
     file: null,
@@ -127,13 +127,13 @@ const handleImageChange = (e, index) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     setFormData((prevData) => {
       if (name === 'fullName') {
         const parts = value.trim().split(/\s+/); // Split by one or more spaces
         const firstName = parts[0] || ''; // Assign the first part to firstName
         const lastName = parts.slice(1).join(' ') || ''; // Join the rest for lastName
-  
+
         return {
           ...prevData,
           firstName: firstName,
@@ -147,10 +147,10 @@ const handleImageChange = (e, index) => {
       }
     });
   };
-  
+
 
   const handleSubmit = async (e) => {
-        
+
     e.preventDefault();
 
     setLoadingOverlay(true);
@@ -238,10 +238,10 @@ imagePreviews.forEach((image, index) => {
         toast.error(
           err.response?.data.message || "Something Broken..! Try again later"
         );
-      } 
+      }
     }
   };
-  
+
   const ResentOTP = (e) => {
     e.preventDefault();
     setIsOtpSent(false);
@@ -259,7 +259,7 @@ imagePreviews.forEach((image, index) => {
     try {
       const res = await axiosInstance.post("/auth/number/verifyotp", {
         userId: authState.user.id,
-        phoneNumber:formData.phoneNumber,
+        phoneNumber: formData.phoneNumber,
         otp: formData.otp,
       });
       if (res.data.success) {
@@ -366,15 +366,15 @@ imagePreviews.forEach((image, index) => {
               your mail will still remain un-edited.
             </p>
             <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                 <label className="block text-gray-700">Name</label>
-                 <input
-                    type="text"
-                    className="w-full px-3 border-b-2 border-fuchsia-800 focus:outline-none focus:border-fuchsia-800"
-                    value={`${formData.firstName} ${formData.lastName}`}
-                    onChange={handleChange}
-                    name="fullName"
-                  />
+              <div className="mb-4">
+                <label className="block text-gray-700">Name</label>
+                <input
+                  type="text"
+                  className="w-full px-3 border-b-2 border-fuchsia-800 focus:outline-none focus:border-fuchsia-800"
+                  value={`${formData.firstName} ${formData.lastName}`}
+                  onChange={handleChange}
+                  name="fullName"
+                />
               </div>
 
               <div className="mb-4">
@@ -561,7 +561,7 @@ imagePreviews.forEach((image, index) => {
 )}
               <div className="mb-4">
                 <label className="block font-bold text-fuchsia-950">
-                  <Link to={"/dashboard/@me/changepass"}>Change Password</Link>
+                  <Link to={"/dashboard/profile/changepass"}>Change Password</Link>
                 </label>
               </div>
               <div className="text-center">

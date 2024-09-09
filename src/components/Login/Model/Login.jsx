@@ -14,7 +14,7 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
     password: "",
     phoneNumber: "",
   });
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!loading && authState.isAuthenticated) modelToggle();
@@ -65,9 +65,10 @@ const Login = ({ isVisible, modelToggle, setLoading }) => {
         const res = await axiosInstance.post("/auth/email/login", formData);
         if (res.data.success) {
           if (res.data.twoFA) {
-           navigate("/privacy/2fa")
+            navigate("/login/2fa/?token=" + res.data.token);
+            toast.warn("Complete 2FA to continue");
+            return;
           }
-
           checkAuthStatus(forceCheck);
           toast.success("Login Success");
           modelToggle();

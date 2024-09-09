@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import apiInstance from "../../../Instance/Axios";
 import { useNavigate } from "react-router-dom";
 
-const TwoFAVerification = ({ userId }) => {
+const TwoFAVerification = () => {
+  const [code, setCode] = useState('');
   const [token, setToken] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      setToken(token);
+    }
+  }, []);
+
   const handleVerifyToken = () => {
-   
-    apiInstance.post('/users/verify-2fa', { userId, token })
-      .then(response => {
-        navigate("/login")
-        // Redirect user to the dashboard or next page
+    if (!token) {
+      setError('Token not found. invalid request');
+      return;
+    }
+    apiInstance.post('/users/verify-2fa', { token, code })
+      .then((res) => {
+        console.log(res.data)
+        navigate("/login?token=" + res.data.token)
       })
       .catch(err => {
         setError('Failed to verify 2FA token. Please try again.');
@@ -26,8 +38,8 @@ const TwoFAVerification = ({ userId }) => {
       <input
         type="text"
         placeholder="Enter your 2FA code"
-        value={token}
-        onChange={e => setToken(e.target.value)}
+        value={code}
+        onChange={e => setCode(e.target.value)}
         className="border p-2 rounded w-full mb-4"
       />
       <button

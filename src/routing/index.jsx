@@ -9,7 +9,7 @@ import DashboardLayout from "../components/Layout/Dashboard";
 import Matches from "../components/Matches";
 import NotFound from "../components/NotFound";
 import DiscoverHeader from "../components/Dashboard/Discover";
-import Profile from "../components/UserProfile/Settings/Profile";
+import Settings from "../components/UserProfile/Settings/Settings";
 import Privacy from "../components/UserProfile/Settings/Privacy";
 import ChangePassword from "../components/UserProfile/Edit/ChangePassword";
 import Prefrenences from "../components/UserProfile/Settings/Prefrenences";
@@ -71,6 +71,10 @@ function Routing() {
           <Route path="/dashboard/profile/:userId" element={<UserProfile />} />
           <Route path="/dashboard/profile/@me/edit" element={<EditProfile />} />
           <Route
+            path="/dashboard/profile/changepass"
+            element={<ChangePassword />}
+          />
+          <Route
             path="/dashboard/userprofile/upgrade"
             element={<UserProfile upgrade={true} />}
           />
@@ -100,13 +104,13 @@ function Routing() {
             path="/dashboard/users/profile-viewers"
             element={<Received page={"myProfileView"} />}
           />
+          <Route path="/dashboard/settings" element={<Settings />} />
+          <Route path="/dashboard/settings/privacy" element={<Privacy />} />
 
           {/**split**/}
 
           <Route path="/dashboard/groups" element={<GroupList />} />
           <Route path="/dashboard/@me/spin" element={<Spin />} />
-          <Route path="/dashboard/@me/profile" element={<Profile />} />
-          <Route path="/dashboard/@me/privacy" element={<Privacy />} />
           <Route path="/dashboard/@me/filter" element={<Filter />} />
           <Route path="/dashboard/@me/addcard" element={<AddCard />} />
           <Route path="/dashboard/story" element={<Stories />} />
@@ -118,10 +122,6 @@ function Routing() {
           <Route
             path="/dashboard/story/upgrade"
             element={<Stories upgrade={true} />}
-          />
-          <Route
-            path="/dashboard/@me/changepass"
-            element={<ChangePassword />}
           />
           <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
           <Route path="/403" element={<AccessDenied />} />

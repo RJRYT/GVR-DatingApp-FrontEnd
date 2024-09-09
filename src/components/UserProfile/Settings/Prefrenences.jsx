@@ -53,7 +53,7 @@ function PrefrenencesSettings() {
     }));
   };
 
-  const addPreferences = useCallback(async (e) => {
+  const addPreferences = async (e) => {
     e.preventDefault();
     setLoadingOverlay(true);
     try {
@@ -69,7 +69,7 @@ function PrefrenencesSettings() {
     } finally {
       setLoadingOverlay(false);
     }
-  },[]);
+  };
 
   const fetchPreferences = useCallback(async()=>{
     try {

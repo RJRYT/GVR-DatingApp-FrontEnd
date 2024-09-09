@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import Switch from "react-switch";
 import Navbar from "../../Dashboard/Navbar";
 import apiInstance from "../../../Instance/Axios";
+import LoadingOverlay from "../../Loading/LoadingOverlay";
+import Loading from "../../Loading";
+import AccessDenied from "../../AccessDenied";
 import { AuthContext } from "../../../contexts/AuthContext";
 
 const PrivacySettings = () => {
@@ -15,7 +18,8 @@ const PrivacySettings = () => {
   const [twoFACode, setTwoFACode] = useState('');  // For entering the 2FA code
   const [error, setError] = useState(''); // To display errors
   const [sessions, setSessions] = useState([]); // State to hold user sessions
-  const {authState} = useContext(AuthContext);
+  const { loading, authState } = useContext(AuthContext);
+  const [loadingOverlay, setLoadingOverlay] = useState(true);
 
   useEffect(() => {
     apiInstance.get('/users/privacy')
@@ -28,22 +32,21 @@ const PrivacySettings = () => {
         console.error('Error fetching user settings:', error);
       });
 
-
-
-       // Fetch user sessions
+    // Fetch user sessions
     apiInstance.get('/users/sessions')
-    .then(response => {
-      setSessions(response.data);
-    })
-    .catch(error => {
-      console.error('Error fetching sessions:', error);
-    });
-
-
+      .then(response => {
+        setSessions(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching sessions:', error);
+      }).finally(() => {
+        setLoadingOverlay(false);
+      });
   }, []);
 
   const handleTwoFactorChange = (enabled) => {
     if (enabled) {
+      setLoadingOverlay(true);
       apiInstance.get('/users/privacy/2fa/generate')
         .then(response => {
           setQrCodeUrl(response.data.qrCodeUrl);
@@ -52,6 +55,8 @@ const PrivacySettings = () => {
         })
         .catch(error => {
           console.error('Error generating 2FA QR code:', error);
+        }).finally(() => {
+          setLoadingOverlay(false);
         });
     } else {
       setIsModalOpen(true);
@@ -59,6 +64,7 @@ const PrivacySettings = () => {
   };
 
   const confirmTwoFactorChange = (enabled) => {
+    setLoadingOverlay(true);
     if (!enabled) {
       apiInstance.post('/users/privacy/2fa', { twoFactorEnabled: enabled })
         .then(response => {
@@ -67,6 +73,8 @@ const PrivacySettings = () => {
         })
         .catch(error => {
           console.error('Error updating 2FA status:', error);
+        }).finally(() => {
+          setLoadingOverlay(false);
         });
     } else {
       apiInstance.post('/users/privacy/2fa/verify', { token: twoFACode })
@@ -80,6 +88,8 @@ const PrivacySettings = () => {
         })
         .catch(error => {
           console.error('Error verifying 2FA code:', error);
+        }).finally(() => {
+          setLoadingOverlay(false);
         });
     }
   };
@@ -89,17 +99,25 @@ const PrivacySettings = () => {
   };
 
   const handleResetAllSessions = () => {
+    setLoadingOverlay(true);
     apiInstance.delete('/users/sessions')
       .then(() => {
         setSessions([]); // Clear the sessions list after deletion
       })
       .catch(error => {
         console.error('Error resetting sessions:', error);
+      }).finally(()=>{
+        setLoadingOverlay(false);
       });
   };
 
+  if (loading) return <Loading />;
+
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
+
   return (
     <>
+      {loadingOverlay && <LoadingOverlay />}
       <div className="items-center justify-center min-h-screen bg-fuchsia-950">
         <div className="flex p-6">
           <button className="rounded-full border-white border-2 p-2 bg-[#DD88CF] ml-4">
@@ -115,12 +133,12 @@ const PrivacySettings = () => {
           </div>
           <div className="flex p-6">
             <label className="font-medium">Sign-in Email</label>
-            <p className="flex-1 text-right ">{authState.user.email}</p>
+            <p className="flex-1 text-right ">{authState.user.email || ""}</p>
           </div>
           <div className="flex px-6 py-2 border-b">
             <label className="font-medium">Password</label>
             <Link
-              to="/dashboard/userprofile/changePassword"
+              to="/dashboard/profile/changepass"
               className="flex-1 text-right"
             >
               <p className="text-blue-600 font-bold"> Change Password</p>
@@ -147,7 +165,7 @@ const PrivacySettings = () => {
           </div>
           <div className="flex p-6">
             <label className="font-medium">Phone number</label>
-            <p className="flex-1 text-right ">+91 93123 45067</p>
+            <p className="flex-1 text-right ">{authState.user.phoneNumber || "Not added yet"}</p>
           </div>
           <div className="px-6 pt-6">
             <label className="font-semibold">Last sign in</label>
@@ -155,33 +173,15 @@ const PrivacySettings = () => {
               {lastSignIn}
             </p>
           </div>
-          {/* <div className="px-6 pt-6 border-b">
-            <label className="font-medium">Total active sessions(5)</label>
-            <p className="font-sm pt-6 pb-2">
-              <span>DESKTOP_6TIG6EC</span>.Kyiv, Ukraine
-            </p>
-            <p className="text-sm pb-2">Chrome. Used right now</p>
-          </div>
           <div className="px-6 pt-6 border-b">
-            <p className="font-light pt-2 pb-2">
-              <span>DESKTOP_6TIG6EC</span>.Kyiv, Ukraine
-            </p>
-            <p className="text-sm pb-2">Chrome. Used right now</p>
-          </div>
-          <div className="p-6 flex pb-24">
-            <button className="bg-fuchsia-950 text-white p-2 rounded-md ml-auto">
-              + Reset all active sessions
-            </button>
-          </div> */}
-          <div className="px-6 pt-6 border-b">
-            <label className="font-medium">Active Sessions</label>
+            <label className="font-medium">Active Sessions({sessions.length})</label>
             {sessions.length > 0 ? (
               sessions.map((session, index) => (
                 <div key={index} className="mb-2">
                   <p className="font-sm">
-                    <span>{session.device || 'Unknown Device'}</span> - {session.ipAddress || 'Unknown IP'}
+                    <span>{session.deviceInfo || 'Unknown Device'}</span> - {session.ipAddress || 'Unknown IP'}
                   </p>
-                  <p className="text-sm text-gray-600">Last Active: {new Date(session.lastActive).toLocaleString()}</p>
+                  <p className="text-sm text-gray-600">Last Active: {new Date(session.lastActiveAt).toLocaleString()}</p>
                 </div>
               ))
             ) : (
@@ -189,7 +189,7 @@ const PrivacySettings = () => {
             )}
           </div>
           <div className="p-6 flex pb-24">
-            <button 
+            <button
               className="bg-fuchsia-950 text-white p-2 rounded-md ml-auto"
               onClick={handleResetAllSessions}
             >
@@ -201,7 +201,7 @@ const PrivacySettings = () => {
       <Navbar />
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div style={{ wordBreak: "break-word" }} className="fixed break-words inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
             <h2 className="text-xl font-semibold mb-4">
               {twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
