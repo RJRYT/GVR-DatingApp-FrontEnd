@@ -165,7 +165,7 @@ const PrivacySettings = () => {
           </div>
           <div className="flex p-6">
             <label className="font-medium">Phone number</label>
-            <p className="flex-1 text-right ">{authState.user.phoneNumber || ""}</p>
+            <p className="flex-1 text-right ">{authState.user.phoneNumber || "Not added yet"}</p>
           </div>
           <div className="px-6 pt-6">
             <label className="font-semibold">Last sign in</label>
@@ -201,7 +201,7 @@ const PrivacySettings = () => {
       <Navbar />
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div style={{ wordBreak: "break-word" }} className="fixed break-words inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
             <h2 className="text-xl font-semibold mb-4">
               {twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
