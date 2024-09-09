@@ -10,8 +10,9 @@ const TwoFAVerification = ({ userId }) => {
   const handleVerifyToken = () => {
    
     apiInstance.post('/users/verify-2fa', { userId, token })
-      .then(response => {
-        navigate("/login")
+      .then( (res) => {
+        console.log(res.data)
+        navigate("/login?token="+res.data.token)
         // Redirect user to the dashboard or next page
       })
       .catch(err => {
