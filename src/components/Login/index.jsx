@@ -4,7 +4,6 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Loading from "../Loading";
 import LoadingOverlay from "../Loading/LoadingOverlay";
 import { toast } from "react-toastify";
-import Cookies from 'js-cookie';
 import Phone from "../../assets/login/phone.png";
 import Google from "../../assets/login/google.png";
 import Illustration from "../../assets/login/illustration.png";
@@ -104,11 +103,10 @@ function Login() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
-    if (token  ) {
-console.log(Cookies.get())
+    if (token) {
       checkAuthStatus();
       checkRegistrationStatus();
-      navigate( (Cookies.get("2fa")==="true")? "/login/2fa":"/login");
+      navigate("/login");
     }
   }, []);
 
