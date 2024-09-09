@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axiosInstance from "../../../Instance/Axios";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft ,  FaEdit , FaTimes , FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../../Loading";
 import LoadingOverlay from "../../Loading/LoadingOverlay";
@@ -13,6 +13,10 @@ const EditProfile = () => {
   const [loadingOverlay, setLoadingOverlay] = useState(false);
   const [errors, setErrors] = useState({});
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isProfilePicChanged, setIsProfilePicChanged] = useState(false);
+  const [isImagesChanged, setIsImagesChanged] = useState(false); 
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null); 
 
   const [formData, setFormData] = useState({
     firstName:authState?.user?.firstName || "",
@@ -21,6 +25,7 @@ const EditProfile = () => {
     email: authState?.user?.email || "",
     phoneNumber: authState?.user?.phoneNumber || "",
     about:authState.user?.about || "",
+    currentProfilePic: authState?.user?.profilePic?.url || "",
     otp:""
   });
   const [profilePic, setProfilePic] = useState({
@@ -28,33 +33,45 @@ const EditProfile = () => {
     url: authState?.user?.profilePic?.url || "",
   });
   const [imagePreviews, setImagePreviews] = useState(
-    authState?.user?.images || [null, null, null]
+    authState?.user?.images || []
   );
   const [shortReelPreview, setShortReelPreview] = useState(
     authState?.user?.shortReel || ""
   );
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+
   const videoRef = useRef(null);
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfilePic({
-        file,
-        url: URL.createObjectURL(file),
-      });
-    }
-  };
-  const handleImageChange = (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      const newImages = [...imagePreviews];
-      newImages[index] = {
-        file,
-        url: URL.createObjectURL(file),
-      };
-      setImagePreviews(newImages);
-    }
-  };
+
+const handleProfilePicChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    // Check if the selected file is different from the previously fetched profilePic
+    const isChanged = file.name !== profilePic.file?.name || file.size !== profilePic.file?.size;
+    setIsProfilePicChanged(isChanged);
+
+    setProfilePic({
+      file,
+      url: URL.createObjectURL(file),
+    });
+  }
+};
+
+const handleImageChange = (e, index) => {
+  const file = e.target.files[0];
+  if (file) {
+    const newImages = [...imagePreviews];
+    // If file exists, update the corresponding image in imagePreviews
+    newImages[index] = {
+      file, // Add the newly selected file
+      url: URL.createObjectURL(file), // Create a preview URL for the new file
+    };
+    setImagePreviews(newImages);
+    setIsImagesChanged(true); // Mark images as changed
+  }
+};
+
+
+
   const handleReelChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -66,19 +83,34 @@ const EditProfile = () => {
   };
 
   const handleAddImage = () => {
-    document.getElementById("imageInput").click();
+    if (imagePreviews.length < 5) {
+      document.getElementById("imageInput").click();
+    }
   };
-
   const handleFileInputChange = (e) => {
     const files = Array.from(e.target.files);
     const newImages = [...imagePreviews];
+  
+    // Append new images to the existing array
     files.forEach((file) => {
       newImages.push({
-        file,
-        url: URL.createObjectURL(file),
+        file, // Include the file for upload
+        url: URL.createObjectURL(file), // Generate a preview for the new image
       });
     });
+  
     setImagePreviews(newImages);
+    setIsImagesChanged(true); // Mark images as changed
+  };  
+ 
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setIsImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImage(null);
   };
 
   const handleVideoClick = () => {
@@ -131,17 +163,23 @@ const EditProfile = () => {
       updatedData.append("email", formData.email);
       updatedData.append("phoneNumber", formData.phoneNumber);
       updatedData.append("about", formData.about);
-      
 
-      if (profilePic.file) {
-        updatedData.append("profilepic", profilePic.file);
-      }
+     // If profile picture has changed, append the new file, else keep the current profile picture
+     if (isProfilePicChanged && profilePic.file) {
+      updatedData.append("profilePic", profilePic.file);
+    } else {
+      updatedData.append("profilePic", formData.currentProfilePic); // Send current profile pic if unchanged
+    }
+    
+   // Append images (both new and existing)
+imagePreviews.forEach((image, index) => {
+  if (image.file) {
+    updatedData.append("images", image.file); // Append the new image file
+  } else if (image.url) {
+    updatedData.append(`existingImages[${index}]`, image.url); // Append the existing image URL
+  }
+});
 
-      imagePreviews.forEach((image) => {
-        if (image.file) {
-          updatedData.append(`images`, image.file);
-        }
-      });
 
       if (shortReelPreview.file) {
         updatedData.append("shortreels", shortReelPreview.file);
@@ -154,6 +192,15 @@ const EditProfile = () => {
       console.log([...updatedData]); // To inspect the form data
       if (response.data.success) {
         toast.success("Profile updated successfully!");
+         // Update profile picture on the frontend
+      if (response.data.updatedProfilePic) {
+        setProfilePic({
+          ...profilePic,
+          url: response.data.updatedProfilePic, // assuming the new profile picture URL is returned
+          file: null, // reset the file if needed
+        });
+      }
+    
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -226,6 +273,29 @@ const EditProfile = () => {
     }
   };
   
+  const handleDeleteImage = async (imageUrl) => {
+    try {
+      setLoadingOverlay(true);
+      // Send DELETE request to backend
+      const response = await axiosInstance.delete(`/users/delete-image`, {
+        data: { imageUrl }, // Send image URL to backend
+      });
+
+      if (response.data.success) {
+        // Remove image from the frontend
+        const updatedImages = imagePreviews.filter((image) => image.url !== imageUrl);
+        setImagePreviews(updatedImages);
+        setSelectedImage(null);
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      toast.error("Failed to delete image. Please try again.");
+    } finally {
+      setLoadingOverlay(false);
+    }
+  };
+
   
   if (loading) return <Loading />;
 
@@ -296,16 +366,16 @@ const EditProfile = () => {
               your mail will still remain un-edited.
             </p>
             <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-  <label className="block text-gray-700">Name</label>
-  <input
-    type="text"
-    className="w-full px-3 border-b-2 border-fuchsia-800 focus:outline-none focus:border-fuchsia-800"
-    value={`${formData.firstName} ${formData.lastName}`}
-    onChange={handleChange}
-    name="fullName"
-  />
-</div>
+                <div className="mb-4">
+                 <label className="block text-gray-700">Name</label>
+                 <input
+                    type="text"
+                    className="w-full px-3 border-b-2 border-fuchsia-800 focus:outline-none focus:border-fuchsia-800"
+                    value={`${formData.firstName} ${formData.lastName}`}
+                    onChange={handleChange}
+                    name="fullName"
+                  />
+              </div>
 
               <div className="mb-4">
                 <label className="block text-gray-700">Username</label>
@@ -354,33 +424,27 @@ const EditProfile = () => {
             </span>)}
           </div>
           <div className="mb-4 relative">
-  {/* OTP Input Field */}
-  <input
-    type="number"
-    name="otp"
-    value={formData.otp}
-    onChange={handleChange}
-    placeholder={!isOtpSent ? "Enter OTP" : "OTP sent to given number"}
-    autoComplete="one-time-code"
-    className={`w-full px-3 py-2 border-b-2 ${
-      errors.otp ? "border-red-600 focus:border-red-600" : "border-fuchsia-800 focus:border-fuchsia-800"
-    } focus:outline-none`}
-  />
+          {/* OTP Input Field */}
+           <input
+              type="number"
+              name="otp"
+              value={formData.otp}
+              onChange={handleChange}
+              placeholder={!isOtpSent ? "Enter OTP" : "OTP sent to given number"}
+              autoComplete="one-time-code"
+              className={`w-full px-3 py-2 border-b-2 ${
+              errors.otp ? "border-red-600 focus:border-red-600" : "border-fuchsia-800 focus:border-fuchsia-800"
+               } focus:outline-none`}
+            />
   
-  {errors.otp && (
-    <span className="text-red-600 text-xs">{errors.otp}</span>
-  )}
-  {formData.otp.length === 6 && (
-                  <button
-                    onClick={handleVerifyOtp}
-                    className="text-sm text-gray-600 hover:underline mt-2"
-                  >
-                    Verify
-                  </button>
-                )}
-</div>
-
-              </div>
+            {errors.otp && (
+            <span className="text-red-600 text-xs">{errors.otp}</span>
+            )}
+            {formData.otp.length === 6 && (
+             <button onClick={handleVerifyOtp} className="text-sm text-gray-600 hover:underline mt-2">Verify</button>
+            )}
+           </div>
+          </div>
               )}
 
               <div className="mb-4">
@@ -405,8 +469,7 @@ const EditProfile = () => {
                           src={image.url}
                           alt={`Preview ${index + 1}`}
                           className="h-full w-full rounded-full object-cover cursor-pointer"
-                          onClick={() => document.getElementById(`imageInput-${index}`).click()}
-                        />
+                          onClick={() => handleImageClick(image.url)}                        />
                       )}
                       <input
                         type="file"
@@ -421,6 +484,7 @@ const EditProfile = () => {
                     type="button" // Ensure this button does not submit the form
                     className="text-purple-500 text-xl font-semibold"
                     onClick={handleAddImage}
+                    disabled={imagePreviews.length >= 5}
                   >
                     <svg
                       className="h-12 w-12 text-black"
@@ -447,43 +511,54 @@ const EditProfile = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <input
-                  type="file"
-                  id="videoUpload"
-                  accept="video/mp4,video/webm"
-                  hidden
-                  onChange={handleReelChange}
-                />
-                <label className="block text-gray-700">Reels</label>
-                <div className="flex items-center justify-start gap-3">
-                  <div className="relative border-2 border-white shadow-md rounded-full block w-16 h-16 ">
-                    <video
-                      src={shortReelPreview.url}
-                      className="h-full w-full rounded-full object-cover cursor-pointer"
-                      onClick={handleVideoClick}
-                    />
-                  </div>
-                </div>
-              </div>
-              {isVideoOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-                  <div className="relative bg-white p-6 rounded-lg max-w-3xl w-full">
-                    <video
-                      src={shortReelPreview?.url}
-                      className="w-full h-auto rounded-md"
-                      controls
-                      autoPlay
-                      ref={videoRef}
-                    />
-                    <button
-                      className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-2"
-                      onClick={handleCloseVideo}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              )}
+  <input
+    type="file"
+    id="videoUpload"
+    accept="video/mp4,video/webm"
+    hidden
+    onChange={handleReelChange}
+  />
+  <label className="block text-gray-700">Reels</label>
+  <div className="flex items-center justify-start gap-3">
+    <div className="relative border-2 border-white shadow-md rounded-full block w-16 h-16">
+      <video
+        src={shortReelPreview.url}
+        className="h-full w-full rounded-full object-cover cursor-pointer"
+        onClick={handleVideoClick}
+      />
+    </div>
+  </div>
+</div>
+
+{isVideoOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div className="relative bg-white p-6 rounded-lg max-w-3xl w-full">
+      <video
+        src={shortReelPreview?.url}
+        className="w-full h-auto rounded-md"
+        controls
+        autoPlay
+        ref={videoRef}
+      />
+      {/* Edit Icon */}
+      <button
+        className="absolute top-4 right-20 p-1 rounded-full text-white text-xl  bg-black bg-opacity-50 hover:text-gray"
+        onClick={(e) => {
+          e.preventDefault(); // Prevent default form submission behavior
+          document.getElementById("videoUpload").click();
+        }}      >
+        <FaEdit className="w-6 h-6" />
+      </button>
+      {/* Close Button */}
+      <button
+        className="absolute top-4 right-5 p-1 text-white text-xl bg-black bg-opacity-50 rounded-full hover:bg-red-600"
+        onClick={handleCloseVideo}
+      >
+        <FaTimes className="w-6 h-6" />
+      </button>
+    </div>
+  </div>
+)}
               <div className="mb-4">
                 <label className="block font-bold text-fuchsia-950">
                   <Link to={"/dashboard/@me/changepass"}>Change Password</Link>
@@ -497,7 +572,29 @@ const EditProfile = () => {
                   Update
                 </button>
               </div>
-            </form>
+              {isImageModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+            <div className="relative">
+              <img
+                src={selectedImage}
+                alt="Selected"
+                className="max-w-full max-h-screen object-contain"
+              />
+                <button
+        className="absolute top-0 left-0 text-white text-base bg-black bg-opacity-50 p-1 rounded-full"
+ onClick={(event) => handleDeleteImage(selectedImage, event)}      >
+        <FaTrash />
+      </button>
+      <button
+  className="absolute top-0 right-0 text-white text-base px-2 bg-black bg-opacity-50 rounded-full"
+  onClick={handleCloseImageModal}
+>
+  &times;
+</button>
+            </div>
+          </div>
+        )}
+            </form> 
           </div>
         </div>
       </div>
