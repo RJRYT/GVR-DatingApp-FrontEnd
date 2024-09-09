@@ -225,7 +225,7 @@ const MessageList = ({ messages }) =>
       ))}
     </div>
   ) : (
-    <p className="p-6 text-center flex items-center justify-center text-xl text-gray-700">
+    <p className="my-16 p-10 text-center flex items-center justify-center text-xl text-gray-700">
       Nothing to show
     </p>
   );

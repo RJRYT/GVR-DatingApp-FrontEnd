@@ -15,8 +15,8 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
     { label: "Shortlisted By", path: "/dashboard/users/shortlisted-by" },
     { label: "Shortlisted", path: "/dashboard/users/shortlist" },
     { label: "Contacted", path: "/dashboard/users/contacted" },
-    { label: "Message", path: "/dashboard/@me/messages" },
-    { label: "Settings", path: "/dashboard/@me/profile" },
+    { label: "Message", path: "/dashboard/messages" },
+    { label: "Settings", path: "/dashboard/settings" },
   ];
 
   const handleItemClick = (item) => {

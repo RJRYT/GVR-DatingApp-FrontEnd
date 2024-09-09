@@ -120,7 +120,7 @@ const PrivacySettings = () => {
           <div className="flex px-6 py-2 border-b">
             <label className="font-medium">Password</label>
             <Link
-              to="/dashboard/userprofile/changePassword"
+              to="/dashboard/profile/changepass"
               className="flex-1 text-right"
             >
               <p className="text-blue-600 font-bold"> Change Password</p>

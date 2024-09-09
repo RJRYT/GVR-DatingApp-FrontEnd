@@ -28,7 +28,7 @@ const ProfileGrid = ({ activeTab }) => {
           </Link>
         ))
       ) : (
-        <p>No profiles found</p>
+        <p className="flex items-center justify-center px-5 py-16 text-lg">No profiles found</p>
       )}
     </div>
   );

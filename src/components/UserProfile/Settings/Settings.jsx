@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   FaSearch,
   FaQrcode,
@@ -10,15 +10,17 @@ import {
   FaUserPlus,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Profile from "../../../assets/profile/profilePic.png";
 import Navbar from "../../Dashboard/Navbar";
+import { AuthContext } from "../../../contexts/AuthContext";
+import Loading from "../../Loading";
+import AccessDenied from "../../AccessDenied";
 
 const settingsOptions = [
   {
     icon: <FaUser />,
     label: "Account",
     description: "Privacy, security, change number",
-    path: "/dashboard/@me/privacy",
+    path: "/dashboard/settings/privacy",
   },
   {
     icon: <FaComments />,
@@ -51,11 +53,14 @@ const settingsOptions = [
     path: "/dashboard/userProfile/settings/invite",
   },
 ];
-const users = [
-  { name: "Nazrul Islam", src: Profile, description: "Never give up 💪" },
-];    
 
 const ProfileSettings = () => {
+  const { authState, loading } = useContext(AuthContext);
+
+  if (loading) return <Loading />;
+
+  if (!loading && !authState.isAuthenticated) return <AccessDenied />;
+
   return (
     <>
       <div className="items-center justify-center min-h-screen bg-fuchsia-950">
@@ -71,29 +76,27 @@ const ProfileSettings = () => {
           <div className="w-full flex justify-center mb-1">
             <div className="w-5 rounded-full md:w-10 lg:w-16 h-1 bg-gray-200 border-2"></div>
           </div>
-          {users.map((user) => (
             <Link
-              to={"/dashboard/@me"}
+              to={"/dashboard/profile"}
               className="flex items-center border-b-2 border-b-slate-200 pb-4"
             >
               <div className="w-16 h-16 rounded-full overflow-hidden">
                 <img
-                  src={user.src}
-                  alt=""
+                  src={authState.user.profilePic.url || ""}
+                  alt={authState.user.username || ""}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="flex-1 ml-6">
                 <h3 className="text-black flex-1 font-bold text-lg">
-                  {user.name}
+                  {authState.user.username || ""}
                 </h3>
-                <p className="text-sm">{user.description}</p>
+                <p className="text-sm">{authState.user.about || ""}</p>
               </div>
               <div>
                 <FaQrcode className="text-teal-500 text-xl" />
               </div>
             </Link>
-          ))}
 
           <div className="pb-24">
             {settingsOptions.map((option, index) => (
