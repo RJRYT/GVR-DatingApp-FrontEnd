@@ -104,14 +104,11 @@ function Login() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
-    const check2faEnabled = Cookies.get("accessToken");
-    
-
-    console.log("cookies",check2faEnabled)
-    if (token) {
+    if (token  ) {
+console.log(Cookies.get())
       checkAuthStatus();
       checkRegistrationStatus();
-      navigate( (check2faEnabled==="true")? "/login/2fa":"/login");
+      navigate( (Cookies.get("2fa")==="true")? "/login/2fa":"/login");
     }
   }, []);
 
