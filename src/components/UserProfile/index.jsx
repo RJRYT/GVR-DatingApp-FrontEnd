@@ -27,7 +27,7 @@ const UserProfile = ({ upgrade = false }) => {
         } else {
           const response = await axios.get(`/users/profile/${userId}`);
           if (response.data.success) {
-            setUser(response.data.user);
+            setUser({...response.data.user, chatId:response.data.chat});
           }
         }
       } catch (error) {
