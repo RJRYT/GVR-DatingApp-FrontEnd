@@ -1,15 +1,27 @@
 import React from "react";
+import { useLocation ,useNavigate} from "react-router-dom";
 import Upgrade from "../Components/UpgradeOverlay";
 
 const ViewStory = ({ upgrade = false }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const videoSrc = queryParams.get('video') || 'https://i.postimg.cc/tC6NTnq0/medium-shot-man-indoors-23-2151038808.avif'; // Default video if no query parameter
+  const username=queryParams.get('username')
+  const profilePic=queryParams.get('profilePic')
+  const handleClose = () => {
+    navigate(-1);
+  };
   return (
     <>
       {upgrade && <Upgrade />}
       <div className="bg-white h-screen flex items-center justify-center p-4">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-lg relative">
           <div className="relative">
-            <img
-              src="https://i.postimg.cc/tC6NTnq0/medium-shot-man-indoors-23-2151038808.avif" // replace with actual image URL
+            <video
+              src={videoSrc} // replace with actual image URL
+              control
+              autoPlay
               alt="Story"
               className="w-full h-auto object-cover"
             />
@@ -34,7 +46,7 @@ const ViewStory = ({ upgrade = false }) => {
               </button>
               <div className="relative">
                 <img
-                  src="https://i.postimg.cc/tC6NTnq0/medium-shot-man-indoors-23-2151038808.avif" // replace with profile picture URL
+                  src={profilePic} // replace with profile picture URL
                   alt="Profile"
                   className="w-14 h-14 rounded-full border-2 border-pink-400 object-cover"
                 />
@@ -42,7 +54,7 @@ const ViewStory = ({ upgrade = false }) => {
               </div>
               <div className="ml-2">
                 <p className="text-white text-lg font-semibold">
-                  Stone Stellar
+                  {username}
                 </p>
                 <p className="text-green-500">Online</p>
               </div>
@@ -70,7 +82,7 @@ const ViewStory = ({ upgrade = false }) => {
                 </svg>
               </button>
 
-              <button className="bg-red-600 text-white w-12 h-10 rounded-full flex items-center justify-center ml-2">
+              <button className="bg-red-600 text-white w-12 h-10 rounded-full flex items-center justify-center ml-2" onClick={handleClose}>
                 <svg
                   className="h-6 w-6 text-white"
                   fill="none"
