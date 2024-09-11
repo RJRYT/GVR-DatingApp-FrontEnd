@@ -125,7 +125,7 @@ function PrefrenencesSettings() {
               <Slider
                 min={18}
                 max={35}
-                value={[preferences.AgeRange.min || 18, preferences.AgeRange.max || 35]}
+                value={[preferences.AgeRange?.min || 18, preferences.AgeRange?.max || 35]}
                 onChange={(selectedOption) => handleSliderChange(selectedOption, 'AgeRange')}
               />
             </div>
@@ -198,7 +198,7 @@ function PrefrenencesSettings() {
               <Slider
                 min={100}
                 max={220}
-                value={[preferences.HeightRange.min || 100, preferences.HeightRange.max || 220]}
+                value={[preferences.HeightRange?.min || 100, preferences.HeightRange?.max || 220]}
                 onChange={(value) => handleSliderChange(value, 'HeightRange')}
               />
             </div>
@@ -212,7 +212,7 @@ function PrefrenencesSettings() {
               <Slider
                 min={40}
                 max={150}
-                value={[preferences.WeightRange.min || 40, preferences.WeightRange.max || 150]}
+                value={[preferences.WeightRange?.min || 40, preferences.WeightRange?.max || 150]}
                 onChange={(value) => handleSliderChange(value, 'WeightRange')}
               />
             </div>

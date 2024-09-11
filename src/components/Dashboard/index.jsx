@@ -10,8 +10,8 @@ import ProfileSidebar from "./Header/ProfileSidebar";
 import apiInstance from "../../Instance/Axios";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useSocket } from "../../contexts/SocketContext";
-import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../Loading/LoadingOverlay";
+import { toast } from "react-toastify";
 
 function HomePage() {
   const {authState} = useContext(AuthContext);
@@ -25,7 +25,6 @@ function HomePage() {
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("nearby");
-  const navigate = useNavigate();
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -40,6 +39,7 @@ function HomePage() {
   useEffect(()=>{
     if(!socket) return;
     socket.on("newNotification", (notification) => {
+      toast.success(notification.message);
       setNotifications((prev) => [...prev, notification]);
     });
 
@@ -77,6 +77,16 @@ function HomePage() {
       })
       .catch(err => console.error("API Error:", err))
       .finally(()=>setLoading(false));
+
+      if(notifications.length){
+        let count = 0;
+        notifications.forEach(notification => {
+          if(!notification.read) count ++;
+        });
+        if(count){
+          toast.success(`You have ${count}+ unreaded notifications`);
+        }
+      }
   }, []);
 
   return (

@@ -13,23 +13,27 @@ const Header = ({ user, typing }) => {
       >
         <FaArrowLeft className="text-xl" />
       </Link>
-      <div className="flex gap-2 items-center text-white text-xl font-medium aldrich-regular text-center">
-        {user && user.isOnline ? (
-          <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-        ) : (
-          ""
-        )}
-        <h3>
-          {user ? user.username : ""}
-        </h3>
-        {user && !user.isOnline ? (
-          <p className="text-xs">
-            Last active: <LastActiveTimeStamp timestamp={user.lastActive} />
-          </p>
-        ) : (
-          ""
-        )}
-        {user && typing ? <p className="text-xs">Typing...</p> : ""}
+      <div className="flex flex-col gap-2 items-center text-white text-xl font-medium aldrich-regular text-center">
+        <div>
+          {user && user.isOnline ? (
+            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+          ) : (
+            ""
+          )}
+          <h3>
+            <Link to={`/dashboard/profile/${user?.id}`}>{user ? user.username : ""}</Link>
+          </h3>
+        </div>
+        <div>
+          {user && !user.isOnline ? (
+            <p className="text-xs">
+              Last active: <LastActiveTimeStamp timestamp={user.lastActive} />
+            </p>
+          ) : (
+            ""
+          )}
+          {user && typing ? <p className="text-xs">Typing...</p> : ""}
+        </div>
       </div>
       <IoCallOutline className="h-6 w-6 text-yellow-400" />
     </div>

@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import Notification from "./Notification";
 import apiInstance from "../../../Instance/Axios";
+import { AiOutlineClose } from "react-icons/ai";
 
 const NotificationsContainer = ({ toggleNotificationModal, notifications }) => {
   const handleClose = async (notification) => {
     await apiInstance.post("/users/notification/delete", {
       notificationId: notification._id,
-    }).catch(err=>{console.log(err)});
+    }).catch(err => { console.log(err) });
   };
 
   const handleClick = async (notification) => {
     await apiInstance.post("/users/notification/markread", {
       notificationId: notification._id,
-    }).catch(err=>{console.log(err)});
+    }).catch(err => { console.log(err) });
   };
 
   useEffect(() => {
@@ -24,6 +25,9 @@ const NotificationsContainer = ({ toggleNotificationModal, notifications }) => {
   return (
     <>
       <div className="absolute z-20 top-[20px] p-6 rounded-lg text-white max-w-full w-full h-dvh hide-scrollbar overflow-x-auto">
+        <button onClick={toggleNotificationModal} className="absolute top-4 right-4 text-lg text-gray-800">
+          <AiOutlineClose />
+        </button>
         {notifications.map((notification) => (
           <Notification
             key={notification._id}

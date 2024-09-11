@@ -19,10 +19,10 @@ const MatchCard = ({ match }) => {
             </div>
           </div>
         </div>
-        <div className="text-white font-bold text-md">
-          {match.username}, {match.age}
+        <div className="flex font-bold gap-1 items-center justify-center text-md text-white">
+          {match.username}, {match.age} {match.isOnline && <span className="h-2 w-2 bg-green-500 rounded-full"></span>}
         </div>
-        <div className="text-white text-[10px] tracking-widest">{match?.locaton?.shortName || ""}</div>
+        <div className="text-center text-sm uppercase tracking-widest text-gray-300">{match.location?.shortName || ""}</div>
       </div>
     </div>
   );

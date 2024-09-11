@@ -196,11 +196,13 @@ const MessageList = ({ messages }) =>
           className="flex items-center border-b border-gray-100 py-6"
         >
           <div className="flex-none w-16 h-16 rounded-full overflow-hidden">
-            <img
-              src={message.user.profilePic.url}
-              alt={message.user.username}
-              className="w-full h-full object-cover"
-            />
+            <Link to={`/dashboard/profile/${message.user._id}`}>
+              <img
+                src={message.user.profilePic.url}
+                alt={message.user.username}
+                className="w-full h-full object-cover"
+              />
+            </Link>
           </div>
           <div className="ml-4 flex-1">
             <div className="flex justify-between items-center">
