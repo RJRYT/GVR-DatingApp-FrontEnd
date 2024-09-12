@@ -167,7 +167,7 @@ const ChatBox = () => {
       <div className="flex flex-col h-dvh">
       <div className="bg-fuchsia-950 min-h-screen flex flex-col">
         <Header user={user} typing={isUserTyping} />
-        {!loadingChats ? <LoadingChatArea /> : <ChatArea messages={messages} user={user} />}
+        {loadingChats ? <LoadingChatArea /> : <ChatArea messages={messages} user={user} />}
       </div>
         <Footer
           content={content}
