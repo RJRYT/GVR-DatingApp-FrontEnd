@@ -2,14 +2,13 @@ import React, { useState, useContext, useEffect, useCallback, useRef } from "rea
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { useSocket } from "../../../../contexts/SocketContext";
 import Loading from "../../../Loading";
-import LoadingOverlay from "../../../Loading/LoadingOverlay";
 import AccessDenied from "../../../AccessDenied";
 import axios from "../../../../Instance/Axios";
 import Header from "./Header";
 import ChatArea from "./ChatArea";
 import Footer from "./Footer";
+import LoadingChatArea from "./LoadingChatArea";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const ChatBox = () => {
   const { chatId } = useParams();
@@ -18,7 +17,7 @@ const ChatBox = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isUserTyping, setUserIsTyping] = useState(false);
   const [content, setContent] = useState("");
-  const [loadingOverlay, setLoadingOverlay] = useState(false);
+  const [loadingChats, setLoadingChats] = useState(true);
   const { authState, loading } = useContext(AuthContext);
   const socket = useSocket();
   const typingTimeoutRef = useRef(null);
@@ -26,6 +25,7 @@ const ChatBox = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
+        setLoadingChats(true);
         const response = await axios.get(`/chats/messages/private/${chatId}`);
         if (response.data.success) {
           const messagingUser =
@@ -39,7 +39,7 @@ const ChatBox = () => {
       } catch (error) {
         console.error("Error fetching user chats", error);
       } finally {
-        setLoadingOverlay(false);
+        setLoadingChats(false);
       }
     };
     if (!loading && authState.isAuthenticated && socket) fetchUserProfile();
@@ -103,7 +103,7 @@ const ChatBox = () => {
         clearTimeout(typingTimeoutRef.current);
       }
     };
-  }, [socket, isUserTyping]);
+  }, [socket, user]);
 
   useEffect(() => {
     const markMessagesARead = async () => {
@@ -149,7 +149,7 @@ const ChatBox = () => {
       typingTimeoutRef.current = setTimeout(() => {
         setIsTyping(false);
         socket.emit("stopTyping", { chatId });
-      }, 5000)
+      }, 3000)
     } else {
       socket.emit("stopTyping", { chatId });
       setIsTyping(false);
@@ -164,12 +164,10 @@ const ChatBox = () => {
   if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
-    <>
-      {loadingOverlay && <LoadingOverlay />}
       <div className="flex flex-col h-dvh">
       <div className="bg-fuchsia-950 min-h-screen flex flex-col">
         <Header user={user} typing={isUserTyping} />
-        <ChatArea messages={messages} user={user} />
+        {!loadingChats ? <LoadingChatArea /> : <ChatArea messages={messages} user={user} />}
       </div>
         <Footer
           content={content}
@@ -177,7 +175,6 @@ const ChatBox = () => {
           onSend={handleSendMessage}
         />
       </div>
-    </>
   );
 };
 
