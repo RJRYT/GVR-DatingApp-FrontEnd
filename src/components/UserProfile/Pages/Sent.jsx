@@ -8,6 +8,7 @@ import Loading from "../../Loading";
 import AccessDenied from "../../AccessDenied";
 import axios from "../../../Instance/Axios";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Sent = () => {
   // State to hold the users
@@ -15,7 +16,7 @@ const Sent = () => {
   const { authState, loading } = useContext(AuthContext);
   const [loadingOverlay, setLoadingOverlay] = useState(true);
 
-  const HandleCancelClick = async(request) =>{
+  const HandleCancelClick = async (request) => {
     setLoadingOverlay(true);
     try {
       const response = await axios.put(`/users/friends/request/${request._id}/cancel`);
@@ -23,13 +24,13 @@ const Sent = () => {
         toast.success("Request cancelled");
         setUsers([]);
         fetchSendRequests();
-      }else{
+      } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
       toast.error("Failed to update");
-    }finally{
+    } finally {
       setLoadingOverlay(false);
     }
   };
@@ -104,25 +105,24 @@ const Sent = () => {
                   </h2>
                   <ul className="list-none p-0 mb-1">
                     {users[letter].map((user) => (
-                      <li
-                        key={user.id}
-                        className="flex items-center relative mb-4"
-                      >
-                        <img
-                          src={user.recipient.profilePic.url}
-                          alt={user.recipient.username}
-                          className="w-14 h-14 rounded-full object-cover mr-4"
-                        />
+                      <li key={user.recipient._id} className="flex items-center relative mb-4 hover:bg-gray-200 hover:bg-opacity-50" >
+                        <Link to={`/dashboard/profile/${user.recipient._id}`}>
+                          <img
+                            src={user.recipient.profilePic.url}
+                            alt={user.recipient.username}
+                            className="w-14 h-14 rounded-full object-cover mr-4"
+                          />
+                        </Link>
                         <div className="flex-grow">
                           <span className="text-lg font-semibold">
                             {user.recipient.username}
                           </span>
                           <p className="text-sm text-gray-600 mt-1 chakra-petch-light">
-                            ...
+                            {user.recipient.about || ""}
                           </p>
                         </div>
                         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex space-x-2">
-                          <RiCloseLine onClick={()=>{HandleCancelClick(user)}} className="cursor-pointer h-10 text-gray-500 w-20" />
+                          <RiCloseLine onClick={() => { HandleCancelClick(user) }} className="cursor-pointer h-10 text-gray-500 w-20" />
                         </div>
                       </li>
                     ))}

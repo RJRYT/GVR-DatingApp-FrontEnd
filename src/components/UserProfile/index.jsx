@@ -27,7 +27,7 @@ const UserProfile = ({ upgrade = false }) => {
         } else {
           const response = await axios.get(`/users/profile/${userId}`);
           if (response.data.success) {
-            setUser(response.data.user);
+            setUser({...response.data.user, chatId:response.data.chat});
           }
         }
       } catch (error) {
@@ -162,7 +162,7 @@ const UserProfile = ({ upgrade = false }) => {
                 ></path>
               </svg>
 
-              <span className="text-gray-300 text-sm">2.5km</span>
+              <span className="text-gray-300 text-sm">{user?.distance || 0}km</span>
             </div>
           )}
 
@@ -176,7 +176,7 @@ const UserProfile = ({ upgrade = false }) => {
             {userId === "@me" ? (
               <MatchButton progress={75} text="Profile Complete" />
             ) : (
-              <MatchButton />
+              <MatchButton progress={user?.matchPercentage || 0}/>
             )}
           </div>
           {/* Combined Vertical Lines */}

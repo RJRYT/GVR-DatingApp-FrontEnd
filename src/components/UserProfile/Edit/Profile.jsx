@@ -1,8 +1,8 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axiosInstance from "../../../Instance/Axios";
-import { FaArrowLeft ,  FaEdit , FaTimes , FaTrash } from "react-icons/fa";
+import { FaArrowLeft, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../../Loading";
 import LoadingOverlay from "../../Loading/LoadingOverlay";
@@ -11,98 +11,111 @@ import AccessDenied from "../../AccessDenied";
 const EditProfile = () => {
   const { authState, loading } = useContext(AuthContext);
   const [loadingOverlay, setLoadingOverlay] = useState(false);
-  const [errors, setErrors] = useState({});
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [isProfilePicChanged, setIsProfilePicChanged] = useState(false);
-  const [isImagesChanged, setIsImagesChanged] = useState(false); 
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null); 
-
-  const [formData, setFormData] = useState({
-    firstName: authState?.user?.firstName || "",
-    lastName: authState?.user?.lastName || "",
-    username: authState?.user?.username || "",
-    email: authState?.user?.email || "",
-    phoneNumber: authState?.user?.phoneNumber || "",
-    about: authState.user?.about || "",
-    currentProfilePic: authState?.user?.profilePic?.url || "",
-    otp: ""
-  });
-  const [profilePic, setProfilePic] = useState({
-    file: null,
-    url: authState?.user?.profilePic?.url || "",
-  });
-  const [imagePreviews, setImagePreviews] = useState(
-    authState?.user?.images || []
-  );
-  const [shortReelPreview, setShortReelPreview] = useState(
-    authState?.user?.shortReel || ""
-  );
+  const [selectedImage, setSelectedImage] = useState(null);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
-
+  const [numVerified, setNumVerified] = useState(false);
   const videoRef = useRef(null);
 
-const handleProfilePicChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    // Check if the selected file is different from the previously fetched profilePic
-    const isChanged = file.name !== profilePic.file?.name || file.size !== profilePic.file?.size;
-    setIsProfilePicChanged(isChanged);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    phoneNumber: "",
+    about: "",
+    profilePic: {
+      url: "",
+      file: null,
+    },
+    images: [{
+      key: "",
+      url: "",
+      file: null,
+    }],
+    reel: {
+      url: "",
+      file: null,
+    },
+    otp: ""
+  });
+  const [phoneNum, setPhoneNum] = useState("");
 
-    setProfilePic({
-      file,
-      url: URL.createObjectURL(file),
-    });
-  }
-};
+  useEffect(() => {
+    if (!loading && authState.isAuthenticated) {
+      const userData = {
+        firstName: authState.user?.firstName || "",
+        lastName: authState.user?.lastName || "",
+        username: authState.user?.username || "",
+        email: authState.user?.email || "",
+        phoneNumber: authState.user?.phoneNumber || "",
+        about: authState.user?.about || "",
+        profilePic: authState.user?.profilePic || { url: "", file: null, },
+        reel: authState.user?.shortReel || { url: "", file: null, },
+        images: authState.user?.images,
+      }
+      setFormData(userData);
+      setPhoneNum(authState.user?.phoneNumber || "");
+    }
+  }, [loading, authState]);
 
-const handleImageChange = (e, index) => {
-  const file = e.target.files[0];
-  if (file) {
-    const newImages = [...imagePreviews];
-    // If file exists, update the corresponding image in imagePreviews
-    newImages[index] = {
-      file, // Add the newly selected file
-      url: URL.createObjectURL(file), // Create a preview URL for the new file
-    };
-    setImagePreviews(newImages);
-    setIsImagesChanged(true); // Mark images as changed
-  }
-};
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileObj = {
+        url: URL.createObjectURL(file),
+        file,
+      };
+      setFormData((prevData) => ({ ...prevData, profilePic: fileObj }));
+    }
+  };
 
-
+  const handleImageChange = (e, index) => {
+    const file = e.target.files[0];
+    if (file) {
+      const newImages = [...formData.images];
+      newImages[index] = {
+        key: newImages[index].key,
+        file,
+        url: URL.createObjectURL(file),
+      };
+      setFormData((prevData) => ({ ...prevData, images: newImages }));
+    }
+  };
 
   const handleReelChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setShortReelPreview({
-        file,
+      const fileObj = {
         url: URL.createObjectURL(file),
-      });
+        file,
+      };
+      setFormData((prevData) => ({ ...prevData, reel: fileObj }));
     }
   };
 
   const handleAddImage = () => {
-    if (imagePreviews.length < 5) {
+    if (formData.images.length < 5) {
       document.getElementById("imageInput").click();
     }
   };
+
   const handleFileInputChange = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = [...imagePreviews];
-  
+    const newImages = [...formData.images];
+
     // Append new images to the existing array
     files.forEach((file) => {
       newImages.push({
-        file, // Include the file for upload
-        url: URL.createObjectURL(file), // Generate a preview for the new image
+        file,
+        key: null,
+        url: URL.createObjectURL(file),
       });
     });
-  
-    setImagePreviews(newImages);
-    setIsImagesChanged(true); // Mark images as changed
-  };  
- 
+    setFormData((prevData) => ({ ...prevData, images: newImages }));
+  };
+
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
     setIsImageModalOpen(true);
@@ -123,7 +136,6 @@ const handleImageChange = (e, index) => {
       videoRef.current.pause();
     }
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -148,15 +160,20 @@ const handleImageChange = (e, index) => {
     });
   };
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
+    if (phoneNum != formData.phoneNumber && !numVerified) {
+      toast.error("Phone number is not verified.");
+      return;
+    }
+    if(formData.images.length > 5) {
+      toast.error("You can only add 5 images to the profile. remove some images to continue.");
+      return;
+    }
     setLoadingOverlay(true);
-    console.log("Updated data:", formData);
     try {
       const updatedData = new FormData();
+      const replacedImg = [];
       updatedData.append("firstName", formData.firstName);
       updatedData.append("lastName", formData.lastName);
       updatedData.append("username", formData.username);
@@ -164,43 +181,37 @@ const handleImageChange = (e, index) => {
       updatedData.append("phoneNumber", formData.phoneNumber);
       updatedData.append("about", formData.about);
 
-     // If profile picture has changed, append the new file, else keep the current profile picture
-     if (isProfilePicChanged && profilePic.file) {
-      updatedData.append("profilePic", profilePic.file);
-    } else {
-      updatedData.append("profilePic", formData.currentProfilePic); // Send current profile pic if unchanged
-    }
-    
-   // Append images (both new and existing)
-imagePreviews.forEach((image, index) => {
-  if (image.file) {
-    updatedData.append("images", image.file); // Append the new image file
-  } else if (image.url) {
-    updatedData.append(`existingImages[${index}]`, image.url); // Append the existing image URL
-  }
-});
-
-
-      if (shortReelPreview.file) {
-        updatedData.append("shortreels", shortReelPreview.file);
+      // If profile picture has changed, append the new file, else keep the current profile picture
+      if (formData.profilePic.file) {
+        updatedData.append("profilepic", formData.profilePic.file);
       }
+
+      if (formData.reel.file) {
+        updatedData.append("shortreels", formData.reel.file);
+      }
+
+      // Append images (both new and existing)
+      formData.images.forEach((image) => {
+        if (image.file) {
+          updatedData.append("images", image.file);
+        }
+        if(image.file && image.key){
+          replacedImg.push(image.key);
+        }
+      });
+      updatedData.append("replacedImages", replacedImg);
 
       const response = await axiosInstance.put("/users/update/profile", updatedData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("Response:", response.data);
-      console.log([...updatedData]); // To inspect the form data
       if (response.data.success) {
         toast.success("Profile updated successfully!");
-         // Update profile picture on the frontend
-      if (response.data.updatedProfilePic) {
-        setProfilePic({
-          ...profilePic,
-          url: response.data.updatedProfilePic, // assuming the new profile picture URL is returned
-          file: null, // reset the file if needed
-        });
-      }
-    
+        setFormData((prevData) => ({
+          ...prevData,
+          reel: response.data.reel,
+          profilePic: response.data.profilePic,
+          images: response.data.images,
+        }));
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -211,16 +222,12 @@ imagePreviews.forEach((image, index) => {
   };
 
   const handleSendOtp = async (e) => {
-    const newErrors = {};
     e.preventDefault();
     if (!formData.phoneNumber) {
-      newErrors.phoneNumber = "Phone number is required";
-      setErrors(newErrors);
+      toast.error("Phone number is required");
     } else if (!/^[0-9]{10}$/.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = "Phone number must be 10 digits long";
-      setErrors(newErrors);
+      toast.error("Phone number must be 10 digits long");
     } else {
-      setErrors({});
       try {
         console.log("Sending OTP to:", formData.phoneNumber);
         const res = await axiosInstance.post("/auth/number/sendotp", {
@@ -250,20 +257,22 @@ imagePreviews.forEach((image, index) => {
       otp: "",
     }));
   };
+
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     if (!formData.otp) {
-      setErrors({ otp: "OTP is required" });
+      toast.error("OTP is required");
       return;
     }
     try {
       const res = await axiosInstance.post("/auth/number/verifyotp", {
-        userId: authState.user.id,
         phoneNumber: formData.phoneNumber,
         otp: formData.otp,
+        userId: authState.user?.id,
       });
       if (res.data.success) {
         toast.success(res.data.message);
+        setNumVerified(true);
       } else {
         toast.error(res.data.message || "Verification failed. Please try again.");
       }
@@ -272,20 +281,32 @@ imagePreviews.forEach((image, index) => {
       toast.error(err.response?.data?.message || "Something went wrong. Try again later.");
     }
   };
-  
+
   const handleDeleteImage = async (imageUrl) => {
     try {
+      const deletedImg = formData.images.find((image) => image.url === imageUrl);
+      if (!deletedImg) {
+        handleCloseImageModal();
+        return;
+      }
+      if (deletedImg.file) {
+        const updatedImages = formData.images.filter((image) => image.url !== imageUrl);
+        setFormData((prevData) => ({ ...prevData, images: updatedImages }));
+        handleCloseImageModal();
+        toast.success("Image Deleted");
+        return;
+      }
       setLoadingOverlay(true);
       // Send DELETE request to backend
       const response = await axiosInstance.delete(`/users/delete-image`, {
-        data: { imageUrl }, // Send image URL to backend
+        data: {imageUrl: deletedImg.url}, // Send image URL to backend
       });
 
       if (response.data.success) {
         // Remove image from the frontend
-        const updatedImages = imagePreviews.filter((image) => image.url !== imageUrl);
-        setImagePreviews(updatedImages);
-        setSelectedImage(null);
+        const updatedImages = formData.images.filter((image) => image.url !== imageUrl);
+        setFormData((prevData) => ({ ...prevData, images: updatedImages }));
+        handleCloseImageModal();
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -296,7 +317,21 @@ imagePreviews.forEach((image, index) => {
     }
   };
 
-  
+  const handleSelectedImageChange = async (imageUrl) => {
+    handleCloseImageModal();
+    if (imageUrl === formData.profilePic.url) {
+      document.getElementById("profilePicInput").click();
+    } else {
+      formData.images.map((image, index) => {
+        if (image.url === imageUrl) {
+          const imageInputTagId = `imageInput-${index}`;
+          document.getElementById(imageInputTagId).click();
+          return;
+        }
+      });
+    }
+  };
+
   if (loading) return <Loading />;
 
   if (!loading && !authState.isAuthenticated) return <AccessDenied />;
@@ -321,9 +356,10 @@ imagePreviews.forEach((image, index) => {
             <div className="flex items-center">
               <div className="w-16 h-16 rounded-full overflow-hidden">
                 <img
-                  src={profilePic.url}
+                  src={formData.profilePic.url}
                   alt="Profile"
                   className="w-full h-full object-cover"
+                  onClick={() => handleImageClick(formData.profilePic.url)}
                 />
                 <div
                   onClick={() =>
@@ -332,7 +368,7 @@ imagePreviews.forEach((image, index) => {
                   className="absolute transform translate-x-6 -translate-y-4 bg-gray-500 p-1 h-4 w-4 rounded-full border cursor-pointer"
                 >
                   <svg
-                    class="text-white"
+                    className="text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -355,7 +391,7 @@ imagePreviews.forEach((image, index) => {
               </div>
               <div className="flex-1 ml-6">
                 <h3 className="text-black flex-1 font-bold text-lg">
-                  {authState?.user?.username}
+                  {formData.username}
                 </h3>
                 <p className="text-sm text-slate-500">{formData.about}</p>
               </div>
@@ -382,17 +418,19 @@ imagePreviews.forEach((image, index) => {
                 <input
                   name='username'
                   type="text"
-                  readOnly
+                  readOnly={authState.user?.username !== ""}
                   value={formData.username}
-                  className="w-full px-3  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700"
+                  onChange={handleChange}
+                  className="w-full px-3 border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700"
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Email</label>
                 <input
                   type="email"
+                  readOnly
                   value={formData.email}
-                  className="w-full px-3  border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700 readOnly aria-readonly  disabled=true" />
+                  className="w-full px-3 border-b-2 border-fuchsia-800 focus:outline-none focus:border-purple-700 readOnly aria-readonly disabled=true" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Phone Number</label>
@@ -401,50 +439,44 @@ imagePreviews.forEach((image, index) => {
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className="w-full px-3 py- border-b-2 border-fuchsia-800 focus:outline-none "
+                  className="w-full px-3 py- border-b-2 border-fuchsia-800 focus:outline-none"
                 />
               </div>
-              {formData.phoneNumber.length === 10 && (
+              {(formData.phoneNumber?.length === 10 && phoneNum != formData.phoneNumber) && (
                 <div>
-              <div className="flex justify-start items-center gap-2 mt-5">
-            <button onClick={handleSendOtp} disabled={isOtpSent} className="text-sm text-gray-600 hover:underline">Generate OTP</button>
-            <br/>
-            {isOtpSent && (<button onClick={ResentOTP} className="text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="23 4 23 10 17 10"></polyline>
-                <polyline points="1 20 1 14 7 14"></polyline>
-                <path d="M3.51 9a9 9 0 0 1 14.88-3.36L23 10M1 14l5.64 5.64A9 9 0 0 0 20.49 15"></path>
-              </svg>
-            </button>)}
-            {isOtpSent && (<span className="text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V13a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </span>)}
-          </div>
-          <div className="mb-4 relative">
-          {/* OTP Input Field */}
-           <input
-              type="number"
-              name="otp"
-              value={formData.otp}
-              onChange={handleChange}
-              placeholder={!isOtpSent ? "Enter OTP" : "OTP sent to given number"}
-              autoComplete="one-time-code"
-              className={`w-full px-3 py-2 border-b-2 ${
-              errors.otp ? "border-red-600 focus:border-red-600" : "border-fuchsia-800 focus:border-fuchsia-800"
-               } focus:outline-none`}
-            />
-  
-            {errors.otp && (
-            <span className="text-red-600 text-xs">{errors.otp}</span>
-            )}
-            {formData.otp.length === 6 && (
-             <button onClick={handleVerifyOtp} className="text-sm text-gray-600 hover:underline mt-2">Verify</button>
-            )}
-           </div>
-          </div>
+                  <div className="flex justify-start items-center gap-2 mt-5">
+                    <button onClick={handleSendOtp} disabled={isOtpSent} className="text-sm text-gray-600 hover:underline">Generate OTP</button>
+                    <br />
+                    {isOtpSent && (<button onClick={ResentOTP} className="text-sm text-gray-600">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.88-3.36L23 10M1 14l5.64 5.64A9 9 0 0 0 20.49 15"></path>
+                      </svg>
+                    </button>)}
+                    {isOtpSent && (<span className="text-sm text-gray-600">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V13a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                    </span>)}
+                  </div>
+                  <div className="mb-4 relative">
+                    {/* OTP Input Field */}
+                    <input
+                      type="text"
+                      name="otp"
+                      value={formData.otp}
+                      onChange={handleChange}
+                      placeholder={!isOtpSent ? "Enter OTP" : "OTP sent to given number"}
+                      autoComplete="one-time-code"
+                      className={`w-full px-3 py-2 border-b-2 border-fuchsia-800 focus:border-fuchsia-800 focus:outline-none`}
+                    />
+                    {formData.otp?.length === 6 && (
+                      <button onClick={handleVerifyOtp} className="text-sm text-gray-600 hover:underline mt-2">Verify</button>
+                    )} 
+                  </div>
+                </div>
               )}
 
               <div className="mb-4">
@@ -459,7 +491,7 @@ imagePreviews.forEach((image, index) => {
               <div className="mb-4">
                 <label className="block text-gray-700">Images</label>
                 <div className="flex items-center justify-start gap-3">
-                  {imagePreviews.map((image, index) => (
+                  {formData.images.map((image, index) => (
                     <div
                       key={index}
                       className="relative border-2 border-white shadow-md rounded-full block w-16 h-16"
@@ -469,7 +501,7 @@ imagePreviews.forEach((image, index) => {
                           src={image.url}
                           alt={`Preview ${index + 1}`}
                           className="h-full w-full rounded-full object-cover cursor-pointer"
-                          onClick={() => handleImageClick(image.url)}                        />
+                          onClick={() => handleImageClick(image.url)} />
                       )}
                       <input
                         type="file"
@@ -484,7 +516,7 @@ imagePreviews.forEach((image, index) => {
                     type="button" // Ensure this button does not submit the form
                     className="text-purple-500 text-xl font-semibold"
                     onClick={handleAddImage}
-                    disabled={imagePreviews.length >= 5}
+                    disabled={formData.images.length >= 5}
                   >
                     <svg
                       className="h-12 w-12 text-black"
@@ -511,54 +543,24 @@ imagePreviews.forEach((image, index) => {
                 </div>
               </div>
               <div className="mb-4">
-  <input
-    type="file"
-    id="videoUpload"
-    accept="video/mp4,video/webm"
-    hidden
-    onChange={handleReelChange}
-  />
-  <label className="block text-gray-700">Reels</label>
-  <div className="flex items-center justify-start gap-3">
-    <div className="relative border-2 border-white shadow-md rounded-full block w-16 h-16">
-      <video
-        src={shortReelPreview.url}
-        className="h-full w-full rounded-full object-cover cursor-pointer"
-        onClick={handleVideoClick}
-      />
-    </div>
-  </div>
-</div>
-
-{isVideoOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-    <div className="relative bg-white p-6 rounded-lg max-w-3xl w-full">
-      <video
-        src={shortReelPreview?.url}
-        className="w-full h-auto rounded-md"
-        controls
-        autoPlay
-        ref={videoRef}
-      />
-      {/* Edit Icon */}
-      <button
-        className="absolute top-4 right-20 p-1 rounded-full text-white text-xl  bg-black bg-opacity-50 hover:text-gray"
-        onClick={(e) => {
-          e.preventDefault(); // Prevent default form submission behavior
-          document.getElementById("videoUpload").click();
-        }}      >
-        <FaEdit className="w-6 h-6" />
-      </button>
-      {/* Close Button */}
-      <button
-        className="absolute top-4 right-5 p-1 text-white text-xl bg-black bg-opacity-50 rounded-full hover:bg-red-600"
-        onClick={handleCloseVideo}
-      >
-        <FaTimes className="w-6 h-6" />
-      </button>
-    </div>
-  </div>
-)}
+                <input
+                  type="file"
+                  id="videoUpload"
+                  accept="video/mp4,video/webm"
+                  hidden
+                  onChange={handleReelChange}
+                />
+                <label className="block text-gray-700">Reels</label>
+                <div className="flex items-center justify-start gap-3">
+                  <div className="relative border-2 border-white shadow-md rounded-full block w-16 h-16">
+                    <video
+                      src={formData.reel.url}
+                      className="h-full w-full rounded-full object-cover cursor-pointer"
+                      onClick={handleVideoClick}
+                    />
+                  </div>
+                </div>
+              </div>
               <div className="mb-4">
                 <label className="block font-bold text-fuchsia-950">
                   <Link to={"/dashboard/profile/changepass"}>Change Password</Link>
@@ -572,29 +574,63 @@ imagePreviews.forEach((image, index) => {
                   Update
                 </button>
               </div>
-              {isImageModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-            <div className="relative">
-              <img
-                src={selectedImage}
-                alt="Selected"
-                className="max-w-full max-h-screen object-contain"
-              />
-                <button
-        className="absolute top-0 left-0 text-white text-base bg-black bg-opacity-50 p-1 rounded-full"
- onClick={(event) => handleDeleteImage(selectedImage, event)}      >
-        <FaTrash />
-      </button>
-      <button
-  className="absolute top-0 right-0 text-white text-base px-2 bg-black bg-opacity-50 rounded-full"
-  onClick={handleCloseImageModal}
->
-  &times;
-</button>
-            </div>
-          </div>
-        )}
-            </form> 
+            </form>
+            {isVideoOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+                <div className="relative bg-white p-6 rounded-lg max-w-3xl w-full">
+                  <video
+                    src={formData.reel.url}
+                    className="w-full h-auto rounded-md"
+                    controls
+                    autoPlay
+                    ref={videoRef}
+                  />
+                  {/* Edit Icon */}
+                  <button
+                    className="absolute top-4 right-20 p-1 rounded-full text-white text-xl  bg-black bg-opacity-50 hover:text-gray"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById("videoUpload").click();
+                    }}      >
+                    <FaEdit className="w-6 h-6" />
+                  </button>
+                  {/* Close Button */}
+                  <button
+                    className="absolute top-4 right-5 p-1 text-white text-xl bg-black bg-opacity-50 rounded-full hover:bg-red-600"
+                    onClick={handleCloseVideo}
+                  >
+                    <FaTimes className="w-6 h-6" />
+                  </button>
+                </div>
+              </div>
+            )}
+            {isImageModalOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+                <div className="relative">
+                  <img
+                    src={selectedImage}
+                    alt="Selected"
+                    className="max-w-full max-h-screen object-contain"
+                  />
+                  {selectedImage !== formData.profilePic.url && (<button
+                    className="absolute top-0 left-0 h-6 w-6 text-white text-base bg-black bg-opacity-50 p-1 rounded-full flex items-center justify-center"
+                    onClick={() => handleDeleteImage(selectedImage)} >
+                    <FaTrash />
+                  </button>)}
+                  <button
+                    className="absolute top-0 right-10 h-6 w-6 text-white text-base bg-black bg-opacity-50 p-1 rounded-full flex items-center justify-center"
+                    onClick={(e) => handleSelectedImageChange(selectedImage)} >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="absolute top-0 right-0 h-6 w-6 text-white text-base bg-black bg-opacity-50 p-1 rounded-full flex items-center justify-center"
+                    onClick={handleCloseImageModal}
+                  >
+                    &times;
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

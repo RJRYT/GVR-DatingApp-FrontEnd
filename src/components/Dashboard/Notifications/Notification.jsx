@@ -13,6 +13,13 @@ const Notification = ({ notification, onClose, onClick }) => {
     error: "#FB3836",
   };
 
+  const notificationLink = {
+    FriendRequest: "/dashboard/requests/received",
+    requestAccepted: "/dashboard/requests/accepted",
+    requestDeclined: "/dashboard/requests/rejected",
+    newMessage: "/dashboard/messages"
+  }
+
   const formatNotificationTime = (timestamp) => {
     const now = moment();
     const date = moment(timestamp);
@@ -42,7 +49,7 @@ const Notification = ({ notification, onClose, onClick }) => {
 
   const Icon = ({ type }) => {
     switch (type) {
-      case ("success", "FriendRequest"):
+      case ("success", "FriendRequest", "newMessage"):
         return (
           <IoMdCheckmarkCircleOutline
             className="text-2xl mr-2"
@@ -76,6 +83,8 @@ const Notification = ({ notification, onClose, onClick }) => {
         return <span>Request accepted</span>;
       case "requestDeclined":
         return <span>Request Declined</span>;
+      case "newMessage":
+        return <span>New messages</span>;
       default:
         return null;
     }
@@ -88,7 +97,7 @@ const Notification = ({ notification, onClose, onClick }) => {
           <Icon type={notification.type} />
         </div>
         <div className="flex-1">
-          <Link onClick={onClick} to={"./"}>
+          <Link onClick={onClick} to={notificationLink[notification.type] ? notificationLink[notification.type] : "./"}>
             <strong
               className="font-bold"
               style={{ fontFamily: "Roboto, sans-serif" }}

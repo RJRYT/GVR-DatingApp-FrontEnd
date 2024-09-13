@@ -6,6 +6,7 @@ import Loading from "../../Loading";
 import AccessDenied from "../../AccessDenied";
 import axios from "../../../Instance/Axios";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Reject = () => {
   // State to hold the users
@@ -83,21 +84,23 @@ const Reject = () => {
                   </h2>
                   <ul className="list-none p-0 mb-1">
                     {users[letter].map((user) => (
-                      <li key={user._id} className="flex items-center">
-                        <img
-                          src={user.recipient.profilePic.url}
-                          alt={user.recipient.username}
-                          className="w-14 h-14 rounded-full object-cover mr-4"
-                        />
-                        <div>
-                          <span className="text-lg font-semibold">
-                            {user.recipient.username}
-                          </span>
-                          <p className="text-sm text-gray-600 mt-1 chakra-petch-light">
-                            ...
-                          </p>
-                        </div>
-                      </li>
+                      <li key={user.recipient._id} className="flex items-center hover:bg-gray-200 hover:bg-opacity-50">
+                          <Link to={`/dashboard/profile/${user.recipient._id}`}>
+                          <img
+                            src={user.recipient.profilePic.url}
+                            alt={user.recipient.username}
+                            className="w-14 h-14 rounded-full object-cover mr-4"
+                          />
+                          </Link>
+                          <div>
+                            <span className="text-lg font-semibold">
+                              {user.recipient.username}
+                            </span>
+                            <p className="text-sm text-gray-600 mt-1 chakra-petch-light">
+                              {user.recipient.about || ""}
+                            </p>
+                          </div>
+                        </li>
                     ))}
                   </ul>
                 </div>

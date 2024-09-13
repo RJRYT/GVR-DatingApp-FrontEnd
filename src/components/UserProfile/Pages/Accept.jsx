@@ -6,6 +6,7 @@ import Loading from "../../Loading";
 import AccessDenied from "../../AccessDenied";
 import axios from "../../../Instance/Axios";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Accept = () => {
   // State to hold the users
@@ -55,16 +56,18 @@ const Accept = () => {
 
           {users ? (
             <div className="pb-16">
-              {users.map((user, index) => (
+              {users.map((user) => (
                 <div
-                  key={index}
-                  className="flex items-center py-4 border-b border-gray-100"
+                  key={user.recipient.id}
+                  className="flex items-center py-4 border-b border-gray-100 hover:bg-gray-200 hover:bg-opacity-50"
                 >
-                  <img
-                    className="w-14 h-14 rounded-full object-cover mr-4"
-                    src={user.recipient.profilePic.url}
-                    alt={user.recipient.username}
-                  />
+                  <Link to={`/dashboard/profile/${user.recipient.id}`}>
+                    <img
+                      className="w-14 h-14 rounded-full object-cover mr-4"
+                      src={user.recipient.profilePic.url}
+                      alt={user.recipient.username}
+                    />
+                  </Link>
                   <div className="ml-3 flex-grow ">
                     <p className="text-2xl text-black">
                       {user.recipient.username}

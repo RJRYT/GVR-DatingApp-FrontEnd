@@ -9,6 +9,7 @@ import Loading from "../../Loading";
 import AccessDenied from "../../AccessDenied";
 import axios from "../../../Instance/Axios";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const pageDefinition = {
   received: {
@@ -195,38 +196,33 @@ const Received = ({ page }) => {
                     {letter}
                   </h2>
                   <ul className="list-none p-0 mb-1">
-                    {users[letter].map((user, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center relative mb-4"
-                      >
-                        <img
-                          src={user.profilePic.url}
-                          alt={user.username}
-                          className="w-20 h-20 rounded-full object-cover mr-4"
-                        />
+                    {users[letter].map((user) => (
+                      <li key={user._id} className="flex items-center relative mb-4 hover:bg-gray-200 hover:bg-opacity-50" >
+                        <Link to={`/dashboard/profile/${user._id}`}>
+                          <img
+                            src={user.profilePic.url}
+                            alt={user.username}
+                            className="w-20 h-20 rounded-full object-cover mr-4"
+                          />
+                        </Link>
                         <div className="flex-grow">
                           <span className="text-lg font-semibold">
                             {user.username}
                           </span>
                           <p className="text-sm text-gray-600 mt-1 chakra-petch-light">
-                            ...
+                            {user.about || ""}
                           </p>
                         </div>
                         {page === "received" || page === "shortlisted" ? (
                           <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex gap-2">
                             {page === "received" ? (
                               <FaRegHeart
-                                onClick={() => {
-                                  HandleApproveClick(user);
-                                }}
+                                onClick={() => { HandleApproveClick(user) }}
                                 className="cursor-pointer h-6 text-gray-500 w-12"
                               />
                             ) : null}
                             <RiCloseLine
-                              onClick={() => {
-                                HandleRejectClick(user);
-                              }}
+                              onClick={() => { HandleRejectClick(user) }}
                               className="cursor-pointer h-8 text-gray-500 w-12"
                             />
                           </div>
