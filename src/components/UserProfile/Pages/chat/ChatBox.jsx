@@ -67,7 +67,7 @@ const ChatBox = () => {
         setUser((prevUser) => ({
           ...prevUser,
           isOnline: false,
-          lastActive: new Date(), 
+          lastActive: new Date(),
         }));
       }
     });
@@ -121,7 +121,7 @@ const ChatBox = () => {
 
   const handleSendMessage = (e) => {
     if (!content) return;
-    socket.emit("sendMessage", { chatId, content:content.trim() });
+    socket.emit("sendMessage", { chatId, content: content.trim() });
     setContent("");
     socket.emit("stopTyping", { chatId });
     setIsTyping(false);
@@ -164,17 +164,17 @@ const ChatBox = () => {
   if (!loading && !authState.isAuthenticated) return <AccessDenied />;
 
   return (
-      <div className="flex flex-col h-dvh">
+    <div className="flex flex-col h-dvh">
       <div className="bg-fuchsia-950 min-h-screen flex flex-col">
         <Header user={user} typing={isUserTyping} />
         {loadingChats ? <LoadingChatArea /> : <ChatArea messages={messages} user={user} />}
       </div>
-        <Footer
-          content={content}
-          setContent={updateContent}
-          onSend={handleSendMessage}
-        />
-      </div>
+      <Footer
+        content={content}
+        setContent={updateContent}
+        onSend={handleSendMessage}
+      />
+    </div>
   );
 };
 

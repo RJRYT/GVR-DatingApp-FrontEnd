@@ -85,7 +85,7 @@ const ChatArea = ({ messages, user }) => {
                   >
                     <div
                       style={{ wordBreak: "break-word" }}
-                      className={`p-3 rounded-none relative break-words min-w-[20%] max-w-[60%] ${
+                      className={`p-3 rounded-none relative break-words min-w-[100px] max-w-[60%] ${
                         message.sender === authState.user.id
                           ? "bg-sky-100 text-black rounded-l-lg"
                           : "bg-[#7f699b] text-white rounded-r-lg"
