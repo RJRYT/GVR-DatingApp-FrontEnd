@@ -25,7 +25,7 @@ const Header = ({ user, typing }) => {
           </h3>
         </div>
         <div>
-          {user && !user.isOnline ? (
+          {(user && !user.isOnline && !typing) ? (
             <p className="text-xs">
               Last active: <LastActiveTimeStamp timestamp={user.lastActive} />
             </p>
