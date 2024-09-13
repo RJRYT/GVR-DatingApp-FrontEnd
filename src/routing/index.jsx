@@ -31,7 +31,17 @@ import AccessDenied from "../components/AccessDenied";
 import Spin from "../components/Dashboard/Spin";
 import ChatBox from "../components/UserProfile/Pages/chat/ChatBox";
 
+// Admin
 
+import MainScreen from "../screens/main-screen/MainScreen";
+import EditProfileScreen from "../screens/edit-profile-screen/EditProfileScreen";
+import AdminLayout from "../components/Layout/AdminLayout";
+import UserManagementScreen from "../screens/user-management-screen/UserManagementScreen";
+import UserProfileScreen from "../screens/user-profile-screen/UserProfileScreen";
+import SubscriptionScreen from "../screens/child-screens/SubscriptionScreen";
+import NotificationScreen from "../screens/child-screens/NotificationScreen";
+import NotificationSettingsScreen from "../screens/child-screens/NotificationSettingsScreen";
+import ErrorScreen from "../screens/error-screen/ErrorScreen";
 
 function Routing() {
   return (
@@ -127,9 +137,22 @@ function Routing() {
           <Route path="/403" element={<AccessDenied />} />
         </Route>
         <Route path="*" element={<NotFound />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<MainScreen />} />
+          <Route path="profile" element={<EditProfileScreen />} />
+          <Route path="users" element={<UserManagementScreen />} />
+          <Route path="users/profile" element={<UserProfileScreen />} />
+          <Route path="subscription" element={<SubscriptionScreen />} />
+          <Route path="notification" element={<NotificationScreen />} />
+          <Route path="notification/settings" element={<NotificationSettingsScreen />} />
+          {/* <Route path="*" errorElement={<ErrorScreen />} /> */}
+
+        </Route>
       </Routes>
     </BrowserRouter>
   );
-};
+}
 
 export default Routing;
