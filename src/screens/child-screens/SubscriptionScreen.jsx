@@ -7,9 +7,7 @@ import { TopBar } from "../../components/Admin";
 function SubscriptionScreen() {
   const [addValue, setAddValue] = useState(false);
   return (
-    <>
-    <TopBar/>
-      <div className="relative w-[90%] h-full mx-auto">
+      <div className=" w-full h-screen">
         <div className={`grid gap-10 ${addValue ? "blur-lg" : ""}`}>
           <SubscriptionHead setValue={setAddValue} />
           <SubscriptionTable />
@@ -20,7 +18,6 @@ function SubscriptionScreen() {
           </div>
         )}
       </div>
-    </>
   );
 }
 

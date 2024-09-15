@@ -5,9 +5,7 @@ import { SearchBar, TopBar } from '../../components/Admin';
 
 function NotificationScreen() {
   return (
-    <div className="relative w-[90%] h-full mb-10 mx-auto">
-        <TopBar/>
-         <SearchBar/>
+    <div className="relative w-full h-full mb-10">
         <NotificationsList />
         <NotificationForm />
     </div>

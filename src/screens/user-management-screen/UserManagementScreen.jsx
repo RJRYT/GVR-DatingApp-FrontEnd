@@ -4,10 +4,7 @@ import { TableRow, TopBar } from "../../components/Admin";
 function UserManagementScreen() {
   const [selectAll, setSelectAll] = useState(false);
   return (
-    <div className="w-[calc(100vw-4rem)] h-full   overflow-auto ">
-      <div className="w-full">
-        <TopBar isSearchAvail={true} />
-      </div>
+    <div className="w-[calc(100vw-4rem)] h-screen   overflow-auto ">
       <div className="w-full h-full  flex items-start justify-center">
         <div className="w-[90%] h-max">
           <div className="w-full mt-7 flex items-center justify-between">

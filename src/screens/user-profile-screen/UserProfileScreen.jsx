@@ -9,10 +9,7 @@ import TopBar from "../../components/Admin/top-bar/Topbar";
 
 function UserProfileScreen() {
   return (
-    <div className="w-[calc(100vw-4rem)] h-full flex  gap-5 flex-col items-center overflow-auto ">
-      <div className="w-full h-20">
-        <TopBar isSearchAvail={true} />
-      </div>
+    <div className="w-[calc(100vw-4rem)] h-screen flex  gap-5 flex-col items-center overflow-auto ">
       <div className="w-[90%] h-max bg-white flex gap-32 rounded-2xl  ">
         <div className="w-1/4 h-[90%]   p-5 px-5 ml-8 flex gap-5 flex-col items-center">
           <div className="w-full grid place-items-center">
