@@ -28,7 +28,7 @@ function SubscriptionAddForm() {
       ></textarea>
 
       <div className=" flex justify-end gap-4">
-        <button className="px-5 py-2 bg-black text-white rounded-lg">Save</button>
+        <button className="px-5 py-2 bg-black text-primary rounded-lg">Save</button>
         <button className="px-3 py-2 bg-red-600 text-primary rounded-lg">
           Cancel
         </button>

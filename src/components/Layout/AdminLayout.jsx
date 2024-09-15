@@ -22,10 +22,10 @@ const AdminLayout = () => {
   return (
     <div className="w-[100%] h-[100%] text-textColor bg-[#f0f6ff] grid place-items-end font-poppins">
       <SideBar />
-      <TopBar isSearchAvail={isSearchAvail} />
-      <div>
+      <TopBar isSearchAvail={isSearchAvail}/>
+      
         <Outlet/>
-      </div>
+      
     </div>
   );
 };
