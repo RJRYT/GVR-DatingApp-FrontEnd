@@ -8,7 +8,7 @@ const AdminLayout = () => {
   
   // Define the routes where SearchBar should be visible
   const searchBarRoutes = [
-    "/admin",
+    "/admin/dashboard",
     "/admin/users",
     "/admin/users/profile",
     "/admin/subscription",
