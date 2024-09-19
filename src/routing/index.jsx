@@ -43,6 +43,8 @@ import NotificationScreen from "../screens/notification-screen/NotificationScree
 import NotificationSettingsScreen from "../screens/notification-settings-screen/NotificationSettingsScreen";
 import ErrorScreen from "../screens/error-screen/ErrorScreen";
 import LoginScreen from "../screens/login-screen/LoginScreen";
+import AccountsScreen from "../screens/accounts-screen/AccountsScreen";
+import FinancialManagementScreen from "../screens/financial-management-screen/FinancialManagementScreen";
 
 function Routing() {
   return (
@@ -149,6 +151,8 @@ function Routing() {
           <Route path="subscription" element={<SubscriptionScreen />} />
           <Route path="notification" element={<NotificationScreen />} />
           <Route path="notification/settings" element={<NotificationSettingsScreen />} />
+          <Route path="accounts" element={<AccountsScreen/>}/>
+          <Route path="finance" element={<FinancialManagementScreen/>}/>
           {/* <Route path="*" element={<ErrorScreen />} /> */}
 
         </Route>

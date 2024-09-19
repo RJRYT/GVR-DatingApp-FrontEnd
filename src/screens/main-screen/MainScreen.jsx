@@ -1,12 +1,11 @@
 import React from "react";
 import {
-  TopBar,
   TopContainer,
   MiddleContainer,
   BottomContainer,
 } from "../../components/Admin";
 
-function MainScreen() {
+function MainScreen () {
   return (
     <div className="w-[calc(100vw-4rem)] h-screen  overflow-auto ">
       <div className="w-full h-full  flex flex-col items-center">
