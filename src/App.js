@@ -13,16 +13,16 @@ function App() {
   return (
     <Suspense fallback={<Loading />}>
       <BrowserRouter>
+        <AdminProvider>
+          <ToastContainer newestOnTop={true} theme="colored" />
+          <AdminRouting />
+        </AdminProvider>
         <AuthProvider>
           <SocketProvider>
             <ToastContainer newestOnTop={true} theme="colored" />
             <Routing />
           </SocketProvider>
         </AuthProvider>
-        <AdminProvider>
-          <ToastContainer newestOnTop={true} theme="colored" />
-          <AdminRouting />
-        </AdminProvider>
       </BrowserRouter>
     </Suspense>
   );
