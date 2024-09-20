@@ -5,6 +5,8 @@ import { SocketProvider } from "./contexts/SocketContext";
 import { ToastContainer } from "react-toastify";
 import Loading from "./components/Loading";
 import Routing from "./routing";
+import { AdminProvider } from "./contexts/AdminContext";
+import AdminRouting from "./routing/adminRoutes";
 
 function App() {
   return (
@@ -15,6 +17,10 @@ function App() {
           <Routing />
         </SocketProvider>
       </AuthProvider>
+      <AdminProvider>
+        <ToastContainer newestOnTop={true} theme="colored" />
+        <AdminRouting />
+      </AdminProvider>
     </Suspense>
   );
 }
