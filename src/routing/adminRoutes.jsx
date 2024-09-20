@@ -19,16 +19,16 @@ function AdminRouting() {
       <Routes>
         <Route path="/admin/login" element={<LoginScreen />} />
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="/" element={<Navigate to={"admin/dashboard"} />} />
-          <Route index path="dashboard" element={<MainScreen />} />
-          <Route path="profile" element={<EditProfileScreen />} />
-          <Route path="users" element={<UserManagementScreen />} />
-          <Route path="users/profile" element={<UserProfileScreen />} />
-          <Route path="subscription" element={<SubscriptionScreen />} />
-          <Route path="notification" element={<NotificationScreen />} />
-          <Route path="notification/settings" element={<NotificationSettingsScreen />} />
-          <Route path="accounts" element={<AccountsScreen />} />
-          <Route path="finance" element={<FinancialManagementScreen />} />
+          <Route path="/admin/" element={<Navigate to={"admin/dashboard"} />} />
+          <Route index path="admin/dashboard" element={<MainScreen />} />
+          <Route path="admin/profile" element={<EditProfileScreen />} />
+          <Route path="admin/users" element={<UserManagementScreen />} />
+          <Route path="admin/users/profile" element={<UserProfileScreen />} />
+          <Route path="admin/subscription" element={<SubscriptionScreen />} />
+          <Route path="admin/notification" element={<NotificationScreen />} />
+          <Route path="admin/notification/settings" element={<NotificationSettingsScreen />} />
+          <Route path="admin/accounts" element={<AccountsScreen />} />
+          <Route path="admin/finance" element={<FinancialManagementScreen />} />
         </Route>
         <Route path="*" element={<ErrorScreen />} />
       </Routes>
