@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from 'react';
 import { Logo, iconSet, Icons } from "../../../constants";
+import { AdminContext } from "../../../contexts/AdminContext";
 
 function SideBar() {
+  const { logout } = useContext(AdminContext);
   return (
     <div className="w-16 h-screen fixed left-0 top-0 bg-white">
       <div className="w-full h-24 grid place-items-center">
@@ -24,7 +26,7 @@ function SideBar() {
         </ul>
       </div>
 
-      <div className="w-full h-1/3  grid place-items-center">
+      <div onClick={logout} className="w-full h-1/3 hover:scale-125 grid place-items-center">
         <Icons.LogOut size={19} />
       </div>
     </div>
