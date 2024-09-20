@@ -8,7 +8,7 @@ import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'; // Import the i
 
 const LoginScreen = () => {
   const navigate = useNavigate();
-  const { authState, loading } = useContext(AdminContext);
+  const { authState, loading, checkAuthStatus } = useContext(AdminContext);
   const [credentials, setCredentials] = useState({
     email: "",
     password: ""
@@ -55,6 +55,7 @@ const LoginScreen = () => {
         
         if (response.data.success) {
           toast.success(response.data.message);
+          checkAuthStatus();
           navigate("/admin/dashboard");
         } else {
           toast.error(response.data.message);
