@@ -58,8 +58,8 @@ export const AdminProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authState, checkAuthStatus, updateAdmin, logout, loading }}>
+    <AdminContext.Provider value={{ authState, checkAuthStatus, updateAdmin, logout, loading }}>
       {children}
-    </AuthContext.Provider>
+    </AdminContext.Provider>
   );
 };
