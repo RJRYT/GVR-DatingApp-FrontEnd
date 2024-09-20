@@ -11,7 +11,7 @@ function SideBar() {
       </div>
 
       <div className="w-full h-1/2 ">
-        <ul className="h-full  grid gap-10 place-items-center items-center  ">
+        <ul className="h-full grid gap-10 place-items-center items-center">
           {iconSet.map((data, index) => {
             const Icon = Icons[data];
             return (
@@ -26,7 +26,7 @@ function SideBar() {
         </ul>
       </div>
 
-      <div onClick={logout} className="w-full h-1/3 hover:scale-125 grid place-items-center">
+      <div onClick={logout} className="w-full h-1/3 hover:scale-125 grid place-items-center cursor-pointer">
         <Icons.LogOut size={19} />
       </div>
     </div>
