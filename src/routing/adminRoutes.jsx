@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import MainScreen from "../screens/main-screen/MainScreen";
 import EditProfileScreen from "../screens/edit-profile-screen/EditProfileScreen";
@@ -19,8 +19,7 @@ function AdminRouting() {
       <Route path="login" element={<LoginScreen />} />
 
       <Route path="/" element={<AdminLayout />}>
-        <Route index element={<Navigate to="/admin/dashboard" />} />
-        <Route path="dashboard" element={<MainScreen />} />
+        <Route index path="dashboard" element={<MainScreen />} />
         <Route path="profile" element={<EditProfileScreen />} />
         <Route path="users" element={<UserManagementScreen />} />
         <Route path="users/profile" element={<UserProfileScreen />} />

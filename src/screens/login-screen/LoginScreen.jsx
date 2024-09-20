@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import axiosInstance from "../../Instance/Axios";
+import React, { useState, useEffect, useContext } from "react";
+import { AdminContext } from "../../contexts/AdminContext";
+import LoadingScreen from "../loading-screen/LoadingScreen";
+import axiosInstance from "../../Instance/AxiosAdmin";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'; // Import the icons
 
 const LoginScreen = () => {
   const navigate = useNavigate();
+  const { authState, loading } = useContext(AdminContext);
   const [credentials, setCredentials] = useState({
     email: "",
     password: ""
@@ -13,6 +16,10 @@ const LoginScreen = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+
+  useEffect(() => {
+    if (!loading && authState.isAuthenticated) return navigate("/admin/dashboard");
+  }, [loading, authState, navigate]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,7 +50,7 @@ const LoginScreen = () => {
 
     if (valid) {
       try {
-        const response = await axiosInstance.post('/admin/auth/login', credentials);
+        const response = await axiosInstance.post('/auth/login', credentials);
         console.log("Credentials:",credentials);
         
         if (response.data.success) {
@@ -66,6 +73,8 @@ const LoginScreen = () => {
       [name]: value
     }));
   };
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#f0f6ff]">

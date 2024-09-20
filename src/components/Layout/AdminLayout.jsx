@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect, useContext } from "react";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { AdminContext } from "../../contexts/AdminContext";
+import LoadingScreen from "../../screens/loading-screen/LoadingScreen";
 import SideBar from "../Admin/side-bar/Sidebar";
 import TopBar from "../Admin/top-bar/Topbar";
-import { Outlet, useLocation } from 'react-router-dom';
 
 const AdminLayout = () => {
   const location = useLocation();
+  const { authState, loading } = useContext(AdminContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated) return navigate("/admin/login");
+  }, [loading, authState, navigate]);
 
   // A mapping of components that should show the SearchBar
   const searchBarComponents = [
@@ -21,6 +29,8 @@ const AdminLayout = () => {
 
   const isSearchAvail = searchBarComponents.includes(currentComponent);
 
+  if (loading) return <LoadingScreen />;
+  
   return (
     <div className="w-[100%] h-[100%] text-textColor bg-[#f0f6ff] grid place-items-end font-poppins">
       <SideBar />

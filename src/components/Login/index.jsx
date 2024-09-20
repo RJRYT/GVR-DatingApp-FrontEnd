@@ -78,15 +78,7 @@ function Login() {
           authState.user.professionalInfoSubmitted &&
           authState.user.purposeSubmitted
         ) {
-
-          if(authState.user.twoFA ===  "True"){
-          
-            console.log("2fa is enabled");
-            return navigate("/dashboard");
-            //return navigate("/twoFAcheck");
-          }
-          else{
-            return navigate("/dashboard");}
+          return navigate("/dashboard");
         }
         if (!authState.user.personalInfoSubmitted) return ToggleModel("Personal");
         if (!authState.user.professionalInfoSubmitted)
