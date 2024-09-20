@@ -35,3 +35,5 @@ function AdminRouting() {
     </BrowserRouter>
   )
 };
+
+export default AdminRouting;
