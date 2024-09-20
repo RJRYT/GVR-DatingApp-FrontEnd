@@ -1,13 +1,13 @@
 import React from "react";
-import { ProfileImage } from "../../../constants";
+import adminProfile from "../../../assets/Admin/profile-images/adminProfile.jpg";
 import { Image, Mail, Phone, User, User2 } from "lucide-react";
 
 function AdminProfileCard() {
   return (
-    <div className="w-1/4 h-[90%] bg-white p-5 rounded-2xl flex gap-6 flex-col overflow-auto ">
+    <div className="w-1/4 h-[90%] bg-white p-5 rounded-2xl flex gap-6 flex-col overflow-auto">
       <div className="w-full h-max  grid gap-5 place-items-center mt-5 ">
         <div className="w-24 h-24 border-[3px] border-pink-600 rounded-full overflow-hidden">
-          <img src={ProfileImage} alt="profile image" />
+        <img src={adminProfile} alt="profile image" className="w-full h-full object-cover" />
         </div>
         <div className="text-center">
           <h3 className="font-medium">Yash test</h3>
