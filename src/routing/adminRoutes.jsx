@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import MainScreen from "../screens/main-screen/MainScreen";
 import EditProfileScreen from "../screens/edit-profile-screen/EditProfileScreen";
@@ -15,24 +15,24 @@ import FinancialManagementScreen from "../screens/financial-management-screen/Fi
 
 function AdminRouting() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/admin/login" element={<LoginScreen />} />
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="/admin/" element={<Navigate to={"admin/dashboard"} />} />
-          <Route index path="admin/dashboard" element={<MainScreen />} />
-          <Route path="admin/profile" element={<EditProfileScreen />} />
-          <Route path="admin/users" element={<UserManagementScreen />} />
-          <Route path="admin/users/profile" element={<UserProfileScreen />} />
-          <Route path="admin/subscription" element={<SubscriptionScreen />} />
-          <Route path="admin/notification" element={<NotificationScreen />} />
-          <Route path="admin/notification/settings" element={<NotificationSettingsScreen />} />
-          <Route path="admin/accounts" element={<AccountsScreen />} />
-          <Route path="admin/finance" element={<FinancialManagementScreen />} />
-        </Route>
-        <Route path="*" element={<ErrorScreen />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/admin/login" element={<LoginScreen />} />
+
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="/admin/dashboard" />} />
+        <Route path="dashboard" element={<MainScreen />} />
+        <Route path="profile" element={<EditProfileScreen />} />
+        <Route path="users" element={<UserManagementScreen />} />
+        <Route path="users/profile" element={<UserProfileScreen />} />
+        <Route path="subscription" element={<SubscriptionScreen />} />
+        <Route path="notification" element={<NotificationScreen />} />
+        <Route path="notification/settings" element={<NotificationSettingsScreen />} />
+        <Route path="accounts" element={<AccountsScreen />} />
+        <Route path="finance" element={<FinancialManagementScreen />} />
+      </Route>
+      
+      <Route path="/admin/*" element={<ErrorScreen />} />
+    </Routes>
   )
 };
 

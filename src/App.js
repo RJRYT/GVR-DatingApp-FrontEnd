@@ -1,26 +1,29 @@
 import "react-toastify/dist/ReactToastify.min.css";
 import React, { Suspense } from "react";
-import { AuthProvider } from "./contexts/AuthContext";
-import { SocketProvider } from "./contexts/SocketContext";
+import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import Loading from "./components/Loading";
-import Routing from "./routing";
+import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
+import { SocketProvider } from "./contexts/SocketContext";
+import Routing from "./routing";
 import AdminRouting from "./routing/adminRoutes";
+import Loading from "./components/Loading";
 
 function App() {
   return (
     <Suspense fallback={<Loading />}>
-      <AuthProvider>
-        <SocketProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <SocketProvider>
+            <ToastContainer newestOnTop={true} theme="colored" />
+            <Routing />
+          </SocketProvider>
+        </AuthProvider>
+        <AdminProvider>
           <ToastContainer newestOnTop={true} theme="colored" />
-          <Routing />
-        </SocketProvider>
-      </AuthProvider>
-      <AdminProvider>
-        <ToastContainer newestOnTop={true} theme="colored" />
-        <AdminRouting />
-      </AdminProvider>
+          <AdminRouting />
+        </AdminProvider>
+      </BrowserRouter>
     </Suspense>
   );
 }

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Layout from "../components/Layout/Main";
 import DefaultPage from "../components/Default";
@@ -33,100 +33,98 @@ import ChatBox from "../components/UserProfile/Pages/chat/ChatBox";
 
 function Routing() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<DefaultPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/login/2fa" element={<Login2FA />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route
-              path="/dashboard/discover"
-              element={<DiscoverHeader title="Discover" />}
-            />
-            <Route
-              path="/dashboard/matches"
-              element={<Matches title="Matches" />}
-            />
-            <Route
-              path="/dashboard/matches/my"
-              element={<Matches title="Viewed my profile" profileView={true} />}
-            />
-            <Route
-              path="/dashboard/matches/upgrade"
-              element={<Matches upgrade={true} />}
-            />
-          </Route>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<DefaultPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/login/2fa" element={<Login2FA />} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route
-            path="/dashboard/profile"
-            element={<Navigate to={"/dashboard/profile/@me"} />}
+            path="/dashboard/discover"
+            element={<DiscoverHeader title="Discover" />}
           />
           <Route
-            path="/dashboard/profile/edit"
-            element={<Navigate to={"/dashboard/profile/@me/edit"} />}
-          />
-          <Route path="/dashboard/profile/:userId" element={<UserProfile />} />
-          <Route path="/dashboard/profile/@me/edit" element={<EditProfile />} />
-          <Route
-            path="/dashboard/profile/changepass"
-            element={<ChangePassword />}
+            path="/dashboard/matches"
+            element={<Matches title="Matches" />}
           />
           <Route
-            path="/dashboard/userprofile/upgrade"
-            element={<UserProfile upgrade={true} />}
-          />
-          <Route path="/dashboard/preferences" element={<Prefrenences />} />
-          <Route path="/dashboard/requests/sent" element={<Sent />} />
-          <Route path="/dashboard/requests/rejected" element={<Reject />} />
-          <Route path="/dashboard/requests/accepted" element={<Accept />} />
-          <Route path="/dashboard/messages" element={<Messages />} />
-          <Route path="/dashboard/chat/:chatId" element={<ChatBox />} />
-          <Route
-            path="/dashboard/requests/received"
-            element={<Received page={"received"} />}
+            path="/dashboard/matches/my"
+            element={<Matches title="Viewed my profile" profileView={true} />}
           />
           <Route
-            path="/dashboard/users/shortlist"
-            element={<Received page={"shortlisted"} />}
+            path="/dashboard/matches/upgrade"
+            element={<Matches upgrade={true} />}
           />
-          <Route
-            path="/dashboard/users/shortlisted-by"
-            element={<Received page={"shortlistedBy"} />}
-          />
-          <Route
-            path="/dashboard/users/contacted"
-            element={<Received page={"contacted"} />}
-          />
-          <Route
-            path="/dashboard/users/profile-viewers"
-            element={<Received page={"myProfileView"} />}
-          />
-          <Route path="/dashboard/settings" element={<Settings />} />
-          <Route path="/dashboard/settings/privacy" element={<Privacy />} />
-
-          {/**split**/}
-
-          <Route path="/dashboard/groups" element={<GroupList />} />
-          <Route path="/dashboard/@me/spin" element={<Spin />} />
-          <Route path="/dashboard/@me/filter" element={<Filter />} />
-          <Route path="/dashboard/@me/addcard" element={<AddCard />} />
-          <Route path="/dashboard/story" element={<Stories />} />
-          <Route
-            path="/dashboard/@me/subscription"
-            element={<Subscription />}
-          />
-          <Route path="/dashboard/@me/payment" element={<PayMethods />} />
-          <Route
-            path="/dashboard/story/upgrade"
-            element={<Stories upgrade={true} />}
-          />
-          <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
-          <Route path="/403" element={<AccessDenied />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+        <Route
+          path="/dashboard/profile"
+          element={<Navigate to={"/dashboard/profile/@me"} />}
+        />
+        <Route
+          path="/dashboard/profile/edit"
+          element={<Navigate to={"/dashboard/profile/@me/edit"} />}
+        />
+        <Route path="/dashboard/profile/:userId" element={<UserProfile />} />
+        <Route path="/dashboard/profile/@me/edit" element={<EditProfile />} />
+        <Route
+          path="/dashboard/profile/changepass"
+          element={<ChangePassword />}
+        />
+        <Route
+          path="/dashboard/userprofile/upgrade"
+          element={<UserProfile upgrade={true} />}
+        />
+        <Route path="/dashboard/preferences" element={<Prefrenences />} />
+        <Route path="/dashboard/requests/sent" element={<Sent />} />
+        <Route path="/dashboard/requests/rejected" element={<Reject />} />
+        <Route path="/dashboard/requests/accepted" element={<Accept />} />
+        <Route path="/dashboard/messages" element={<Messages />} />
+        <Route path="/dashboard/chat/:chatId" element={<ChatBox />} />
+        <Route
+          path="/dashboard/requests/received"
+          element={<Received page={"received"} />}
+        />
+        <Route
+          path="/dashboard/users/shortlist"
+          element={<Received page={"shortlisted"} />}
+        />
+        <Route
+          path="/dashboard/users/shortlisted-by"
+          element={<Received page={"shortlistedBy"} />}
+        />
+        <Route
+          path="/dashboard/users/contacted"
+          element={<Received page={"contacted"} />}
+        />
+        <Route
+          path="/dashboard/users/profile-viewers"
+          element={<Received page={"myProfileView"} />}
+        />
+        <Route path="/dashboard/settings" element={<Settings />} />
+        <Route path="/dashboard/settings/privacy" element={<Privacy />} />
+
+        {/**split**/}
+
+        <Route path="/dashboard/groups" element={<GroupList />} />
+        <Route path="/dashboard/@me/spin" element={<Spin />} />
+        <Route path="/dashboard/@me/filter" element={<Filter />} />
+        <Route path="/dashboard/@me/addcard" element={<AddCard />} />
+        <Route path="/dashboard/story" element={<Stories />} />
+        <Route
+          path="/dashboard/@me/subscription"
+          element={<Subscription />}
+        />
+        <Route path="/dashboard/@me/payment" element={<PayMethods />} />
+        <Route
+          path="/dashboard/story/upgrade"
+          element={<Stories upgrade={true} />}
+        />
+        <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
+        <Route path="/403" element={<AccessDenied />} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
