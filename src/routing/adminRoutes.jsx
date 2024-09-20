@@ -16,9 +16,9 @@ import FinancialManagementScreen from "../screens/financial-management-screen/Fi
 function AdminRouting() {
   return (
     <Routes>
-      <Route path="/admin/login" element={<LoginScreen />} />
+      <Route path="login" element={<LoginScreen />} />
 
-      <Route path="/admin" element={<AdminLayout />}>
+      <Route path="/" element={<AdminLayout />}>
         <Route index element={<Navigate to="/admin/dashboard" />} />
         <Route path="dashboard" element={<MainScreen />} />
         <Route path="profile" element={<EditProfileScreen />} />
@@ -31,7 +31,7 @@ function AdminRouting() {
         <Route path="finance" element={<FinancialManagementScreen />} />
       </Route>
       
-      <Route path="/admin/*" element={<ErrorScreen />} />
+      <Route path="*" element={<ErrorScreen />} />
     </Routes>
   )
 };
