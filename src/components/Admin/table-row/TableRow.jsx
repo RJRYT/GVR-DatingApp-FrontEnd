@@ -2,7 +2,7 @@ import { Edit } from "lucide-react";
 import React, { useState } from "react";
 import { UserProfile } from "../../../constants";
 
-function TableRow({ name, gender, age, location, status, subs, selectAll }) {
+function TableRow({ name, gender, age, location, profilepic, status, subs, selectAll }) {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -18,9 +18,9 @@ function TableRow({ name, gender, age, location, status, subs, selectAll }) {
         />
       </td>
       <td className="  ">
-        <div className="flex gap-4 items-center justify-center">
+        <div className="flex gap-4 items-center justify-left">
           <img
-            src={UserProfile}
+            src={profilepic}
             alt="user image"
             className="w-9 h-9 rounded-full"
           />
