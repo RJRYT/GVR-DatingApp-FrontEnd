@@ -12,8 +12,8 @@ const UserManagementScreen = () => {
     try {
       const response = await axiosInstance.get(`/admin/me/users?page=${page}&limit=10`);
       setUsers(response.data.users);
-      setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.currentPage);
+      setTotalPages(Number(response.data.totalPages));
+      setCurrentPage(Number(response.data.currentPage));
     } catch (error) {
       console.error('Error fetching users:', error);
     }
@@ -100,7 +100,7 @@ const UserManagementScreen = () => {
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(i);
     }
-  
+  console.log(currentPage)
     return (
       <div className="flex justify-end mt-4">
         <div className="pagination flex items-center">
@@ -121,9 +121,7 @@ const UserManagementScreen = () => {
                 key={number}
                 onClick={() => handlePageClick(number)}
                 className={`mx-1 px-3 py-1 border rounded-full ${
-                  number === currentPage 
-                    ? 'bg-blue-700 text-white ' // Active page stays blue
-                    : 'bg-white text-gray-400 hover:bg-blue-300' // Other pages hover effect
+                  number === currentPage ? 'bg-blue-700 text-white '  : 'bg-white text-gray-400 hover:bg-blue-300' // Other pages hover effect
                 }`}
               >
                 {number}
