@@ -15,7 +15,7 @@ function SubscriptionAdd({ setValue }) {
             <RiCloseLargeFill />
           </button>
         </div>
-        <SubscriptionAddForm />
+        <SubscriptionAddForm setValue={setValue}/>
       </div>
     </div>
   );

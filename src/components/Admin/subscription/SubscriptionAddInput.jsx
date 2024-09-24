@@ -1,13 +1,18 @@
-import React from 'react'
+import React from "react";
 
-function SubscriptionAddInput({label}) {
+function SubscriptionAddInput({ label, name, value, onChange, type = "text", ...rest }) {
   return (
     <input
-    type="text"
-    placeholder={label}
-    className="w-full px-4 py-3 border-2 border-gray-300 outline-none rounded-lg capitalize"
-  />
-  )
+      id={name}
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={label}
+      className="w-full px-4 py-3 border-2 border-gray-300 outline-none rounded-lg capitalize"
+      {...rest}
+    />
+  );
 }
 
-export default SubscriptionAddInput
+export default SubscriptionAddInput;
