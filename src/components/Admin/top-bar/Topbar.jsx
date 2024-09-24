@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { SearchBar } from "../index";
-import { ProfileImage } from "../../../constants/images";
+import adminProfile from "../../../assets/Admin/profile-images/adminProfile.jpg";
 import { Bell, Moon } from "lucide-react";
 
 function TopBar({ isSearchAvail }) {
@@ -19,10 +19,9 @@ function TopBar({ isSearchAvail }) {
             className="w-7 h-7 rounded-full overflow-hidden cursor-pointer"
           >
             <img
-              src={ProfileImage}
+              src={adminProfile}
               alt="profile image"
-              className="object-cover"
-            />
+              className="w-full h-full object-cover"            />
           </div>
         </div>
       </div>
