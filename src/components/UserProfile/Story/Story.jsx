@@ -1,10 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import { useLocation ,useNavigate} from "react-router-dom";
 import Upgrade from "../Components/UpgradeOverlay";
+import { AuthContext } from "../../../contexts/AuthContext";
 
-const ViewStory = ({ upgrade = false }) => {
+const ViewStory = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { authState } = useContext(AuthContext);
   const queryParams = new URLSearchParams(location.search);
   const videoSrc = queryParams.get('video') || 'https://i.postimg.cc/tC6NTnq0/medium-shot-man-indoors-23-2151038808.avif'; // Default video if no query parameter
   const username=queryParams.get('username')
@@ -14,7 +16,7 @@ const ViewStory = ({ upgrade = false }) => {
   };
   return (
     <>
-      {upgrade && <Upgrade />}
+      {!authState?.user?.primeUser && <Upgrade />}
       <div className="bg-white h-screen flex items-center justify-center p-4">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-lg relative">
           <div className="relative">

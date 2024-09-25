@@ -64,7 +64,7 @@ const ProfileSidebar = ({ toggleProfileModal, isOnline, user }) => {
             </div>
             <div >
               <p className=" font-bold">{user && user.username ? user.username : "Unknown"}</p>
-              <p className=" text-sm">Prime Member</p>
+              {user?.primeUser && <p className=" text-sm">Prime Member</p>}
               <p className=" text-sm text-green-500">Online</p>
             </div>
           </div>

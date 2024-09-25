@@ -27,7 +27,7 @@ const LoginScreen = () => {
   };
 
   const validatePassword = (password) => {
-    return password.length >= 6;
+    return password.length;
   };
 
   const handleLogin = async (e) => {

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import SubscriptionAddInput from "./SubscriptionAddInput";
 import axiosInstance from "../../../Instance/AxiosAdmin";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"
 
 function SubscriptionAddForm({ setValue }) {
   const [formData, setFormData] = useState({
@@ -14,7 +13,6 @@ function SubscriptionAddForm({ setValue }) {
 
   });
 
-  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -22,15 +20,10 @@ function SubscriptionAddForm({ setValue }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post("/me/subscription", formData)
+      await axiosInstance.post("/me/subscription", formData)
 
-      if (res.data.success) {
-        toast.success("Subscription added successfully!");
-        setValue(false);
-        navigate(-1);
-      } else {
-        toast.error(res.data.error);
-      }
+      toast.success("Subscription added successfully!");
+      setValue(false);
     } catch (error) {
       console.error(error);
       toast.error(
