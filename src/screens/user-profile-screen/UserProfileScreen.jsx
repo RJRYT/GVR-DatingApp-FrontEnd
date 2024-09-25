@@ -5,7 +5,6 @@ import { UserProfile } from "../../constants";
 import { formList } from "../../constants";
 import { checkBoxes, companyForm } from "../../constants/form-list";
 import { CustomForm, OptionButtons, UserForm } from "../../components/Admin";
-import TopBar from "../../components/Admin/top-bar/Topbar";
 
 function UserProfileScreen() {
   return (
