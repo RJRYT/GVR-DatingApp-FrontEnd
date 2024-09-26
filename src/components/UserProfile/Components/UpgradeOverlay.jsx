@@ -5,16 +5,9 @@ function Upgrade() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        // Adjust the scroll position as needed
-        setShowModal(true);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    // Add or remove inline styles to the body when modal is shown
+    const showModalTime = setTimeout(() => {
+      setShowModal(true);
+    }, 5000);
     if (showModal) {
       document.body.style.overflow = "hidden"; // Disable scrolling
     } else {
@@ -23,8 +16,8 @@ function Upgrade() {
 
     // Cleanup on component unmount
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       document.body.style.overflow = ""; // Restore scrolling on cleanup
+      clearTimeout(showModalTime);
     };
   }, [showModal]);
 

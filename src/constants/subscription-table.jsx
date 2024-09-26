@@ -4,14 +4,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 export const tableHead = [
   "name",
-  "image",
   "price",
   "description",
   "status",
   "duration",
   "subscription type",
   "",
-  ""
+
 ];
 
 export const tableBody = [

@@ -14,7 +14,6 @@ import Upgrade from "./Upgrade";
 
 const Matches = ({
   title = "",
-  upgrade = false,
 }) => {
   const navigate = useNavigate();
   const [matches, setMatches] = useState([]);
@@ -72,13 +71,13 @@ const Matches = ({
       {loadingOverlay && <LoadingOverlay />}
       <div className="min-h-screen p-4 aldrich-regular">
         <Topbar title={title} />
-        {!upgrade && <Filter connect={connectCount} likes={likesCount} />}
+        <Filter connect={connectCount} likes={likesCount} />
         <div className="text-lg font-bold text-[#4b164c] mt-4 pl-2">
           Your Matches <span className="text-pink-500">{matchesCount}</span>
         </div>
         <section className="mt-8">
           <MatchGrid matches={matches}/>
-          {upgrade && <Upgrade />}
+          {!authState?.user?.primeUser && <Upgrade />}
         </section>
       </div>
     </>

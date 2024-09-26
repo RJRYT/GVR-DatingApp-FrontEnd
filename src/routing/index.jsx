@@ -52,10 +52,6 @@ function Routing() {
             path="/dashboard/matches/my"
             element={<Matches title="Viewed my profile" profileView={true} />}
           />
-          <Route
-            path="/dashboard/matches/upgrade"
-            element={<Matches upgrade={true} />}
-          />
         </Route>
         <Route
           path="/dashboard/profile"
@@ -70,10 +66,6 @@ function Routing() {
         <Route
           path="/dashboard/profile/changepass"
           element={<ChangePassword />}
-        />
-        <Route
-          path="/dashboard/userprofile/upgrade"
-          element={<UserProfile upgrade={true} />}
         />
         <Route path="/dashboard/preferences" element={<Prefrenences />} />
         <Route path="/dashboard/requests/sent" element={<Sent />} />
@@ -116,10 +108,6 @@ function Routing() {
           element={<Subscription />}
         />
         <Route path="/dashboard/@me/payment" element={<PayMethods />} />
-        <Route
-          path="/dashboard/story/upgrade"
-          element={<Stories upgrade={true} />}
-        />
         <Route path="/dashboard/@me/creategroup" element={<CreateGroup />} />
         <Route path="/403" element={<AccessDenied />} />
       </Route>

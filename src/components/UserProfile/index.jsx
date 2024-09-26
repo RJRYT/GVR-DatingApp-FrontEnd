@@ -10,7 +10,7 @@ import MatchButton from "./Components/MatchButton";
 import Upgrade from "./Components/UpgradeOverlay";
 import { toast } from "react-toastify";
 
-const UserProfile = ({ upgrade = false }) => {
+const UserProfile = () => {
 
   const [activeLine, setActiveLine] = useState(1);
   const { authState, loading } = useContext(AuthContext);
@@ -109,7 +109,7 @@ const UserProfile = ({ upgrade = false }) => {
 
   return (
     <>
-      {upgrade && <Upgrade />}
+      {!authState?.user?.primeUser && <Upgrade />}
       {loadingOverlay && <LoadingOverlay />}
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-fuchsia-800 overflow-hidden">
         <div
