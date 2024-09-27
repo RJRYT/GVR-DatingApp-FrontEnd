@@ -1,0 +1,40 @@
+{
+  "files": {
+    "main.css": "/static/css/main.459eb815.css",
+    "main.js": "/static/js/main.1cd3a33c.js",
+    "static/media/formImg.png": "/static/media/formImg.35471456fd4ef33f0184.png",
+    "static/media/illustration.png": "/static/media/illustration.3911b4595f4b1289fa49.png",
+    "static/media/discover.png": "/static/media/discover.7455b7f973b862fcc88e.png",
+    "static/media/Afrin.png": "/static/media/Afrin.170ba85ade31ccd65181.png",
+    "static/media/MasterCard_Logo.svg.png": "/static/media/MasterCard_Logo.svg.4f0e700116ae536112d7.png",
+    "static/media/visa.png": "/static/media/visa.64a3b514591aa053af70.png",
+    "static/media/sadie.jpg": "/static/media/sadie.0f904aeedb93d4b36439.jpg",
+    "static/media/mastercard.png": "/static/media/mastercard.262ad69481e810b73f39.png",
+    "static/media/profile1.png": "/static/media/profile1.499dfd7186c79cdc7f3e.png",
+    "static/media/1-16404_visa-visa-logo-png-white-transparent-png.png": "/static/media/1-16404_visa-visa-logo-png-white-transparent-png.1cf667c1211b7adc98fd.png",
+    "static/media/americanexpress.jpg": "/static/media/americanexpress.d45fb524b956b59467c1.jpg",
+    "static/media/profilePic.png": "/static/media/profilePic.8f6ebd2d6d76b8014175.png",
+    "static/media/Maps.png": "/static/media/Maps.308576e3fed4375eb51a.png",
+    "static/media/google.png": "/static/media/google.c05c3879fa560c35b977.png",
+    "static/media/User1.png": "/static/media/User1.ae12d1a66ea2236eafdb.png",
+    "static/media/spin-base.png": "/static/media/spin-base.d840865b5370f448b348.png",
+    "static/media/second.png": "/static/media/second.3d079c6dc8e664392724.png",
+    "static/media/phone.png": "/static/media/phone.f67ea721e68e7455d62e.png",
+    "static/media/subscription.png": "/static/media/subscription.2d4d8b2d0fab17c52236.png",
+    "static/media/user.png": "/static/media/user.0d14c6999b4a5c8e86a7.png",
+    "static/media/third.png": "/static/media/third.cf24598d3d8af75432f7.png",
+    "static/media/logo-one.png": "/static/media/logo-one.e6a8301000469843c964.png",
+    "static/media/dollar_icon.webp": "/static/media/dollar_icon.ed8fe78f2e9a1aa5395e.webp",
+    "static/media/chat.svg": "/static/media/chat.8aaf682c7e9088e5d968b8349cb945f6.svg",
+    "static/media/like.svg": "/static/media/like.15ffff070895892e24c0aa708dda806d.svg",
+    "static/media/more.svg": "/static/media/more.163ca445233488249c39eba7f3825687.svg",
+    "index.html": "/index.html",
+    "static/media/base.svg": "/static/media/base.e832aa1e5fee657c70978fcb0350a65b.svg",
+    "main.459eb815.css.map": "/static/css/main.459eb815.css.map",
+    "main.1cd3a33c.js.map": "/static/js/main.1cd3a33c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.459eb815.css",
+    "static/js/main.1cd3a33c.js"
+  ]
+}
